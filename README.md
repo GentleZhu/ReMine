@@ -1,7 +1,7 @@
 # ReMine
 Take NYT13_110K dataset as a example:
 ## Pipeline
-1> Input: Pre-defined(distant supervised) pos_tag relation patterns, Entity Seeds
+1> Input: Pre-defined pos_tag relation patterns, Entity Seeds
 
 2> Use Entity Seeds to generate entity pos tag patterns, pos_tag relation patterns generate relation phrases. Filter out low-frequency entity
 postag seqs and relation phrases
