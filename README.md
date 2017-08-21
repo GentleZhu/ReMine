@@ -14,11 +14,6 @@ postag seqs and relation phrases
 
 6> Run ReMine segmentation, postprocess using Preprocessor.py segmentation mode
 
-## Issues
-1. Unigram occupies top of the ranklist, <b>Potential Solution</b>:Treat unigram/entity/relation differently
-
-2. Not able to handle unigram relation yet, <b>discussion</b>
-
-3. Take time to check whole pipeline and run case study for entity detection and relation detection. There may exist some bugs in current version
-
-4. Ideal generative Process should be able to denoise/reduce search space in order to compete with OpenIE system: Ollie/Stanford IE/ReVerb
+## Todos
+1. Ideal generative Process should be able to denoise/reduce search space in order to compete with OpenIE system: Ollie/Stanford IE/ReVerb
+2. Multi-constraint version: add punc constraint, improve deps constraint
