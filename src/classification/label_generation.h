@@ -92,10 +92,10 @@ inline unordered_set<ULL> loadPatterns_tag(string filename)
     return ret;
 }
 
-inline unordered_set<ULL> loadPatterns(string filename)
+inline unordered_set<ULL> loadPatterns(string filename, int MAX_POSITIVE)
 {
     FILE* in = tryOpen(filename, "r");
-    unordered_set<ULL> ret;
+    vector<ULL> positivesUnigrams, positiveMultiwords;
     while (getLine(in)) {
         stringstream sin(line);
         bool valid = true;
@@ -106,7 +106,7 @@ inline unordered_set<ULL> loadPatterns(string filename)
                 possibleInt |= isdigit(s[i]);
             }
             if (possibleInt) {
-                int x;
+                TOKEN_ID_TYPE x;
                 fromString(s, x);
                 if (x < 0) {
                     valid = false;
@@ -115,11 +115,39 @@ inline unordered_set<ULL> loadPatterns(string filename)
                 p.append(x);
             }
         }
-        if (valid) {
-            ret.insert(p.hashValue);
+        if (valid && pattern2id.count(p.hashValue)) {
+            if (p.size() > 1) {
+                positiveMultiwords.push_back(p.hashValue);
+            } else if (p.size() == 1) {
+                positivesUnigrams.push_back(p.hashValue);
+            }
         }
     }
     fclose(in);
+
+    if (MAX_POSITIVE != -1) {
+        sort(positiveMultiwords.begin(), positiveMultiwords.end());
+        positiveMultiwords.erase(unique(positiveMultiwords.begin(), positiveMultiwords.end()), positiveMultiwords.end());
+        if (MAX_POSITIVE < positiveMultiwords.size()) {
+            srand(time(0) ^ 13548689);
+            random_shuffle(positiveMultiwords.begin(), positiveMultiwords.end());
+            positiveMultiwords.resize(MAX_POSITIVE);
+        }
+        sort(positivesUnigrams.begin(), positivesUnigrams.end());
+        positivesUnigrams.erase(unique(positivesUnigrams.begin(), positivesUnigrams.end()), positivesUnigrams.end());
+        if (MAX_POSITIVE < positivesUnigrams.size()) {
+            srand(time(0) ^ 13548689);
+            random_shuffle(positivesUnigrams.begin(), positivesUnigrams.end());
+            positivesUnigrams.resize(MAX_POSITIVE);
+        }
+    }
+    unordered_set<ULL> ret;
+    for (ULL value : positiveMultiwords) {
+        ret.insert(value);
+    }
+    for (ULL value : positivesUnigrams) {
+        ret.insert(value);
+    }
     return ret;
 }
 
@@ -278,151 +306,78 @@ inline vector<Pattern> generateBootstrap(vector<vector<double>> &features, vecto
     return ret;
 }
 
-inline vector<Pattern> generate(vector<vector<double>> &features, vector<string> &featureNames, string ALL_FILE, string QUALITY_FILE)
+inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string ALL_FILE, string QUALITY_FILE)
 {
-    unordered_set<ULL> exclude = loadPatterns(ALL_FILE);
-    unordered_set<ULL> include = loadPatterns(QUALITY_FILE);
-
-    vector<pair<ULL, PATTERN_ID_TYPE>> positiveOrder, negativeOrder;
-    for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() <= 1) {
-            continue;
-        }
-        assert(features[i].size() != 0);
-        if (include.count(patterns[i].hashValue)) {
-            positiveOrder.push_back(make_pair(patterns[i].hashValue, i));
-        } else if (!exclude.count(patterns[i].hashValue)) {
-            negativeOrder.push_back(make_pair(patterns[i].hashValue, i));
-        }
-    }
-    sort(positiveOrder.begin(), positiveOrder.end());
-    sort(negativeOrder.begin(), negativeOrder.end());
-    // make sure the patterns are same each time
-    vector<PATTERN_ID_TYPE> positives, negatives;
-    for (const auto& iter : positiveOrder) {
-        positives.push_back(iter.second);
-    }
-    for (const auto& iter : negativeOrder) {
-        negatives.push_back(iter.second);
-    }
-
-    fprintf(stderr, "matched positives = %d\n", positives.size());
-    fprintf(stderr, "matched negatives = %d\n", negatives.size());
-
-    if (LABEL_METHOD == "ByBootstrap") {
-        return generateBootstrap(features, featureNames, positives, negatives);
-    }
-
     vector<Pattern> ret;
+
+    if (LABEL_METHOD.find("E") != -1) { // experts
+        vector<Pattern> truth;
+        cerr << "Loading existing labels..." << endl;
+        truth = Label::loadLabels(LABEL_FILE);
+        bool needPos = LABEL_METHOD.find("EP") != -1;
+        bool needNeg = LABEL_METHOD.find("EN") != -1;
+        for (PATTERN_ID_TYPE i = 0; i < truth.size(); ++ i) {
+            if (truth[i].label == 1) {
+                if (needPos) {
+                    ret.push_back(truth[i]);
+                }
+            } else if (truth[i].label == 0) {
+                if (needNeg) {
+                    ret.push_back(truth[i]);
+                }
+            }
+        }
+    }
+
+    if (LABEL_METHOD.find("D") != -1) { // distant training
+        bool needPos = LABEL_METHOD.find("DP") != -1;
+        bool needNeg = LABEL_METHOD.find("DN") != -1;
+
+        unordered_set<ULL> include = loadPatterns(QUALITY_FILE, MAX_POSITIVE);
+        unordered_set<ULL> exclude = loadPatterns(ALL_FILE, MAX_POSITIVE);
+
+        if (MAX_POSITIVE != -1) {
+            exclude.clear();
+        }
+
+        for (ULL value : include) { // make sure exclude is a super set of include
+            exclude.insert(value);
+        }
+        for (int i = 0; i < ret.size(); ++ i) { // make sure every human label is excluded
+            exclude.insert(ret[i].hashValue);
+        }
+
+        for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
+            if (patterns[i].size() < 1) {
+                continue;
+            }
+            if (include.count(patterns[i].hashValue)) {
+                if (needPos) {
+                    ret.push_back(patterns[i]);
+                    ret.back().label = 1;
+                }
+            } else if (!exclude.count(patterns[i].hashValue)) {
+                if (needNeg) {
+                    ret.push_back(patterns[i]);
+                    ret.back().label = 0;
+                }
+            }
+        }
+    }
+
     int cntPositives = 0, cntNegatives = 0;
-    srand(19910724);
-
-    if (LABEL_METHOD.find("ByLength") != -1) {
-        positives = samplingByLength(positives, MAX_POSITIVE, 0);
-    } else if (LABEL_METHOD.find("ByRandom") != -1) {
-        random_shuffle(positives.begin(), positives.end());
-        if (MAX_POSITIVE > 0 && MAX_POSITIVE < positives.size()) {
-            positives.resize(MAX_POSITIVE);
-        }
-    } else if (LABEL_METHOD.find("ByKMeans") != -1) {
-        positives = select(positives, features, MAX_POSITIVE);
-    }
-
-    unordered_set<PATTERN_ID_TYPE> negativeSet(negatives.begin(), negatives.end());
-
-    // positives
-    for (PATTERN_ID_TYPE id : positives) {
-        ret.push_back(patterns[id]);
-        ret.back().label = 1;
-        ++ cntPositives;
-    }
-
-    // negatives part 1
-    if (LABEL_METHOD.find("ByPositive") != -1) {
-        for (PATTERN_ID_TYPE id : positives) {
-            // sub pattern
-            for (int st = 0; st < patterns[id].size(); ++ st) {
-                Pattern pattern;
-                for (int ed = st; ed < patterns[id].size(); ++ ed) {
-                    pattern.append(patterns[id].tokens[ed]);
-                    if (pattern.size() > 1 && pattern2id.count(pattern.hashValue)) {
-                        PATTERN_ID_TYPE subID = pattern2id[pattern.hashValue];
-                        if (negativeSet.count(subID)) {
-                            ret.push_back(patterns[subID]);
-                            ret.back().label = 0;
-                            negativeSet.erase(subID);
-                            ++ cntNegatives;
-                        }
-                    }
-                }
-            }
-            // super pattern
-            PATTERN_ID_TYPE superLeft = -1, superRight = -1;
-            for (TOTAL_TOKENS_TYPE ed : id2ends[id]) {
-                TOTAL_TOKENS_TYPE st = ed - patterns[id].size();
-                if (st > 0 && !Documents::isEndOfSentence(st - 1)) {
-                    Pattern left;
-                    for (TOTAL_TOKENS_TYPE i = st - 1; i <= ed; ++ i) {
-                        left.append(wordTokens[i]);
-                    }
-                    if (pattern2id.count(left.hashValue)) {
-                        PATTERN_ID_TYPE superID = pattern2id[left.hashValue];
-                        if (negativeSet.count(superID)) {
-                            if (superLeft == -1 || patterns[superID].currentFreq > patterns[superLeft].currentFreq) {
-                                superLeft = superID;
-                            }
-
-                            ret.push_back(patterns[superID]);
-                            ret.back().label = 0;
-                            negativeSet.erase(superID);
-                            ++ cntNegatives;
-                        }
-                    }
-                }
-                if (!Documents::isEndOfSentence(ed) && ed + 1 < totalWordTokens) {
-                    Pattern right = patterns[id];
-                    right.append(wordTokens[ed + 1]);
-                    if (pattern2id.count(right.hashValue)) {
-                        PATTERN_ID_TYPE superID = pattern2id[right.hashValue];
-                        if (negativeSet.count(superID)) {
-                            if (superRight == -1 || patterns[superID].currentFreq > patterns[superRight].currentFreq) {
-                                superRight = superID;
-                            }
-
-                            ret.push_back(patterns[superID]);
-                            ret.back().label = 0;
-                            negativeSet.erase(superID);
-                            ++ cntNegatives;
-                        }
-                    }
-                }
-            }
+    for (PATTERN_ID_TYPE i = 0; i < ret.size(); ++ i) {
+        if (ret[i].label == 1) {
+            ++ cntPositives;
+        } else if (ret[i].label == 0) {
+            ++ cntNegatives;
+        } else {
+            assert(false); // It should not happen!
         }
     }
 
-    // negatives part 2
-    negatives = vector<int>(negativeSet.begin(), negativeSet.end());
-    if (LABEL_METHOD.find("ByLength") != -1) {
-        negatives = samplingByLength(negatives, positives.size() * NEGATIVE_RATIO);
-    } else if (LABEL_METHOD.find("ByRandom") != -1) {
-        random_shuffle(negatives.begin(), negatives.end());
-        if (positives.size() * NEGATIVE_RATIO < negatives.size()) {
-            negatives.resize(positives.size() * NEGATIVE_RATIO);
-        }
-    } else if (LABEL_METHOD.find("ByKMeans") != -1) {
-        negatives = select(negatives, features, positives.size() * NEGATIVE_RATIO);
-    } else {
-        negatives.clear();
-    }
-
-    for (PATTERN_ID_TYPE id : negatives) {
-        ret.push_back(patterns[id]);
-        ret.back().label = 0;
-        ++ cntNegatives;
-    }
-
-    fprintf(stderr, "selected positives = %d\n", cntPositives);
-    fprintf(stderr, "selected negatives = %d\n", cntNegatives);
+    fprintf(stderr, "\tThe size of the positive pool = %d\n", cntPositives);
+    fprintf(stderr, "\tThe size of the negative pool = %d\n", cntNegatives);
 
     return ret;
 }
@@ -529,7 +484,7 @@ inline vector<int> generate_samples(string QUALITY_FILE){
     return ret;
 }
 
-
+/*
 inline vector<Pattern> generateUnigram(string ALL_FILE, string QUALITY_FILE)
 {
     unordered_set<ULL> exclude = loadPatterns(ALL_FILE);
@@ -593,6 +548,7 @@ inline vector<Pattern> generateUnigram(string ALL_FILE, string QUALITY_FILE)
 
     return ret;
 }
+*/
 
 void removeWrongLabels()
 {

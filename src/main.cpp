@@ -70,13 +70,8 @@ int main(int argc, char* argv[])
     int recognized_entity = Features::recognize_tag(entity_truth);
     cerr << "=== Generate Phrase Labels ===" << endl;
     // multi-words
-    cerr << "" << QUALITY_FILE <<endl;
-    phrase_truth = Label::generate(featuresPhrase, featureNamesPhrase, ALL_FILE, QUALITY_FILE);
-    int recognized = Features::recognize(phrase_truth);
-
-    cerr << "=== Generate Unigram Labels ===" << endl;
-    vector<Pattern> truthUnigram = Label::generateUnigram(ALL_FILE, QUALITY_FILE);
-    int recognizedUnigram = Features::recognize(truthUnigram);
+    phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, ALL_FILE, QUALITY_FILE);
+    TOTAL_TOKENS_TYPE recognized = Features::recognize(phrase_truth);
 
     relation_truth = Label::generate_tag(featuresSemantic, QUALITY_FILE_RELATION,false);
     int recognized_relation = Features::recognize_tag(relation_truth);
@@ -251,7 +246,7 @@ int main(int argc, char* argv[])
         // check the quality
         if (INTERMEDIATE) {
             char filename[256];
-            sprintf(filename, "tmp/iter_%d_frequent_quality", iteration);
+            sprintf(filename, "tmp_remine/iter_%d_frequent_quality", iteration);
             Dump::dumpResults(filename);
         }
 
