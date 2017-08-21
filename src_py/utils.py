@@ -21,12 +21,22 @@ def cvtRaw(file_path,out_path,num):
 		#break
 	OUT.close()
 
+def getEntity(file_path):
+	with open(file_path) as IN:
+		for line in IN:
+			tmp=json.loads(line)
+			for e in tmp['entity_mentions']:
+				if e[1] - e[0] == 1:
+					print ' '.join(tmp['tokens'][e[0]:e[1]])
+
 def eliminateTab(file_path,out_path):
 	with open(file_path) as IN, open(out_path,'w') as OUT:
 		for line in IN:
 			OUT.write(line.split('\t')[1].lstrip())
-def relationLinker(postag_path,file_path):
+def relationLinker(file_path,postag_path,prefix):
+	relation_token=set(["VB","VBD","VBG","VBN","VBP","VBZ"])
 	matched_phrases=defaultdict(int)
+	matched_unigram=defaultdict(int)
 	relation_pattern=set()
 	references=[]
 	with open(postag_path) as IN:
@@ -44,24 +54,32 @@ def relationLinker(postag_path,file_path):
 			cnt+=1
 			#print line
 			tmp=json.loads(line)
-			for i,e in enumerate(tmp['entityMentions']):
-				if i == len(tmp['entityMentions'])-1:
+			for i,e in enumerate(tmp['entity_mentions']):
+				if i == len(tmp['entity_mentions'])-1:
 					break
+				#print i,e
 				#print tmp['entityMentions'][i+1][0]-e[1]
 				for r in references:
 					length=len(r)
-					if tmp['entityMentions'][i+1][0]-e[1] >= length:
-						for idx in xrange(e[1],tmp['entityMentions'][i+1][0]):
+					if tmp['entity_mentions'][i+1][0]-e[1] >= length:
+					#if tmp['entity_mentions'][i+1]['start']-e['end'] >= length:	
+						for idx in xrange(e[1],tmp['entity_mentions'][i+1][0]):
+						#for idx in xrange(e['end'],tmp['entity_mentions'][i+1]['start']):
 							if tmp['pos'][idx:idx+length] == r:
 								#print r,tmp['tokens'][idx:idx+length]
 								matched_phrases[' '.join(tmp['tokens'][idx:idx+length])]+=1
-			#break
-	pickle.dump(matched_phrases,open('dumped_relations.p','wb'))
+								#print ' '.join(tmp['tokens'][idx:idx+length])
+							if tmp['pos'][idx] in relation_token:
+								matched_unigram[tmp['tokens'][idx]]+=1
 
-def playRelations():
-	matched_phrases=pickle.load(open('dumped_relations.p','rb'))
+			#break
+	pickle.dump(matched_phrases,open(prefix+'dumped_relations.p','wb'))
+	pickle.dump(matched_unigram,open(prefix+'dumped_relation_unigram.p','wb'))
+
+def playRelations(prefix):
+	matched_phrases=pickle.load(open(prefix+'dumped_relation_unigram.p','rb'))
 	for k,v in matched_phrases.iteritems():
-		if v>20:
+		if v>5:
 			print k.encode('ascii', 'ignore').decode('ascii')
 def cvtTaggedRaw(file_path,out_path):
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
@@ -72,7 +90,7 @@ def cvtTaggedRaw(file_path,out_path):
 			for e in line.strip().split(' '):
 				corpus['tokens'].append('_'.join(e.split('_')[:-1]))
 				corpus['pos'].append(e.split('_')[-1])
-			corpus['sentText']=' '.join(corpus['tokens'])
+			#corpus['sentText']=' '.join(corpus['tokens'])
 			OUT.write(json.dumps(corpus)+'\n')
 
 def cvtUntaggedRaw(file_path,seed_path,out_path):
@@ -151,9 +169,32 @@ def refinePos(file_path,out_path):
 	sorted_x = sorted(patterns.items(), key=operator.itemgetter(1),reverse=True)
 	
 	with open(out_path,'w') as OUT:
-		for x in sorted_x[:150]:
-			OUT.write(x[0]+'\n')
+		for x in sorted_x[:200]:
+			if 'V' not in x[0] and 'N' in x[0]:
+				OUT.write(x[0]+'\n')
 
+def flatData(file_path,out_path):
+	punc=['.',',','"',"'",'?',':',';','-','!','(',')','``',"''"]
+	with open(file_path) as IN, open(out_path,'w') as OUT:
+		for line in IN:
+			temp=json.loads(line)['tokens']
+			#OUT.write(' '.join(json.loads(line)['pos']).encode('ascii', 'ignore').decode('ascii')+'\n')
+			OUT.write(' '.join(temp).encode('ascii', 'ignore').decode('ascii')+'\n')
+			#OUT.write(line.split('\t')[1])
+
+
+def segment_combine(segment_path,out_path):
+	with open(segment_path) as IN, open(out_path,'w') as OUT:
+		for line in IN:
+			for t in line.split(','):
+				OUT.write('_'.join(t.rstrip().split(' '))+' ')
+			OUT.write('\n')
+
+def cvtTow2v(in_path,out_path):
+	with open(in_path,'r') as IN, open(out_path,'w') as OUT:
+		for line in IN:
+			for phrase in line.replace(':EP','').replace(':RP','').split(','):
+				OUT.write(phrase.strip().replace(' ','_').lower()+' ')
 
 
 def addSentID(file_path,seed_path):
@@ -232,14 +273,23 @@ def cvtTest(file_path,out_path=None):
 		#print len(tmp['documents'][0]['sentences'])
 
 if __name__ == '__main__':
+	#TODO(branzhu): add comments for following methods
+
 	#cvtRaw(sys.argv[1],sys.argv[2],int(sys.argv[3]))
 	#entityLinker(sys.argv[1],sys.argv[2],sys.argv[3])
 	#cvtTest(sys.argv[1],sys.argv[2])
-	#relationLinker(sys.argv[1],sys.argv[2])
-	#playRelations()
-	#cvtTaggedRaw(sys.argv[1],sys.argv[2])
+	#relationLinker(sys.argv[1],sys.argv[2],sys.argv[3])
+	#playRelations(sys.argv[1])
+	#getEntity(sys.argv[1])
+	
+	cvtTaggedRaw(sys.argv[1],sys.argv[2])
 	#cntSegs(sys.argv[1])
 	#cvtUntaggedRaw(sys.argv[1],sys.argv[2],sys.argv[3])
 	#entityLinker2(sys.argv[1],sys.argv[2],sys.argv[3])
-	refinePos(sys.argv[1],sys.argv[2])
+	#refinePos(sys.argv[1],sys.argv[2])
+	#segment_combine(sys.argv[1],sys.argv[2])
+	#flatData(sys.argv[1],sys.argv[2])
 	#addSentID(sys.argv[1],sys.argv[2])
+
+	#results_remine/segmentation.tokens utils/word2vec/data
+	#cvtTow2v(sys.argv[1],sys.argv[2])
