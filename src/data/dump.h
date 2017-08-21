@@ -18,6 +18,14 @@ using FrequentPatternMining::Pattern;
 using FrequentPatternMining::patterns;
 using FrequentPatternMining::pattern2id;
 
+void normalizePatterns(vector<pair<double, int>> &order, const int cutff){
+    sort(order.rbegin(), order.rend());
+    double MIN=order[cutff].first;
+    double gap=order[0].first-MIN;
+    cerr << MIN << '\t' << gap <<endl;
+    for (int i=0; i< cutff;++i)
+        patterns[order[i].second].quality=(order[i].first-MIN)/gap;
+}
 void loadSegmentationModel(const string& filename)
 {
     FILE* in = tryOpen(filename, "rb");
@@ -38,6 +46,29 @@ void loadSegmentationModel(const string& filename)
         //cerr<<patterns[i].postagquality<<endl;
     }
     cerr << "pattern loaded" << endl;
+
+    vector<pair<double, int>> order;
+    //cerr<<"Checkpoint"<<endl;
+    cerr << patterns.size() << endl;
+    for (int i = 0; i < patterns.size(); ++ i) {
+        if (patterns[i].size() > 1) {
+            order.push_back(make_pair(patterns[i].quality, i));
+            patterns[i].quality=0;
+        }
+    }
+    normalizePatterns(order,10000);
+
+    order.clear();
+    for (int i = 0; i < patterns.size(); ++ i) {
+        if (patterns[i].size() == 1) {
+            order.push_back(make_pair(patterns[i].quality, i));
+            patterns[i].quality=0;
+        }
+    }
+    normalizePatterns(order,5000);
+    order.clear();
+    order.shrink_to_fit();
+
 
     // POS Tag mapping
     Binary::read(in, cnt);
@@ -72,14 +103,15 @@ void dumpSegmentationModel(const string& filename)
     // quality phrases & unigrams
     size_t cnt = 0;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        //if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
             ++ cnt;
         }
     }
     Binary::write(out, cnt);
     cerr << "# of patterns dumped = " << cnt << endl;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
             patterns[i].dump(out);
         }
     }
@@ -167,12 +199,12 @@ void dumpResults(const string& prefix)
     vector<pair<double, int>> order;
     //cerr<<"Checkpoint"<<endl;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0) {
+        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 && patterns[i].indicator[0] == 'E') {
             order.push_back(make_pair(patterns[i].quality, i));
         }
     }
     //cerr<<"Checkpoint"<<endl;
-    dumpRankingList(prefix + "_multi-words.txt", order);
+    dumpRankingList(prefix + "_multi-entities.txt", order);
 
     order.clear();
     for (int i = 0; i < patterns.size(); ++ i) {
@@ -188,11 +220,11 @@ void dumpResults(const string& prefix)
     order.clear();
     for (int i = 0; i < patterns.size(); ++ i) {
         //if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
-        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 ) {
+        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 && patterns[i].indicator[0] == 'R') {
             order.push_back(make_pair(patterns[i].quality, i));
         }
     }
-    dumpRankingList(prefix + "_salient.txt", order);
+    dumpRankingList(prefix + "_multi-relations.txt", order);
 }
 
 };

@@ -15,16 +15,17 @@ using FrequentPatternMining::patterns;
 vector<double> f;
 vector<int> pre;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<POS_ID_TYPE>& tags, Segmentation& segmenter, FILE* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, Segmentation& segmenter, FILE* out)
 {
     if (ENABLE_POS_TAGGING) {
-        segmenter.viterbi(tokens, tags, f, pre);
+        segmenter.viterbi(tokens, deps, f, pre);
     } else {
         segmenter.viterbi(tokens, f, pre);
     }
 
     int i = (int)tokens.size();
-    assert(f[i] > -1e80);
+    // assert(f[i] > -1e80);
+    // assert(tokens.size() == deps.size());
     vector<string> ret;
     while (i > 0) {
         int j = pre[i];
@@ -37,7 +38,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<POS_ID_TYPE>&
             }
             u = trie[u].children[tokens[k]];
         }
-        quality &= trie[u].id >= 0 && trie[u].id < SEGMENT_QUALITY_TOP_K;
+        quality &= trie[u].id >= 0; // && trie[u].id < SEGMENT_QUALITY_TOP_K;
 
 
         if (quality) {
@@ -51,6 +52,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<POS_ID_TYPE>&
             for (int k = i - 1; k >= j; -- k) {
                 ostringstream sout;
                 sout << tokens[k];  
+                //sout << tags[k]; 
                 //ret.push_back(Documents::posid2Tag[int(tags[k])]);
                 ret.push_back(sout.str());
             }
@@ -93,27 +95,37 @@ int main(int argc, char* argv[])
     //return 0;
 
     sort(patterns.begin(), patterns.end(), byQuality);
+    int unigram_cnt=0,multigram_cnt=0;
+    for (int i=0;i<patterns.size();++i){
+        if (patterns[i].quality <= 0)
+            continue;
+        if (patterns[i].size()==1)
+            unigram_cnt+=1;
+        else
+            multigram_cnt+=1;
+    }
+    cerr << "unigram_cnt:" << unigram_cnt << " multigram_cnt:" << multigram_cnt <<endl;
 
-    //for (int i=0;i<patterns.size();++i)
     //    cerr<<"check:"<<patterns[i].postagquality<<endl;
 
     constructTrie(); // update the current frequent enough patterns
 
     Segmentation* segmenter;
-    if (ENABLE_POS_TAGGING) {
+    /*if (ENABLE_POS_TAGGING) {
         segmenter = new Segmentation(ENABLE_POS_TAGGING);
         Segmentation::getDisconnect();
         Segmentation::logPosTags();
-    } else {
-        segmenter = new Segmentation(Segmentation::penalty);
-    }
+    } else {*/
+    segmenter = new Segmentation(Segmentation::penalty);
 
-    char currentTag[100];
+    char currentDep[100];
 
     FILE* in = tryOpen(TEXT_TO_SEG_FILE, "r");
-    FILE* posIn = NULL;
+    // FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_FILE, "r");
+    FILE* depIn = NULL;
+
     if (ENABLE_POS_TAGGING) {
-        posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_FILE, "r");
+        depIn = tryOpen(TEXT_TO_SEG_DEPS_FILE, "r");
     }
 
     FILE* out = tryOpen("tmp_remine/tokenized_segmented_sentences.txt", "w");
@@ -121,26 +133,23 @@ int main(int argc, char* argv[])
     while (getLine(in)) {
         stringstream sin(line);
         vector<TOTAL_TOKENS_TYPE> tokens;
-        vector<POS_ID_TYPE> tags;
+        vector<TOTAL_TOKENS_TYPE> deps;
 
         string lastPunc = "";
         for (string temp; sin >> temp;) {
             // get pos tag
-            POS_ID_TYPE posTagId = -1;
+            //POS_ID_TYPE posTagId = -1;
             if (ENABLE_POS_TAGGING) {
-                myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
-                if (!Documents::posTag2id.count(currentTag)) {
-                    posTagId = -1; // unknown tag
-                } else {
-                    posTagId = Documents::posTag2id[currentTag];
-                }
+                myAssert(fscanf(depIn, "%s", currentDep) == 1, "POS file doesn't have enough POS tags");
+
+                //posTagId = currentTag;
             }
 
             // get token
             bool flag = true;
             TOKEN_ID_TYPE token = 0;
             for (int i = 0; i < temp.size() && flag; ++ i) {
-                flag &= isdigit(temp[i]) || i == 0 && temp.size() > 1 && temp[0] == '-';
+                flag &= /*temp[i] != '.' || */isdigit(temp[i]) || i == 0 && temp.size() > 1 && temp[0] == '-';
             }
             stringstream sin(temp);
             sin >> token;
@@ -148,24 +157,24 @@ int main(int argc, char* argv[])
             if (!flag) {
                 string punc = temp;
                 if (Documents::separatePunc.count(punc)) {
-                    process(tokens, tags, *segmenter, out);
+                    process(tokens, deps, *segmenter, out);
                     tokens.clear();
-                    tags.clear();
+                    deps.clear();
                 }
             } else {
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
-                    tags.push_back(posTagId);
+                    deps.push_back(atoi(currentDep));
                 }
             }
         }
         if (tokens.size() > 0) {
-            process(tokens, tags, *segmenter, out);
+            process(tokens, deps, *segmenter, out);
         }
     }
     fclose(in);
     if (ENABLE_POS_TAGGING) {
-        fclose(posIn);
+        fclose(depIn);
     }
     fclose(out);
 

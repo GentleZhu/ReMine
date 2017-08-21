@@ -29,6 +29,7 @@ using FrequentPatternMining::unigrams;
 
 namespace Features
 {
+    map<string, string> pos_group;
 // === global variables ===
     struct Hist {
         int timestamp;
@@ -74,6 +75,20 @@ namespace Features
         return 0;
     }
 
+    inline void loadPosgroup(const string &filename) {
+        FILE* in = tryOpen(filename, "r");
+
+        while (getLine(in)) {
+            vector<string> tokens = splitBy(line, ' ');
+            if (tokens.size() == 2) {
+                pos_group[tokens[0]] = tokens[1];
+            }
+        }
+
+        cerr << "posgroup length:" << pos_group.size() << endl;
+        fclose(in);
+    }
+
     
     void extractBipostag(int id, vector<double> &feature, int bucket_size){
         const Pattern &pattern = patterns_tag[id];
@@ -103,6 +118,22 @@ namespace Features
             //cerr<<feature.back()<<" ";
         }
         //cerr<<endl;
+    }
+
+    void extractPosRatio(const Pattern& pattern, vector<double>& feature) {
+        const vector<TOTAL_TOKENS_TYPE> &tokens = pattern.tokens;
+        map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, 
+        {"ADJ", 0}, {"NP", 0}, {"PP", 0}, {"ADV", 0}, {"VB", 0}, {"WH", 0}, {"NA", 0}};
+        for (int i = 0; i + 1 < pattern.size(); ++i) {
+            if (pos_group.count(posid2Tag[tokens[i]]) > 0)
+                ++featureMaps[pos_group[posid2Tag[tokens[i]]]];
+            else
+                ++featureMaps["NA"];
+        }
+        for (const auto& m : featureMaps) {
+            feature.push_back((double)m.second / tokens.size());
+        }
+
     }
     
 
@@ -483,14 +514,16 @@ namespace Features
         /*featureNames = {"stat_f1", "stat_f2", "stat_f4", "stat_outside",
                         "stopwords_1st", "stopwords_last", "stopwords_ratio",
                         "punc_quote", "punc_dash", "punc_parenthesis", "first_capitalized"};*/
-        featureNames = {"stat_f1", "stat_f2", "stat_f4"};
+        featureNames = {"stat_f1", "stat_f2", "stat_f4",
+                        "CC", "CD", "DT", "IN", "ADJ", "NP",
+                        "PP", "ADV", "VB", "WH", "NA"};
         //cerr<<"bigram bucket size: "<<BigramID.size()<<endl;
         //cerr<<"feature size: "<<BigramID.size()<<endl;
         
         //Do not use bigram feature
-        featureNames.resize(featureNames.size()+BigramID.size());
+        //featureNames.resize(featureNames.size()+BigramID.size());
         //featureNames.resize(BigramID.size());
-        //featureNames.resize(featureNames.size()+0);
+        featureNames.resize(featureNames.size());
 
         // compute features for each pattern
         vector<vector<double>> features(patterns_tag.size(), vector<double>());
@@ -499,6 +532,7 @@ namespace Features
         for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
             if (patterns_tag[i].size() > 1) {
                 extractStatistical_tag(i, features[i]);
+                extractPosRatio(patterns_tag[i], features[i]);
                 //check their effectiveness
                 
                 //extractPunctuation(i, features[i]);
@@ -510,7 +544,7 @@ namespace Features
 
         //cerr<<"Die here"<<endl;
         //cerr<<"size of bigram id pocket is"<<BigramID.size()<<endl;  
-        
+        /*
         for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
             if (patterns_tag[i].size() > 1) {
                 extractBipostag(i, features[i], BigramID.size());
@@ -521,7 +555,7 @@ namespace Features
                 features[i].shrink_to_fit();
             }
         }
-        
+        */
 
         features.shrink_to_fit();
         return features;
@@ -586,12 +620,21 @@ namespace Features
         feature.push_back(superFreq / freq);
     }
 
-    void extractExtracbitUnigram(const Pattern &pattern, vector<double> &feature) {
-        unordered_set<string> extrabits({"NN","NNS","NNP","NNPS"});
+    void extractExtracbitUnigram(Pattern &pattern, vector<double> &feature) {
+        unordered_set<string> extrabit_noun({"NN","NNS","NNP","NNPS"});
+        unordered_set<string> extrabit_verb({"VB","VBD","VBG","VBN","VBP","VBZ"});
         assert(pattern.postags.size()==1);
-        if (extrabits.count(Documents::posid2Tag[pattern.postags[0]])>0) {
+        if (extrabit_noun.count(Documents::posid2Tag[pattern.postags[0]])>0) {
             //cerr << "PosTag:" << pattern.postags[0] << " freq:" << pattern.currentFreq << endl;
             feature.push_back(1);
+            pattern.indicator="ENTITY";
+        }
+        else 
+            feature.push_back(0);
+        if (extrabit_verb.count(Documents::posid2Tag[pattern.postags[0]])>0) {
+            //cerr << "PosTag:" << pattern.postags[0] << " freq:" << pattern.currentFreq << endl;
+            feature.push_back(1);
+            pattern.indicator="RELATION";
         }
         else 
             feature.push_back(0);
@@ -608,7 +651,7 @@ namespace Features
         featureNames = {"log_frequency", "independent_ratio",
                         "stopwords", "idf",
                         "punc_quote", "punc_parenthesis", "first_capitalized", "all_capitalized",
-                        "complete_super", "extrabit"
+                        "complete_super", "extrabit_noun", "extrabit_verb"
                         };
 
         // compute features for each pattern

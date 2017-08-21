@@ -45,6 +45,9 @@ namespace Documents
 
     float* idf; // 0 .. maxTokenID
     TOKEN_ID_TYPE* wordTokens; // 0 .. totalWordTokens - 1
+
+    TOKEN_ID_TYPE* depPaths;
+
     POS_ID_TYPE* posTags; // 0 .. totalWordTokens - 1
 
     // 0 .. ((totalWordTokens * 7 + 31) / 32) - 1
@@ -54,6 +57,7 @@ namespace Documents
     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> sentences;
     //vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> postagsent;
 
+    // Below are unique pos tag information.
     map<string, POS_ID_TYPE> posTag2id;
     map<POS_ID_TYPE, string> posid2Tag;
     vector<string> posTag;
@@ -110,7 +114,8 @@ namespace Documents
         fclose(in);
     }
 
-    inline void loadAllTrainingFiles(const string& docFile, const string& posFile, const string& capitalFile) {
+    inline void loadAllTrainingFiles(const string& docFile, const string& posFile, const string& capitalFile,
+        const string& depFile) {
         if (true) {
             // get total number of tokens and the maximum number of tokens
             FILE* in = tryOpen(docFile, "r");
@@ -136,7 +141,7 @@ namespace Documents
         idf = new float[maxTokenID + 1];
         isDigital = new bool[maxTokenID + 1];
         wordTokens = new TOKEN_ID_TYPE[totalWordTokens];
-        //if (ENABLE_POS_TAGGING) {
+
         if (true) {
             posTag.clear();
             posTag2id.clear();
@@ -146,14 +151,17 @@ namespace Documents
         wordTokenInfo = new WordTokenInfo[totalWordTokens];
 
         char currentTag[100];
+        char currentDep[100];
 
         FILE* in = tryOpen(docFile, "r");
-        FILE* posIn = NULL;
-        //if (ENABLE_POS_TAGGING) {
-        if (true) {
-            posIn = tryOpen(posFile, "r");
-        }
+        FILE* posIn = tryOpen(posFile, "r");
         FILE* capitalIn = tryOpen(capitalFile, "r");
+        FILE* depIn = NULL;
+        if (ENABLE_POS_TAGGING) {
+            depIn = tryOpen(depFile, "r");
+            depPaths = new TOKEN_ID_TYPE[totalWordTokens];
+        }
+        // posIn = tryOpen(posFile, "r");
 
         INDEX_TYPE docs = 0;
         TOTAL_TOKENS_TYPE ptr = 0;
@@ -163,24 +171,26 @@ namespace Documents
 
             stringstream sin(line);
 
-            myAssert(getLine(capitalIn), "Captial info file doesn't have enough lines");
+            myAssert(getLine(capitalIn), "Capital info file doesn't have enough lines");
             int capitalPtr = 0;
 
             string lastPunc = "";
             for (string temp; sin >> temp;) {
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
-                //if (ENABLE_POS_TAGGING) {
-                if (true) {
-                    myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
-                    if (!posTag2id.count(currentTag)) {
-                        posTagId = posTag2id.size();
-                        posTag.push_back(currentTag);
-                        posTag2id[currentTag] = posTagId;
-                        posid2Tag[posTagId] = currentTag;
-                    } else {
-                        posTagId = posTag2id[currentTag];
-                    }
+                if (ENABLE_POS_TAGGING) {
+                    myAssert(fscanf(depIn, "%s", currentDep) == 1, "Deps file doesn't have enough dependencies");
+                }
+
+                // get postag info
+                myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
+                if (!posTag2id.count(currentTag)) {
+                    posTagId = posTag2id.size();
+                    posTag.push_back(currentTag);
+                    posTag2id[currentTag] = posTagId;
+                    posid2Tag[posTagId] = currentTag;
+                } else {
+                    posTagId = posTag2id[currentTag];
                 }
 
                 // get token
@@ -213,10 +223,10 @@ namespace Documents
                     lastPunc = punc;
                 } else {
                     wordTokens[ptr] = token;
-                    //if (ENABLE_POS_TAGGING) {
-                    if (true) {
-                        posTags[ptr] = posTagId;
+                    if (ENABLE_POS_TAGGING) {
+                        depPaths[ptr] = atoi(currentDep);
                     }
+                    posTags[ptr] = posTagId;
 
                     if (lastPunc == "\"") {
                         wordTokenInfo[ptr].turnOn(QUOTE_BEFORE);
@@ -252,11 +262,6 @@ namespace Documents
         cerr << "# of documents = " << docs << endl;
         cerr << "# of POS tags = " << posTag2id.size() << endl;
         maxPosID = posTag2id.size() - 1 ;
-        //cout << "xxxx" << maxPosID <<endl;
-        //for(map<string, POS_ID_TYPE>::iterator iterator = posTag2id.begin(); iterator != posTag2id.end(); iterator++)
-        //{
-        //    cout << iterator->first << " " << (int)iterator->second << endl;
-        //}
     }
 
     inline void splitIntoSentences() {

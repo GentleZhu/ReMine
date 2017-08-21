@@ -39,7 +39,7 @@ inline vector<Pattern> loadLabels(string filename)
         for (TOKEN_ID_TYPE s; sin >> s;) {
             p.append(s);
         }
-        if (p.size() > 1) {
+        if (p.size() > 0 && pattern2id.count(p.hashValue)) {
             ret.push_back(p);
         }
     }

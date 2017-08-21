@@ -53,9 +53,9 @@ void parseCommandFlags(int argc, char* argv[])
         fprintf(stderr, "Minimum Support Threshold = %d\n", MIN_SUP);
         fprintf(stderr, "Maximum Length Threshold = %d\n", MAX_LEN);
         if (ENABLE_POS_TAGGING) {
-            fprintf(stderr, "POS-Tagging Mode Enabled\n");
+            fprintf(stderr, "Constraints Mode Enabled\n");
         } else {
-            fprintf(stderr, "POS-Tagging Mode Disabled\n");
+            fprintf(stderr, "Constraints Mode Disabled\n");
             fprintf(stderr, "Discard Ratio = %.6f\n", DISCARD);
         }
         fprintf(stderr, "Number of threads = %d\n", NTHREADS);

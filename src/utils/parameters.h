@@ -28,6 +28,7 @@ const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp/pos_tags_tokenized_text_to_seg.txt
 const string TRAIN_FILE = "tmp_remine/tokenized_train.txt";
 const string TEST_FILE = "tmp_remine/tokenized_test.txt";
 const string TRAIN_CAPITAL_FILE = "tmp_remine/case_tokenized_train.txt";
+const string TRAIN_DEPS_FILE = "tmp_remine/deps_train.txt";
 const string STOPWORDS_FILE = "tmp_remine/tokenized_stopwords.txt";
 const string ALL_FILE = "tmp_remine/tokenized_quality.txt";
 //const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
@@ -36,15 +37,18 @@ const string QUALITY_FILE_ENTITY = "tmp_remine/refine_postags_quality.txt";
 //const string QUALITY_FILE = "tmp_remine/relation_token.txt";
 const string QUALITY_FILE_RELATION = "tmp_remine/pos_relation_token.txt";
 const string POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_train.txt";
-const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_text_to_seg.txt";
+//Modify next line just for NYT13K dataset
+const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_train.txt";
 const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_text_to_seg.txt";
+const string TEXT_TO_SEG_DEPS_FILE = "tmp_remine/deps_train.txt";
+
 
 
 const TOKEN_ID_TYPE BREAK = -911;
 
-int ITERATIONS = 3;
+int ITERATIONS = 2;
 int MIN_SUP = 30;
-int MAX_LEN = 4;
+int MAX_LEN = 6;
 int MAX_POSITIVE = 100;
 int NEGATIVE_RATIO = 5;
 int NTHREADS = 4;

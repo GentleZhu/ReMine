@@ -99,8 +99,8 @@ void combineScore(vector<Pattern> &patterns, vector<Pattern> &patterns_tag, unor
                 //    patterns[i].indicator="ENTITY";
             }
         }
-        else if (patterns[i].size()==1)
-            patterns[i].indicator="ENTITY";
+        //else if (patterns[i].size()==1)
+        //    patterns[i].indicator="ENTITY";
 
 
                 //cerr<<"[ERROR: no matched postags]"<<endl;
@@ -146,11 +146,21 @@ void predictPosTagQuality(vector<Pattern> &patterns, vector<vector<double>> &fea
     initialize();
     TASK_TYPE = REGRESSION;
     RandomForest *solver = new RandomForest();
-    RANDOM_FEATURES = 14;
+    RANDOM_FEATURES = 4;
     RANDOM_POSITIONS = 4;
 
     fprintf(stderr, "[POS Tag]Start Classifier Training...\n");
     solver->train(trainX, trainY, 1000, 1, 100, featureNames);
+
+    vector<pair<double, string>> order;
+    for (int i = 0; i < featureImportance.size(); ++ i) {
+        order.push_back(make_pair(featureImportance[i], featureNames[i]));
+    }
+    sort(order.rbegin(), order.rend());
+    for (int i = 0; i < order.size(); ++ i) {
+        cerr << order[i].first << "\t" << order[i].second << endl;
+    }
+
 
     fprintf(stderr, "[POS Tag]Start Quality Prediction\n");
     for (int i = 0; i < features.size(); ++ i) {
@@ -201,6 +211,15 @@ void predictPosTagQuality(vector<Pattern> &patterns, vector<vector<double>> &fea
 
     fprintf(stderr, "[POS Tag]Start Classifier Training...\n");
     solver->train(trainX, trainY, 1000, 1, 100, featureNames);
+
+    vector<pair<double, string>> order;
+    for (int i = 0; i < featureImportance.size(); ++ i) {
+        order.push_back(make_pair(featureImportance[i], featureNames[i]));
+    }
+    sort(order.rbegin(), order.rend());
+    for (int i = 0; i < order.size(); ++ i) {
+        cerr << order[i].first << "\t" << order[i].second << endl;
+    }
 
     fprintf(stderr, "[POS Tag]Start Quality Prediction\n");
 

@@ -14,6 +14,7 @@ using FrequentPatternMining::unigrams;
 
 using FrequentPatternMining::patterns_tag;
 using FrequentPatternMining::id2ends_tag;
+using FrequentPatternMining::unigrams_tag;
 using Documents::posid2Tag;
 
 mutex POSTagMutex[SUFFIX_MASK + 1];
@@ -203,7 +204,7 @@ public:
             prob[i] = log(prob[i] + EPS) + log(patterns[i].quality + EPS);
         }
     }
-
+    //segmentation penalty
     Segmentation(double penalty) {
         Segmentation::penalty = penalty;
         initialize();
@@ -293,7 +294,24 @@ public:
         return f[tokens.size()];
     }
 
-    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<POS_ID_TYPE> &tags, vector<double> &f, vector<int> &pre) {
+    inline bool istree(const vector<TOKEN_ID_TYPE> &deps, int start, int end) {
+        int out_edge = 0;
+        if (start == end) return true;
+        for (int i = start; i <= end; ++i) {
+            // cerr << out_edge << " i=" << i;
+            if (deps[i] <= start || deps[i] > i+1) {
+                if (out_edge == i+1 || out_edge < 1){
+                    out_edge = deps[i];
+                }
+                else {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &deps, vector<double> &f, vector<int> &pre) {
         f.clear();
         f.resize(tokens.size() + 1, -INF);
         pre.clear();
@@ -316,14 +334,13 @@ public:
                     impossible = false;
                     PATTERN_ID_TYPE id = trie[u].id;
                     double p = cost + prob[id];
-                    double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
-                    if (f[i] + p + tagCost > f[j + 1]) {
-                        f[j + 1] = f[i] + p + tagCost;
+                    double depCost = istree(deps, i, j) ? 0 : -INF;
+                    // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
+                    // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
+                    if (f[i] + p + depCost > f[j + 1]) {
+                        f[j + 1] = f[i] + p + depCost;
                         pre[j + 1] = i;
                     }
-                }
-                if (j + 1 < tags.size() && tags[j] >= 0 && tags[j + 1] >= 0) {
-                    cost += connect[tags[j]][tags[j + 1]];
                 }
             }
             if (impossible) {
@@ -390,19 +407,27 @@ public:
         return sum / id2ends[id].size();
     }
 
-    inline void rectifyFrequency(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences) {
+    inline double rectifyFrequency(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences) {
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
             patterns[i].currentFreq = 0;
             id2ends[i].clear();
         }
 
+        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
+        for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
+            patterns_tag[i].currentFreq = 0;
+            id2ends_tag[i].clear();
+        }
+
         double energy = 0;
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
             vector<TOKEN_ID_TYPE> tokens;
+            vector<TOKEN_ID_TYPE> postags;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 tokens.push_back(Documents::wordTokens[i]);
+                postags.push_back(Documents::posTags[i]);
             }
             vector<double> f;
             vector<int> pre;
@@ -413,6 +438,7 @@ public:
             assert(f[i] > -1e80);
 
             energy += f[i];
+
     		while (i > 0) {
     			int j = pre[i];
                 size_t u = 0;
@@ -429,10 +455,116 @@ public:
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();
                 }
+                u = 0;
+                bool local_mis = false;
+                for (int k = j; k < i; ++ k) {
+                    if (trie_pos[u].children.count(postags[k]) > 0) {
+                        u = trie_pos[u].children[postags[k]];
+                    }
+                    else {
+                        local_mis = true;
+                        // mistakes += 1;
+                        // i = j;
+                        break;
+                    }
+                }
+                if (!local_mis && trie_pos[u].id != -1) {
+                    PATTERN_ID_TYPE id = trie_pos[u].id;
+                    separateMutex[id & SUFFIX_MASK].lock();
+                    ++ patterns_tag[id].currentFreq;
+                    if (i - j > 1 || i - j == 1 && unigrams_tag[patterns_tag[id].tokens[0]] >= MIN_SUP) {
+                        id2ends_tag[id].push_back(sentences[senID].first + i - 1);
+                    }
+                    separateMutex[id & SUFFIX_MASK].unlock();
+                }
     			i = j;
     		}
         }
-        //cerr << "Energy = " << energy << endl;
+
+        // cerr << "Trie search mistakes:" << mistakes << ":" << total << endl;
+        cerr << "Energy = " << energy << endl;
+        return energy;
+    }
+
+    inline double rectifyFrequencyDeps(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences) {
+        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
+        for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
+            patterns[i].currentFreq = 0;
+            id2ends[i].clear();
+        }
+
+        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
+        for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
+            patterns_tag[i].currentFreq = 0;
+            id2ends_tag[i].clear();
+        }
+
+        double energy = 0;
+        # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
+        for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
+            vector<TOKEN_ID_TYPE> tokens;
+            vector<TOKEN_ID_TYPE> postags;
+            vector<TOKEN_ID_TYPE> deps;
+            for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
+                tokens.push_back(Documents::wordTokens[i]);
+                postags.push_back(Documents::posTags[i]);
+                deps.push_back(Documents::depPaths[i]);
+            }
+            vector<double> f;
+            vector<int> pre;
+
+            double bestExplain = viterbi(tokens, deps, f, pre);
+
+            int i = (int)tokens.size();
+            assert(f[i] > -1e80);
+
+            energy += f[i];
+
+            while (i > 0) {
+                int j = pre[i];
+                size_t u = 0;
+                for (int k = j; k < i; ++ k) {
+                    assert(trie[u].children.count(tokens[k]));
+                    u = trie[u].children[tokens[k]];
+                }
+                if (trie[u].id != -1) {
+                    PATTERN_ID_TYPE id = trie[u].id;
+                    separateMutex[id & SUFFIX_MASK].lock();
+                    ++ patterns[id].currentFreq;
+                    if (i - j > 1 || i - j == 1 && unigrams[patterns[id].tokens[0]] >= MIN_SUP) {
+                        id2ends[id].push_back(sentences[senID].first + i - 1);
+                    }
+                    separateMutex[id & SUFFIX_MASK].unlock();
+                }
+                u = 0;
+                bool local_mis = false;
+                for (int k = j; k < i; ++ k) {
+                    if (trie_pos[u].children.count(postags[k]) > 0) {
+                        u = trie_pos[u].children[postags[k]];
+                    }
+                    else {
+                        local_mis = true;
+                        // mistakes += 1;
+                        // i = j;
+                        break;
+                    }
+                }
+                if (!local_mis && trie_pos[u].id != -1) {
+                    PATTERN_ID_TYPE id = trie_pos[u].id;
+                    separateMutex[id & SUFFIX_MASK].lock();
+                    ++ patterns_tag[id].currentFreq;
+                    if (i - j > 1 || i - j == 1 && unigrams_tag[patterns_tag[id].tokens[0]] >= MIN_SUP) {
+                        id2ends_tag[id].push_back(sentences[senID].first + i - 1);
+                    }
+                    separateMutex[id & SUFFIX_MASK].unlock();
+                }
+                i = j;
+            }
+        }
+
+        // cerr << "Trie search mistakes:" << mistakes << ":" << total << endl;
+        cerr << "Energy = " << energy << endl;
+        return energy;
     }
 
     inline double rectifyFrequencyPOS(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
@@ -464,7 +596,7 @@ public:
             vector<double> f;
             vector<int> pre;
 
-            double bestExplain = viterbi(tokens, tags, f, pre);
+            double bestExplain = viterbi(tokens, f, pre);
 
             int i = (int)tokens.size();
             assert(f[i] > -1e80);
@@ -517,7 +649,7 @@ public:
         return energy;
     }
 
-    inline double adjustPOSTagTransition(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
+    inline double adjustConstraints(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
         vector<vector<TOTAL_TOKENS_TYPE>> cnt(connect.size(), vector<TOTAL_TOKENS_TYPE>(connect.size(), 0));
         logPosTags();
 
@@ -525,7 +657,7 @@ public:
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
             vector<TOKEN_ID_TYPE> tokens;
-            vector<POS_ID_TYPE> tags;
+            vector<TOKEN_ID_TYPE> tags;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 tokens.push_back(Documents::wordTokens[i]);
                 tags.push_back(Documents::posTags[i]);

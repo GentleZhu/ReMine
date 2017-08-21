@@ -87,6 +87,7 @@ namespace FrequentPatternMining
 
         Pattern() {
             tokens.clear();
+            postags.clear();
             hashValue = 0;
             currentFreq = 0;
             label = UNKNOWN_LABEL;
@@ -97,6 +98,7 @@ namespace FrequentPatternMining
 
         inline void shrink_to_fit() {
             tokens.shrink_to_fit();
+            postags.shrink_to_fit();
         }
 
         inline Pattern substr(int l, int r) const {
@@ -237,7 +239,7 @@ namespace FrequentPatternMining
     }
 
     inline void mine(int MIN_SUP, int LENGTH_THRESHOLD = 6) {
-        cerr << "MIN SUP is" << MIN_SUP;
+        // cerr << "MIN SUP is" << MIN_SUP;
         noExpansion = vector<bool>(Documents::posTag2id.size(), false);
         noInitial = vector<bool>(Documents::posTag2id.size(), false);
         if (ENABLE_POS_PRUNE) {
@@ -289,6 +291,7 @@ namespace FrequentPatternMining
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (TOTAL_TOKENS_TYPE i = 0; i < Documents::totalWordTokens; ++ i) {
             const TOTAL_TOKENS_TYPE& token = Documents::wordTokens[i];
+            // add prune, see add pattern, so currentFreq must < id2ends[id].size()
             if (!pruneByPOSTag(i, i)) {
                 separateMutex[token & SUFFIX_MASK].lock();
                 ++ unigrams[token];
@@ -321,17 +324,6 @@ namespace FrequentPatternMining
                 totalOcc += unigrams[token] >= MIN_SUP;
             }
         }
-        
-        /*
-        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (TOTAL_TOKENS_TYPE i = 0; i < Documents::totalWordTokens; ++ i) {
-            if (pruneByPOSTag(i, i)) {
-                const TOTAL_TOKENS_TYPE& token = Documents::wordTokens[i];
-                const TOTAL_TOKENS_TYPE& postag = Documents::posTags[i];
-                addPattern(Pattern(token,postag), i, false);
-            }
-        }
-        */
 
         cerr << "unigrams inserted" << endl;
 
@@ -404,7 +396,7 @@ namespace FrequentPatternMining
                                     newPattern.appendwithpos(Documents::wordTokens[ed + 1], Documents::posTags[ed + 1]);
                                     assert(newPattern.size() == len + 1);
                                     newPattern.currentFreq = 0;
-
+                                    // each ID will in different threads, so withoutlock
                                     addPatternWithoutLocks(newPattern, ed + 1);
                                     ++ totalOcc;
                                 }
@@ -453,6 +445,7 @@ namespace FrequentPatternMining
     inline void mine_pos(int MIN_SUP, int LENGTH_THRESHOLD = 6) {
         noExpansion = vector<bool>(Documents::posTag2id.size(), false);
         noInitial = vector<bool>(Documents::posTag2id.size(), false);
+        /*
         if (ENABLE_POS_PRUNE) {
             FILE* in = tryOpen(NO_EXPANSION_POS_FILENAME, "r");
             int type = -1;
@@ -487,6 +480,7 @@ namespace FrequentPatternMining
             cerr << "# of forbidden initial pos tags = " << cntUnigrams << endl;
             cerr << "# of forbidden expanded pos tags = " << cntExpansions << endl;
         }
+        */
 
         id2ends_tag.clear();
         patterns_tag.clear();
@@ -535,13 +529,6 @@ namespace FrequentPatternMining
             }
         }
 
-        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (TOTAL_TOKENS_TYPE i = 0; i < Documents::totalWordTokens; ++ i) {
-            if (pruneByPOSTag(i, i)) {
-                const TOTAL_TOKENS_TYPE& token = Documents::posTags[i];
-                addPatternPos(Pattern(token), i, false);
-            }
-        }
         cerr << "unigrams inserted" << endl;
 
         PATTERN_ID_TYPE last = 0;
@@ -549,6 +536,7 @@ namespace FrequentPatternMining
             cerr << "# of frequent patterns postags of length-" << len << " = "  << patterns_tag.size() - last + 1 << endl;
             PATTERN_ID_TYPE backup = patterns_tag.size();
             //cerr<<"patterns size-"<<backup<<endl;
+            
             unordered_map<ULL, TOTAL_TOKENS_TYPE> threadFreq[NTHREADS];
             # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
             for (PATTERN_ID_TYPE id = last; id < backup; ++ id) {
