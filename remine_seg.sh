@@ -20,8 +20,8 @@ mkdir -p results_remine
 echo ${green}===Tokenization===${reset}
 
 TOKENIZER="-cp .:tools/tokenizer/lib/*:tools/tokenizer/resources/:tools/tokenizer/build/ Tokenizer"
-TOKENIZED_TEXT_TO_SEG=tmp_remine/tokenized_text_to_seg.txt
-CASE=tmp_remine/case_tokenized_text_to_seg.txt
+TOKENIZED_TEXT_TO_SEG=tmp_remine/tokenized_text_to_seg_100.txt
+CASE=tmp_remine/case_tokenized_text_to_seg_100.txt
 TOKEN_MAPPING=tmp_remine/token_mapping.txt
 POS_TAGS=tmp_remine/pos_tags_tokenized_text_to_seg.txt
 
@@ -48,6 +48,8 @@ fi
 
 echo ${green}===Generating Output===${reset}
 python src_py/PreProcessor.py segmentation tmp_remine/tokenized_segmented_sentences.txt results_remine/segmentation.txt
+#java $TOKENIZER -m segmentation -i $TEXT_TO_SEG -segmented tmp_remine/tokenized_segmented_sentences.txt -o results_remine/segmentation.txt -tokenized_raw tmp_remine/raw_text_to_seg.txt -tokenized_id tmp_remine/tokenized_text_to_seg.txt -c N
+
 
 #python src_py/PostProcessor.py ../data/nyt/test_new.json results_remine/segmentation.txt #>> $2
 #python src_py/PostProcessor.py src_py/kbp_test.json results_remine/segmentation.txt >> $2
