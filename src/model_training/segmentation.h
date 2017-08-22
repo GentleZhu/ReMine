@@ -16,6 +16,7 @@ using FrequentPatternMining::patterns_tag;
 using FrequentPatternMining::id2ends_tag;
 using FrequentPatternMining::unigrams_tag;
 using Documents::posid2Tag;
+using Documents::tree_map;
 
 mutex POSTagMutex[SUFFIX_MASK + 1];
 
@@ -336,6 +337,7 @@ public:
                     PATTERN_ID_TYPE id = trie[u].id;
                     double p = cost + prob[id];
                     double depCost = istree(deps, i, j) ? 0 : -INF;
+                    Documents::InsertOrGetTreeID(deps, tree_map);
                     // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
                     // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
                     if (f[i] + p + depCost > f[j + 1]) {

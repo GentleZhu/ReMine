@@ -63,6 +63,9 @@ namespace Documents
     map<POS_ID_TYPE, string> posid2Tag;
     vector<string> posTag;
 
+    // dependency tree maps
+    unordered_map<string, int> tree_map;
+
     set<TOKEN_ID_TYPE> stopwords;
 
     set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\"", "\'\'"};

@@ -130,6 +130,8 @@ int main(int argc, char* argv[])
 
     FILE* out = tryOpen("tmp_remine/tokenized_segmented_sentences.txt", "w");
 
+    unordered_map<string, int> tree_map;
+
     while (getLine(in)) {
         stringstream sin(line);
         vector<TOTAL_TOKENS_TYPE> tokens;
@@ -169,11 +171,15 @@ int main(int argc, char* argv[])
             }
         }
         if (tokens.size() > 0) {
+            Documents::InsertOrGetTreeID(deps, tree_map);
             process(tokens, deps, *segmenter, out);
         }
     }
     fclose(in);
     if (ENABLE_POS_TAGGING) {
+        for (const auto& m : tree_map) {
+            cerr << m.first << " " << m.second <<endl;
+        }
         fclose(depIn);
     }
     fclose(out);
