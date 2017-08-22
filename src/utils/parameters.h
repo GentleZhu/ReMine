@@ -59,8 +59,8 @@ string NO_EXPANSION_POS_FILENAME = "";
 double DISCARD = 0.05;
 string LABEL_FILE = "";
 bool INTERMEDIATE = true;
-string LABEL_METHOD = "ByLengthByPositive";
-//string LABEL_METHOD = "ByRandom";
+bool ORIGINAL_PUNC = false;
+string LABEL_METHOD = "DPDN";
 string SEGMENTATION_MODEL = "";
 int SEGMENT_QUALITY_TOP_K = 50000;
 

@@ -28,7 +28,7 @@ int main(int argc, char* argv[])
     Documents::loadStopwords(STOPWORDS_FILE);
     Documents::loadAllTrainingFiles(TRAIN_FILE, POS_TAGS_FILE, TRAIN_CAPITAL_FILE, TRAIN_DEPS_FILE);
     //cerr<<"here"<<endl;
-    Documents::splitIntoSentences();
+    Documents::splitIntoSentences(ORIGINAL_PUNC, TRAIN_FILE);
 
     // return -1;
     cerr << "Mining frequent phrases..." << endl;

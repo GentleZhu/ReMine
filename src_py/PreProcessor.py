@@ -12,6 +12,7 @@ class PreProcessor(object):
 		self.word_cnt=1
 		self.cache=[]
 		self.punc=['.',',','"',"'",'?',':',';','-','!','(',')','``',"''"]
+		self.mode="Length Penalty Mode"
 		if train_path:
 			with open(train_path,'r') as IN:
 				for line in IN:
@@ -20,7 +21,7 @@ class PreProcessor(object):
 
 
 	def inWordmapping(self,word):
-		if word in self.punc:
+		if word in self.punc and self.mode != 'Constraints Mode':
 			return word
 		if word not in self.word_mapping:
 			self.word_mapping[word]=self.word_cnt
@@ -29,7 +30,7 @@ class PreProcessor(object):
 		return str(self.word_mapping[word])
 
 	def inTrainmapping(self,word):
-		if word in self.punc:
+		if word in self.punc and self.mode != 'Constraints Mode':
 			return word
 		if word in self.word_mapping:
 			return str(self.word_mapping[word])
@@ -45,7 +46,7 @@ class PreProcessor(object):
 		with open(out_path,'w') as OUT:
 			for content in self.cache:
 				assert(len(content['tokens'])==len(content['pos']))
-				for w in content['tokens']:
+				for w in content['tokens'][:-1]:
 					if len(w)==0:
 						continue
 					if w.isupper() or w in self.punc:
@@ -57,6 +58,7 @@ class PreProcessor(object):
 					else:
 						CASE.write('0')
 					OUT.write(self.inWordmapping(w.lower())+' ')
+				OUT.write(content['tokens'][-1]+'\n')
 				for p in content['pos']:
 					POS_tag.write(p+'\n')
 				for e in content['entity_mentions']:
@@ -74,7 +76,7 @@ class PreProcessor(object):
 						ENTITIES.write(' '.join(tokens)+'\n')
 						#ENTITIES_POS.write(' '.join(content['pos'][e['start']:e['end']])+'\n')
 						ENTITIES_POS.write(' '.join(content['pos'][e[0]:e[1]])+'\n')
-				OUT.write('\n')
+				#OUT.write('\n')
 				CASE.write('\n')
 		#ENTITIES.close()
 		ENTITIES_POS.close()
@@ -139,6 +141,7 @@ class PreProcessor(object):
 		self.test_token=[]
 		self.test_word=[]
 		self._punc=[]
+		sum_token=0
 		with open(test_path,'r') as IN:
 			for line in IN:
 				content=json.loads(line)
@@ -146,9 +149,9 @@ class PreProcessor(object):
 				token=[]
 				word=[]
 				punc_pos=[]
-				for w in content['tokens']:
-					if w=="``" or w=="''":
-						continue
+				for w in content['tokens'][:-1]:
+					#if w=="``" or w=="''":
+					#	continue
 					if len(w)==0:
 						continue
 					if w.isupper() or w in self.punc:
@@ -160,11 +163,12 @@ class PreProcessor(object):
 					else:
 						CASE.write('0')
 					OUT.write(self.inTrainmapping(w.lower())+' ')
-					if w not in self.punc:
+					if self.mode=='Constraints Mode' or w not in self.punc:
 						token.append(self.inTrainmapping(w.lower()))
 						word.append(w)
 					else:
 						punc_pos.append((len(word),w))
+					punc_pos.append((len(word),content['tokens'][-1]))
 					#if w != "``" and w!= "''": 
 					#	TEXT.write(w+' ')
 					#else:
@@ -175,8 +179,10 @@ class PreProcessor(object):
 				CASE.write('\n')
 				TEXT.write('\n')
 				self.test_token.append(token)
+				sum_token+=len(token)
 				self.test_word.append(word)
 				self._punc.append(punc_pos)
+		print sum_token
 		OUT.close()
 		POS_tag.close()
 		CASE.close()
@@ -200,12 +206,19 @@ class PreProcessor(object):
 					if queue[0] in start or queue[0] in end:
 						#if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
 						if queue[0] in start and c_ptr == len(self.test_token[r_ptr]):
-							OUT.write('\n'+queue.pop(0)+' ')
+							if queue[0]!='<None>':
+								OUT.write('\n'+queue.pop(0)+' ')
+							else:
+								queue.pop(0)
+								OUT.write('\n')
 							r_ptr+=1
 							c_ptr=0
 							continue
 						else:
-							OUT.write(queue.pop(0)+' ')
+							if 'None' not in queue[0]:
+								OUT.write(queue.pop(0)+' ')
+							else:
+								queue.pop(0)
 					elif c_ptr < len(self.test_token[r_ptr]) and queue[0] == self.test_token[r_ptr][c_ptr]:
 						OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+' ')
 						queue.pop(0)
@@ -261,7 +274,6 @@ class PreProcessor(object):
 						queue.pop(0)
 						c_ptr+=1
 					else:
-						#print 'here'
 						r_ptr+=1
 						c_ptr=0
 						OUT.write('\n')
@@ -314,6 +326,7 @@ class PreProcessor(object):
 if __name__ == '__main__':
 	if sys.argv[1]=='translate':
 		tmp=PreProcessor(sys.argv[2])
+		tmp.mode = "Constraints Mode"
 		tmp.tokenize_train(sys.argv[3])
 		tmp.tokenize_test(sys.argv[4],sys.argv[5])
 		tmp.tokenize_stopwords(sys.argv[6],sys.argv[7])
@@ -322,7 +335,7 @@ if __name__ == '__main__':
 	elif sys.argv[1]=='segmentation':
 		tmp=PreProcessor(None)
 		tmp.load()
-		tmp.mapBackv2(sys.argv[2],sys.argv[3])
+		tmp.mapBack(sys.argv[2],sys.argv[3])
 	elif sys.argv[1]=='raw':
 		tmp=PreProcessor(sys.argv[2])
 		tmp.dump_raw(sys.argv[3])

@@ -38,6 +38,7 @@ namespace Documents
         }
     };
 // === global variables ===
+    TOTAL_TOKENS_TYPE totalTokens = 0;
     TOTAL_TOKENS_TYPE totalWordTokens = 0;
 
     TOKEN_ID_TYPE maxTokenID = 0;
@@ -64,7 +65,7 @@ namespace Documents
 
     set<TOKEN_ID_TYPE> stopwords;
 
-    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\""};
+    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\"", "\'\'"};
 // ===
     inline bool hasDashAfter(int i) {
         return 0 <= i && i < totalWordTokens && wordTokenInfo[i].get(DASH_AFTER);
@@ -119,7 +120,7 @@ namespace Documents
         if (true) {
             // get total number of tokens and the maximum number of tokens
             FILE* in = tryOpen(docFile, "r");
-            int totalTokens = 0;
+            totalTokens = 0;
             for (;fscanf(in, "%s", line) == 1; ++ totalTokens) {
                 bool flag = true;
                 TOKEN_ID_TYPE id = 0;
@@ -222,6 +223,7 @@ namespace Documents
                     }
                     lastPunc = punc;
                 } else {
+                    assert(token > 0);
                     wordTokens[ptr] = token;
                     if (ENABLE_POS_TAGGING) {
                         depPaths[ptr] = atoi(currentDep);
@@ -264,15 +266,32 @@ namespace Documents
         maxPosID = posTag2id.size() - 1 ;
     }
 
-    inline void splitIntoSentences() {
+    inline void splitIntoSentences(bool ORIGINAL_PUNC, string docFile="") {
         sentences.clear();
         TOTAL_TOKENS_TYPE st = 0;
-        for (TOTAL_TOKENS_TYPE i = 0; i < totalWordTokens; ++ i) {
-            if (isEndOfSentence(i)) {
-                sentences.push_back(make_pair(st, i));
-                //postagsent.push_back(make_pair(st, i));
-                st = i + 1;
+
+        if (!ORIGINAL_PUNC) {
+            for (TOTAL_TOKENS_TYPE i = 0; i < totalWordTokens; ++ i) {
+                if (isEndOfSentence(i)) {
+                    sentences.push_back(make_pair(st, i));
+                    //postagsent.push_back(make_pair(st, i));
+                    st = i + 1;
+                }
             }
+        }
+        else {
+            FILE* in = tryOpen(docFile, "r");
+            while (getLine(in)) {
+                // line[strcspn(line, "\n")] = '\0';
+                int words_cnt = 0;
+                for (int i = 0; i < strlen(line); ++i) {
+                    if (line[i] == ' ') words_cnt += 1;
+                }
+                sentences.push_back(make_pair(st, st + words_cnt - 1));
+                st += words_cnt;
+            }
+            assert(st == totalWordTokens);
+            fclose(in);
         }
         sentences.shrink_to_fit();
         cerr << "The number of sentences = " << sentences.size() << endl;

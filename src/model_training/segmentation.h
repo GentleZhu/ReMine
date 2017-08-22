@@ -318,6 +318,7 @@ public:
         pre.resize(tokens.size() + 1, -1);
         f[0] = 0;
         pre[0] = 0;
+        assert(tokens.size() == deps.size());
         for (size_t i = 0 ; i < tokens.size(); ++ i) {
             if (f[i] < -1e80) {
                 continue;
@@ -524,6 +525,14 @@ public:
                 int j = pre[i];
                 size_t u = 0;
                 for (int k = j; k < i; ++ k) {
+                    if (!trie[u].children.count(tokens[k])){
+                        cerr<<" "<<sentences[senID].first<<" "<<sentences[senID].second<<endl;
+                        for (const TOKEN_ID_TYPE t : tokens) {
+                            cerr<<t<<" ";
+                        }
+                        cerr<<endl;
+
+                    }
                     assert(trie[u].children.count(tokens[k]));
                     u = trie[u].children[tokens[k]];
                 }

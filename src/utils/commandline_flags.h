@@ -28,6 +28,7 @@ void parseCommandFlags(int argc, char* argv[])
             INTERMEDIATE = true;
         } else if (!strcmp(argv[i], "--pos_tag")) {
             ENABLE_POS_TAGGING = true;
+            ORIGINAL_PUNC = true;
         } else if (!strcmp(argv[i], "--pos_prune")) {
             ENABLE_POS_PRUNE = true;
             NO_EXPANSION_POS_FILENAME = argv[++ i];

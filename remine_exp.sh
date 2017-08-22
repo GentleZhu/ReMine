@@ -1,6 +1,6 @@
 FIRST_RUN=1
-ENABLE_POS_TAGGING=0
-MIN_SUP=5
+ENABLE_POS_TAGGING=1
+MIN_SUP=10
 #echo $MIN_SUP
 #0 original SegPhrase, 1 in the loop, 2 at the top
 POSTAG_SCORE=1
@@ -39,7 +39,6 @@ if [ $ENABLE_POS_TAGGING -eq 1 ]; then
         --verbose \
         --pos_tag \
         --thread $THREAD \
-        --pos_prune data/BAD_POS_TAGS_PENN.txt \
         --label_method $LABEL_METHOD \
         --max_positives $MAX_POSITIVES \
         --negative_ratio $NEGATIVE_RATIO \
