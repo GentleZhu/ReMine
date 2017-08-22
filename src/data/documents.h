@@ -329,6 +329,27 @@ namespace Documents
         return string_to_id[min_representation] = new_id;
     }
 
+    inline int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end, unordered_map<string, int> &string_to_id) {
+        vector<vector<int>> children(deps.size() + 1);
+        vector<bool> isRoot(deps.size(), true);
+        for (int i = start; i < end; ++ i) {
+            int a = i + 1, b = deps[i];
+            children[b].push_back(a);
+            isRoot[b] = false;
+        }
+        for (int i = 1; i <= deps.size(); ++ i) {
+            if (isRoot[i]) {
+                children[0].push_back(i);
+            }
+        }
+        string min_representation = treeToString(children, 0);
+        if (string_to_id.count(min_representation)) {
+            return string_to_id[min_representation];
+        }
+        int new_id = string_to_id.size();
+        return string_to_id[min_representation] = new_id;
+    }
+
 };
 
 #endif
