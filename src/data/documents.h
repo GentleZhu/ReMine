@@ -298,6 +298,34 @@ namespace Documents
         //cout << "The number of sentences = " << sentences.size() << endl;
     }
 
+    inline string treeToString(const vector<vector<int>>& children, int u) {
+        vector<string> subtrees;
+        for (int v : children[u]) {
+            subtrees.push_back(treeToString(children, v));
+        }
+        sort(subtrees.begin(), subtrees.end());
+        string ret = "(x";
+        for (const string& subtree : subtrees) {
+            ret += subtree;
+        }
+        ret += ")";
+        return ret;
+    }
+
+    inline int InsertOrGetTreeID(const vector<int> &deps, unordered_map<string, int> &string_to_id) {
+        vector<vector<int>> children(deps.size() + 1);
+        for (int i = 0; i < deps.size(); ++ i) {
+            int a = i + 1, b = deps[i];
+            children[b].push_back(a);
+        }
+        string min_representation = treeToString(children, 0);
+        if (string_to_id.count(min_representation)) {
+            return string_to_id[min_representation];
+        }
+        int new_id = string_to_id.size();
+        return string_to_id[min_representation] = new_id;
+    }
+
 };
 
 #endif
