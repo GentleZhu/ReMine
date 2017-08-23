@@ -64,7 +64,7 @@ namespace Documents
     vector<string> posTag;
 
     // dependency tree maps
-    unordered_map<string, int> tree_map;
+    unordered_map<string, double> tree_map;
 
     set<TOKEN_ID_TYPE> stopwords;
 
@@ -309,45 +309,69 @@ namespace Documents
         sort(subtrees.begin(), subtrees.end());
         string ret = "(x";
         for (const string& subtree : subtrees) {
-            ret += subtree;
+            if (u == 0)
+                ret += "|"+subtree;
+            else
+                ret += subtree;
+
         }
         ret += ")";
         return ret;
     }
 
-    inline int InsertOrGetTreeID(const vector<int> &deps, unordered_map<string, int> &string_to_id) {
-        vector<vector<int>> children(deps.size() + 1);
-        for (int i = 0; i < deps.size(); ++ i) {
-            int a = i + 1, b = deps[i];
-            children[b].push_back(a);
-        }
-        string min_representation = treeToString(children, 0);
-        if (string_to_id.count(min_representation)) {
-            return string_to_id[min_representation];
-        }
-        int new_id = string_to_id.size();
-        return string_to_id[min_representation] = new_id;
-    }
-
-    inline int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end, unordered_map<string, int> &string_to_id) {
+    inline string GetSubtreeID(const vector<int> &deps, int start, int end, unordered_map<string, double> &string_to_id) {
         vector<vector<int>> children(deps.size() + 1);
         vector<bool> isRoot(deps.size(), true);
         for (int i = start; i < end; ++ i) {
             int a = i + 1, b = deps[i];
-            children[b].push_back(a);
-            isRoot[b] = false;
+            if (b > start && b <= end) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+                // isRoot[b] = false;
+            }
         }
-        for (int i = 1; i <= deps.size(); ++ i) {
+
+        for (int i = 1 + start; i < 1 + end; ++ i) {
             if (isRoot[i]) {
                 children[0].push_back(i);
             }
         }
+        // cerr << "Before" << endl;
+        // cerr << children[0].size() << endl;
+        return treeToString(children, 0);
+    }
+
+    inline double InsertOrGetSubtreeID(const vector<int> &deps, int start, int end, unordered_map<string, double> &string_to_id) {
+        vector<vector<int>> children(deps.size() + 1);
+        vector<bool> isRoot(deps.size(), true);
+        for (int i = start; i < end; ++ i) {
+            int a = i + 1, b = deps[i];
+            if (b > start && b <= end) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+                // isRoot[b] = false;
+            }
+        }
+
+        for (int i = 1 + start; i < 1 + end; ++ i) {
+            if (isRoot[i]) {
+                children[0].push_back(i);
+            }
+        }
+        // cerr << "Before" << endl;
+        // cerr << children[0].size() << endl;
         string min_representation = treeToString(children, 0);
+        // cerr << "After" << endl;
         if (string_to_id.count(min_representation)) {
             return string_to_id[min_representation];
         }
         int new_id = string_to_id.size();
-        return string_to_id[min_representation] = new_id;
+        if (children[0].size() == 1)
+            string_to_id[min_representation] = 1;
+        else
+            string_to_id[min_representation] = 0.01;
+        return string_to_id[min_representation];
+        // return string_to_id[min_representation] = new_id;
     }
 
 };

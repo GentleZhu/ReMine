@@ -91,6 +91,16 @@ void loadSegmentationModel(const string& filename)
     }
     cerr << "POS tag transition loaded" << endl;
 
+    Binary::read(in, cnt);
+    Documents::tree_map.clear();
+    for (int i = 0; i < cnt; ++ i) {
+        string key,score;
+        Binary::read(in, key);
+        Binary::read(in, score);
+        Documents::tree_map[key] = std::stod(score);
+    }
+    cerr << "Tree Maps transition loaded" << endl;
+
     fclose(in);
 }
 
@@ -128,6 +138,14 @@ void dumpSegmentationModel(const string& filename)
         for (int j = 0; j < Segmentation::connect[i].size(); ++ j) {
             Binary::write(out, Segmentation::connect[i][j]);
         }
+    }
+
+    // 
+    Binary::write(out, Documents::tree_map.size());
+    cerr << "# of tree_maps dumped = " << Documents::tree_map.size() << endl;
+    for (const auto& kv : tree_map) {
+        Binary::write(out, kv.first);
+        Binary::write(out, std::to_string(kv.second));
     }
 
     fclose(out);

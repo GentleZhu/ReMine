@@ -157,33 +157,16 @@ int main(int argc, char* argv[])
             segmentation.rectifyFrequency(Documents::sentences);
         } else {
             // hard encode it first
+            Segmentation segmentation(0.5);
+            double last = 1e100;
             cerr << "[Constraints Mode]" << endl;
-            double penalty = EPS;
-            double lower = EPS, upper = 200;
-            for (int _ = 0; _ < 10; ++ _) {
-                penalty = (lower + upper) / 2;
-                Segmentation segmentation(penalty);
-                segmentation.rectifyFrequencyDeps(Documents::sentences);
-                double wrong = 0, total = 0;
-                # pragma omp parallel for reduction (+:total,wrong)
-                for (int i = 0; i < phrase_truth.size(); ++ i) {
-                    if (phrase_truth[i].label == 1) {
-                        ++ total;
-                        vector<double> f;
-                        vector<int> pre;
-                        segmentation.viterbi(phrase_truth[i].tokens, f, pre);
-                        wrong += pre[phrase_truth[i].tokens.size()] != 0;
+            for (int inner = 0; inner < 10; ++ inner) {
+                    double energy = segmentation.adjustConstraints(Documents::sentences, MIN_SUP);
+                    if (fabs(energy - last) / fabs(last) < EPS) {
+                        break;
                     }
-                }
-                if (wrong / total <= DISCARD) {
-                //if (energy > prev_min) {
-                    lower = penalty;
-                } else {
-                    upper = penalty;
-                }
-                cerr << penalty << " " << wrong << endl;
+                    last = energy;
             }
-            cerr << "Length Penalty = " << penalty << endl;
             /*
             if (true) {
                 Segmentation segmentation(ENABLE_POS_TAGGING);
@@ -204,8 +187,9 @@ int main(int argc, char* argv[])
             }
             */
 
-            Segmentation segmentation(penalty);
+            // Segmentation segmentation(0.5);
             segmentation.rectifyFrequencyDeps(Documents::sentences);
+
 
             //if (iteration==ITERATIONS-1){
             //    cerr<<"Initialize the probability!"<<endl;

@@ -336,8 +336,14 @@ public:
                     impossible = false;
                     PATTERN_ID_TYPE id = trie[u].id;
                     double p = cost + prob[id];
-                    double depCost = istree(deps, i, j) ? 0 : -INF;
-                    Documents::InsertOrGetTreeID(deps, tree_map);
+                    // double depCost = istree(deps, i, j) ? 0 : -INF;
+                    double depCost = 0.0;
+                    
+                    // TODO(branzhu): incorporate 
+                    if (j > i + 1) {
+                        depCost = log(Documents::InsertOrGetSubtreeID(deps, i, j, tree_map));
+                    }
+                    
                     // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
                     // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
                     if (f[i] + p + depCost > f[j + 1]) {
@@ -527,14 +533,6 @@ public:
                 int j = pre[i];
                 size_t u = 0;
                 for (int k = j; k < i; ++ k) {
-                    if (!trie[u].children.count(tokens[k])){
-                        cerr<<" "<<sentences[senID].first<<" "<<sentences[senID].second<<endl;
-                        for (const TOKEN_ID_TYPE t : tokens) {
-                            cerr<<t<<" ";
-                        }
-                        cerr<<endl;
-
-                    }
                     assert(trie[u].children.count(tokens[k]));
                     u = trie[u].children[tokens[k]];
                 }
@@ -661,22 +659,23 @@ public:
     }
 
     inline double adjustConstraints(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
-        vector<vector<TOTAL_TOKENS_TYPE>> cnt(connect.size(), vector<TOTAL_TOKENS_TYPE>(connect.size(), 0));
-        logPosTags();
-
+        unordered_map<string, int> tree_cnt;
+        int total_cnt;
         double energy = 0;
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
             vector<TOKEN_ID_TYPE> tokens;
             vector<TOKEN_ID_TYPE> tags;
+            vector<TOKEN_ID_TYPE> deps;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 tokens.push_back(Documents::wordTokens[i]);
                 tags.push_back(Documents::posTags[i]);
+                deps.push_back(Documents::depPaths[i]);
             }
             vector<double> f;
             vector<int> pre;
 
-            double bestExplain = viterbi(tokens, tags, f, pre);
+            double bestExplain = viterbi(tokens, deps, f, pre);
 
             int i = (int)tokens.size();
             assert(f[i] > -1e80);
@@ -690,27 +689,21 @@ public:
                 }
                 if (trie[u].id != -1) {
                     PATTERN_ID_TYPE id = trie[u].id;
-                    for (int k = j + 1; k < i; ++ k) {
-                        int index = tags[k] * cnt.size() + tags[k - 1];
-                        POSTagMutex[index & SUFFIX_MASK].lock();
-                        ++ cnt[tags[k - 1]][tags[k]];
-                        POSTagMutex[index & SUFFIX_MASK].unlock();
+                    if (i - j > 1) {
+                        POSTagMutex[id & SUFFIX_MASK].lock();
+                        ++ tree_cnt[Documents::GetSubtreeID(deps, j, i, tree_map)];
+                        POSTagMutex[id & SUFFIX_MASK].unlock();
+                        ++ total_cnt;
                     }
                 }
     			i = j;
     		}
         }
 
-        for (int i = 0; i < connect.size(); ++ i) {
-            for (int j = 0; j < connect[i].size(); ++ j) {
-                if (total[i][j] > 0) {
-                    connect[i][j] = (double)cnt[i][j] / total[i][j];
-                } else {
-                    connect[i][j] = 0;
-                }
-            }
+        for (auto& kv : tree_map) {
+            kv.second = (double)tree_cnt[kv.first] / total_cnt;
         }
-        getDisconnect();
+
         cerr << "Energy = " << energy << endl;
         return energy;
     }
