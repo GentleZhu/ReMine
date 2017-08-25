@@ -89,15 +89,18 @@ void loadSegmentationModel(const string& filename)
             Binary::read(in, Segmentation::connect[i][j]);
         }
     }
+
     cerr << "POS tag transition loaded" << endl;
 
     Binary::read(in, cnt);
-    Documents::tree_map.clear();
+    Segmentation::tree_map.clear();
+    Segmentation::deps_prob.resize(cnt);
     for (int i = 0; i < cnt; ++ i) {
-        string key,score;
+        string key;
         Binary::read(in, key);
-        Binary::read(in, score);
-        Documents::tree_map[key] = std::stod(score);
+        Binary::read(in, Segmentation::tree_map[key]);
+        Binary::read(in, Segmentation::deps_prob[Segmentation::tree_map[key]]);
+        cerr << key << Segmentation::tree_map[key] << Segmentation::deps_prob[Segmentation::tree_map[key]] <<endl;
     }
     cerr << "Tree Maps transition loaded" << endl;
 
@@ -141,11 +144,12 @@ void dumpSegmentationModel(const string& filename)
     }
 
     // 
-    Binary::write(out, Documents::tree_map.size());
-    cerr << "# of tree_maps dumped = " << Documents::tree_map.size() << endl;
-    for (const auto& kv : tree_map) {
+    Binary::write(out, Segmentation::tree_map.size());
+    cerr << "# of tree_maps dumped = " << Segmentation::tree_map.size() << endl;
+    for (const auto& kv : Segmentation::tree_map) {
         Binary::write(out, kv.first);
-        Binary::write(out, std::to_string(kv.second));
+        Binary::write(out, kv.second);
+        Binary::write(out, Segmentation::deps_prob[kv.second]);
     }
 
     fclose(out);

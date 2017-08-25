@@ -112,12 +112,12 @@ int main(int argc, char* argv[])
     constructTrie(); // update the current frequent enough patterns
 
     Segmentation* segmenter;
-    /*if (ENABLE_POS_TAGGING) {
+    if (ENABLE_POS_TAGGING) {
         segmenter = new Segmentation(ENABLE_POS_TAGGING);
-        Segmentation::getDisconnect();
-        Segmentation::logPosTags();
-    } else {*/
-    segmenter = new Segmentation(Segmentation::penalty);
+        // Segmentation::logPosTags();
+    } else {
+        segmenter = new Segmentation(Segmentation::penalty);
+    }
 
     char currentDep[100];
 

@@ -96,9 +96,9 @@ int main(int argc, char* argv[])
     
     //return -1;
     //Parser remine;
-    //if (ENABLE_POS_TAGGING) {
-    //    Segmentation::initializePosTags(Documents::posTag2id.size());
-    //}
+    if (ENABLE_POS_TAGGING) {
+        Segmentation::initializeDeps(Documents::sentences, MAX_LEN);
+    }
 
     // SegPhrase, +, ++, +++, ...
     for (int iteration = 0; iteration < ITERATIONS; ++ iteration) {
@@ -157,15 +157,20 @@ int main(int argc, char* argv[])
             segmentation.rectifyFrequency(Documents::sentences);
         } else {
             // hard encode it first
-            Segmentation segmentation(0.5);
-            double last = 1e100;
-            cerr << "[Constraints Mode]" << endl;
-            for (int inner = 0; inner < 10; ++ inner) {
-                    double energy = segmentation.adjustConstraints(Documents::sentences, MIN_SUP);
-                    if (fabs(energy - last) / fabs(last) < EPS) {
-                        break;
-                    }
-                    last = energy;
+            if (true) {
+                Segmentation segmentation(ENABLE_POS_TAGGING);
+                double last = 1e100;
+                cerr << "[Constraints Mode]" << endl;
+                for (int inner = 0; inner < 10; ++ inner) {
+                        double energy = segmentation.adjustConstraints(Documents::sentences, MIN_SUP);
+                        if (fabs(energy - last) / fabs(last) < EPS) {
+                            break;
+                        }
+                        last = energy;
+                }
+                for (const auto& m : Segmentation::tree_map) {
+                    cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
+                }
             }
             /*
             if (true) {
@@ -186,8 +191,7 @@ int main(int argc, char* argv[])
                 Dump::dumpPOSTransition(filename);
             }
             */
-
-            // Segmentation segmentation(0.5);
+            Segmentation segmentation(ENABLE_POS_TAGGING);
             segmentation.rectifyFrequencyDeps(Documents::sentences);
 
 

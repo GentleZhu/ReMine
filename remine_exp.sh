@@ -4,7 +4,7 @@ MIN_SUP=10
 #echo $MIN_SUP
 #0 original SegPhrase, 1 in the loop, 2 at the top
 POSTAG_SCORE=1
-THREAD=1
+THREAD=10
 #THREAD=1
 LABEL_METHOD=DPDN
 MAX_POSITIVES=-1

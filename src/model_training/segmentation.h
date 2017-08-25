@@ -16,7 +16,6 @@ using FrequentPatternMining::patterns_tag;
 using FrequentPatternMining::id2ends_tag;
 using FrequentPatternMining::unigrams_tag;
 using Documents::posid2Tag;
-using Documents::tree_map;
 
 mutex POSTagMutex[SUFFIX_MASK + 1];
 
@@ -87,11 +86,85 @@ class Segmentation
 private:
     static const double INF;
     static vector<vector<TOTAL_TOKENS_TYPE>> total;
+    static vector<TOTAL_TOKENS_TYPE> tree_total;
 
 public:
     static bool ENABLE_POS_TAGGING;
     static double penalty;
     static vector<vector<double>> connect, disconnect;
+    
+    // dependency tree maps
+    static map<string, int> tree_map;
+    static vector<double> deps_prob;
+
+    static string treeToString(const vector<vector<int>>& children, int u) {
+        vector<string> subtrees;
+        for (int v : children[u]) {
+            subtrees.push_back(treeToString(children, v));
+        }
+        sort(subtrees.begin(), subtrees.end());
+        string ret = "(x";
+        for (const string& subtree : subtrees) {
+            ret += subtree;
+
+        }
+        ret += ")";
+        return ret;
+    }
+
+    static int GetSubtreeID(const vector<int> &deps, int start, int end) {
+        vector<vector<int>> children(deps.size() + 1);
+        vector<bool> isRoot(deps.size(), true);
+        for (int i = start; i < end; ++ i) {
+            int a = i + 1, b = deps[i];
+            if (b > start && b <= end) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+                // isRoot[b] = false;
+            }
+        }
+
+        for (int i = 1 + start; i < 1 + end; ++ i) {
+            if (isRoot[i]) {
+                children[0].push_back(i);
+            }
+        }
+
+        string min_representation = treeToString(children, 0);
+        assert(tree_map.count(min_representation));
+        return tree_map[min_representation];
+    }
+
+    static int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end) {
+        vector<vector<int>> children(deps.size() + 1);
+        vector<bool> isRoot(deps.size(), true);
+        for (int i = start; i < end; ++ i) {
+            int a = i + 1, b = deps[i];
+            if (b > start && b <= end) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+                // isRoot[b] = false;
+            }
+        }
+
+        for (int i = 1 + start; i < 1 + end; ++ i) {
+            if (isRoot[i]) {
+                children[0].push_back(i);
+            }
+        }
+
+        string min_representation = treeToString(children, 0);
+        if (tree_map.count(min_representation)) {
+            return tree_map[min_representation];
+        }
+        int new_id = tree_map.size();
+        assert(new_id == deps_prob.size());
+        if (children[0].size() == 1)
+            deps_prob.push_back(0.3);
+        else
+            deps_prob.push_back(0.8);
+        return tree_map[min_representation] = new_id;
+    }
 
     static void initializePosTags(int n) {
         // uniformly initialize
@@ -107,6 +180,32 @@ public:
         for (TOTAL_TOKENS_TYPE i = 1; i < Documents::totalWordTokens; ++ i) {
             if (!Documents::isEndOfSentence(i - 1)) {
                 ++ total[Documents::posTags[i - 1]][Documents::posTags[i]];
+            }
+        }
+    }
+
+    static void initializeDeps(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int LENGTH_THRESHOLD) {
+        // TODO(branzhu): intialize by whole corpus
+        deps_prob.clear();
+        tree_map.clear();
+        tree_total.clear();
+
+        for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
+            vector<TOKEN_ID_TYPE> deps;
+            for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
+                deps.push_back(Documents::depPaths[i]);
+            }
+            for (int len = 2; len <= LENGTH_THRESHOLD; ++len) {
+                for (int st = 0; st + len <= deps.size(); ++st) {
+                    int index = InsertOrGetSubtreeID(deps, st, st+len);
+                    assert(index <= tree_total.size());
+                    if (index == tree_total.size()) {
+                        tree_total.push_back(1);
+                    }
+                    else {
+                        ++ tree_total[index];
+                    }
+                }
             }
         }
     }
@@ -147,6 +246,13 @@ public:
             }
         }
     }
+
+    static void logDeps() {
+        for (int i = 0; i < deps_prob.size(); ++i) {
+            deps_prob[i] = log(deps_prob[i] + EPS);
+        }
+    }
+
 private:
     // generated
     int maxLen;
@@ -197,6 +303,7 @@ public:
         delete [] prob;
     }
 
+    //TODO(branzhu): Change this into Enable Constraints Mode.
     Segmentation(bool ENABLE_POS_TAGGING) {
         assert(ENABLE_POS_TAGGING == true);
         Segmentation::ENABLE_POS_TAGGING = ENABLE_POS_TAGGING;
@@ -341,7 +448,8 @@ public:
                     
                     // TODO(branzhu): incorporate 
                     if (j > i + 1) {
-                        depCost = log(Documents::InsertOrGetSubtreeID(deps, i, j, tree_map));
+                        int index = GetSubtreeID(deps, i, j);
+                        depCost = deps_prob[index];
                     }
                     
                     // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
@@ -508,6 +616,8 @@ public:
             id2ends_tag[i].clear();
         }
 
+        logDeps();
+
         double energy = 0;
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
@@ -576,91 +686,12 @@ public:
         return energy;
     }
 
-    inline double rectifyFrequencyPOS(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
-        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
-            patterns[i].currentFreq = 0;
-            id2ends[i].clear();
-        }
-
-        # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
-            patterns_tag[i].currentFreq = 0;
-            id2ends_tag[i].clear();
-        }
-
-        vector<vector<double>> backup = connect;
-        logPosTags();
-
-        double energy = 0;
-        int flag_cnt=0;
-        //# pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
-        for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
-            vector<TOKEN_ID_TYPE> tokens;
-            vector<POS_ID_TYPE> tags;
-            for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
-                tokens.push_back(Documents::wordTokens[i]);
-                tags.push_back(Documents::posTags[i]);
-            }
-            vector<double> f;
-            vector<int> pre;
-
-            double bestExplain = viterbi(tokens, f, pre);
-
-            int i = (int)tokens.size();
-            assert(f[i] > -1e80);
-            assert(tokens.size()==tags.size());
-            energy += f[i];
-    		while (i > 0) {
-    			int j = pre[i];
-                size_t u = 0;
-                for (int k = j; k < i; ++ k) {
-                    assert(trie[u].children.count(tokens[k]));
-                    u = trie[u].children[tokens[k]];
-                }
-                if (trie[u].id != -1) {
-                    PATTERN_ID_TYPE id = trie[u].id;
-                    //separateMutex[id & SUFFIX_MASK].lock();
-                    ++ patterns[id].currentFreq;
-                    if (i - j > 1 || i - j == 1 && unigrams[patterns[id].tokens[0]] >= MIN_SUP) {
-                        id2ends[id].push_back(sentences[senID].first + i - 1);
-                    }
-                    //separateMutex[id & SUFFIX_MASK].unlock();
-                }
-
-                //add pos tag tries
-                u = 0;
-                bool flag=true;
-                
-                for (int k = j; k < i; ++ k) {
-                    //cerr<<tokens[k]<<"\t"<<posid2Tag[tags[k]]<<endl;
-                    //cerr<<"here"<<tags[k]<<"here"<<endl;
-                    if (!trie_pos[u].children.count(tags[k])){
-                        flag=false;
-                        flag_cnt++;
-                        break;
-                    }
-                    u = trie_pos[u].children[tags[k]];
-                }
-                if (flag&&trie_pos[u].id != -1) {
-                    PATTERN_ID_TYPE id = trie_pos[u].id;
-                    //separateMutex[id & SUFFIX_MASK].lock();
-                    ++ patterns_tag[id].currentFreq;
-                    //separateMutex[id & SUFFIX_MASK].unlock();
-                }
-    			i = j;
-    		}
-        }
-        connect = backup;
-        getDisconnect();
-        cerr << "no match count"<< flag_cnt <<endl;
-        cerr << "Energy = " << energy << endl;
-        return energy;
-    }
-
     inline double adjustConstraints(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
-        unordered_map<string, int> tree_cnt;
-        int total_cnt;
+        assert(tree_map.size() == deps_prob.size());
+        vector<double> tree_cnt(tree_map.size(), 0);
+        
+        logDeps();
+
         double energy = 0;
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
@@ -684,24 +715,31 @@ public:
     			int j = pre[i];
                 size_t u = 0;
                 for (int k = j; k < i; ++ k) {
+                    if (!trie[u].children.count(tokens[k])) {
+                        for (const auto& t : tokens) {
+                            cerr << t << " ";
+                        }
+                    }
                     assert(trie[u].children.count(tokens[k]));
                     u = trie[u].children[tokens[k]];
                 }
                 if (trie[u].id != -1) {
-                    PATTERN_ID_TYPE id = trie[u].id;
                     if (i - j > 1) {
-                        POSTagMutex[id & SUFFIX_MASK].lock();
-                        ++ tree_cnt[Documents::GetSubtreeID(deps, j, i, tree_map)];
-                        POSTagMutex[id & SUFFIX_MASK].unlock();
-                        ++ total_cnt;
+                        // TODO(branzhu): support multi-threads version
+                        int index = GetSubtreeID(deps, j, i);
+                        // int id = index.tree_map.size() 
+                        // if (index > tree_map.size()) cerr << "careful" << endl;
+                        POSTagMutex[index & SUFFIX_MASK].lock();
+                        ++ tree_cnt[index];
+                        POSTagMutex[index & SUFFIX_MASK].unlock();
                     }
                 }
     			i = j;
     		}
         }
 
-        for (auto& kv : tree_map) {
-            kv.second = (double)tree_cnt[kv.first] / total_cnt;
+        for (int i = 0; i < tree_map.size(); ++i) {
+            deps_prob[i] = tree_cnt[i] / tree_total[i];
         }
 
         cerr << "Energy = " << energy << endl;
@@ -712,6 +750,9 @@ public:
 const double Segmentation::INF = 1e100;
 vector<vector<double>> Segmentation::connect;
 vector<vector<double>> Segmentation::disconnect;
+map<string, int> Segmentation::tree_map;
+vector<double> Segmentation::deps_prob;
+vector<TOTAL_TOKENS_TYPE> Segmentation::tree_total;
 vector<vector<TOTAL_TOKENS_TYPE>> Segmentation::total;
 bool Segmentation::ENABLE_POS_TAGGING;
 double Segmentation::penalty;
