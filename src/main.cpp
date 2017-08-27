@@ -102,6 +102,15 @@ int main(int argc, char* argv[])
     if (ENABLE_POS_TAGGING) {
         Segmentation::initializePosTags(Documents::posTag2id.size());
         Segmentation::initializeDeps(Documents::sentences, MAX_LEN);
+        /*
+        for (int i = 0; i < Segmentation::connect.size(); ++ i) {
+            for (int j = 0; j < Segmentation::connect.size(); ++ j) {
+                if (Segmentation::total[i][j] > 0) {
+                    cerr << Documents::posid2Tag[i] << " " << Documents::posid2Tag[j] << Segmentation::total[i][j] <<endl;
+                }
+            }
+        }
+        */
     }
 
     // SegPhrase, +, ++, +++, ...
@@ -164,7 +173,7 @@ int main(int argc, char* argv[])
             if (true) {
                 Segmentation segmentation(ENABLE_POS_TAGGING);
                 double last = 1e100;
-                cerr << "[Constraints Mode]" << endl;
+                cerr << "[Constraints Model]" << endl;
                 for (int inner = 0; inner < 10; ++ inner) {
                         double energy = segmentation.adjustConstraints(Documents::sentences, MIN_SUP);
                         if (fabs(energy - last) / fabs(last) < EPS) {

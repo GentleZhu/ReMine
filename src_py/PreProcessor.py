@@ -165,6 +165,10 @@ class PreProcessor(object):
 					#	continue
 					if len(w)==0:
 						continue
+					if w == '-LRB-':
+						w = '('
+					if w == '-RRB-':
+						w = ')'
 					if w.isupper() or w in self.punc:
 						CASE.write('3')
 					elif w[0].isupper():

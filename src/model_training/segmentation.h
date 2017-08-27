@@ -18,6 +18,7 @@ using FrequentPatternMining::unigrams_tag;
 using Documents::posid2Tag;
 
 mutex POSTagMutex[SUFFIX_MASK + 1];
+mutex DepsMutex[SUFFIX_MASK + 1];
 
 struct TrieNode {
     unordered_map<TOTAL_TOKENS_TYPE, size_t> children;
@@ -85,13 +86,14 @@ class Segmentation
 {
 private:
     static const double INF;
-    static vector<vector<TOTAL_TOKENS_TYPE>> total;
+    
     static vector<TOTAL_TOKENS_TYPE> tree_total;
 
 public:
     static bool ENABLE_POS_TAGGING;
     static double penalty;
     static vector<vector<double>> connect, disconnect;
+    static vector<vector<TOTAL_TOKENS_TYPE>> total;
     
     // dependency tree maps
     static map<string, int> tree_map;
@@ -172,13 +174,13 @@ public:
         for (int i = 0; i < n; ++ i) {
             connect[i].resize(n);
             for (int j = 0; j < n; ++ j) {
-                connect[i][j] = 1.0 / n;
+                connect[i][j] = 1.0 / n ;
             }
         }
         // getDisconnect();
         total = vector<vector<TOTAL_TOKENS_TYPE>>(connect.size(), vector<TOTAL_TOKENS_TYPE>(connect.size(), 0));
         for (TOTAL_TOKENS_TYPE i = 1; i < Documents::totalWordTokens - 1; ++ i) {
-            if (!Documents::isEndOfSentence(i)) {
+            if (Documents::isPunc(Documents::wordTokens[i]) && !Documents::isEndOfSentence(i)) {
                 ++ total[Documents::posTags[i - 1]][Documents::posTags[i+1]];
             }
         }
@@ -211,6 +213,7 @@ public:
     }
 
     static double GetPuncCost(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &tags, int start, int end) {
+        /*
         if (Documents::punctuations.count(tokens[start])) {
             if  (Documents::punctuations[tokens[start]] != "(" && Documents::punctuations[tokens[start]] != "\'\'")
                 return -INF;
@@ -225,6 +228,7 @@ public:
             if (Documents::punctuations[tokens[end]] != ")" && Documents::punctuations[tokens[end]] != "\'\'")
                 return -INF;
         }
+        */
         // cerr << "Get One" << endl;
         double PCost = 0;
         for (int i = start + 1; i < end ; ++i) {
@@ -479,6 +483,7 @@ public:
                     // TODO(branzhu): add punc cost 
                     
                     if (j > i) {
+                        //multiConstraints += 0;
                         multiConstraints += GetPuncCost(tokens, tags, i, j);
                         // at the corner 1e-100 else 1e-20
                     }
@@ -721,7 +726,7 @@ public:
     inline double adjustConstraints(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences, int MIN_SUP) {
         assert(tree_map.size() == deps_prob.size());
         vector<double> tree_cnt(tree_map.size(), 0);
-        
+        vector<vector<TOTAL_TOKENS_TYPE>> cnt(connect.size(), vector<TOTAL_TOKENS_TYPE>(connect.size(), 0));
         logDeps();
 
         double energy = 0;
@@ -747,11 +752,6 @@ public:
     			int j = pre[i];
                 size_t u = 0;
                 for (int k = j; k < i; ++ k) {
-                    if (!trie[u].children.count(tokens[k])) {
-                        for (const auto& t : tokens) {
-                            cerr << t << " ";
-                        }
-                    }
                     assert(trie[u].children.count(tokens[k]));
                     u = trie[u].children[tokens[k]];
                 }
@@ -761,13 +761,32 @@ public:
                         int index = GetSubtreeID(deps, j, i);
                         // int id = index.tree_map.size() 
                         // if (index > tree_map.size()) cerr << "careful" << endl;
-                        POSTagMutex[index & SUFFIX_MASK].lock();
+                        DepsMutex[index & SUFFIX_MASK].lock();
                         ++ tree_cnt[index];
-                        POSTagMutex[index & SUFFIX_MASK].unlock();
+                        DepsMutex[index & SUFFIX_MASK].unlock();
+                    }
+
+                    for (int k = j + 1; k < i - 1; ++ k) {
+                        if (Documents::isPunc(tokens[k])) {
+                            int index = tags[k + 1] * cnt.size() + tags[k - 1];
+                            POSTagMutex[index & SUFFIX_MASK].lock();
+                            ++ cnt[tags[k - 1]][tags[k + 1]];
+                            POSTagMutex[index & SUFFIX_MASK].unlock();
+                        }
                     }
                 }
     			i = j;
     		}
+        }
+
+        for (int i = 0; i < connect.size(); ++ i) {
+            for (int j = 0; j < connect[i].size(); ++ j) {
+                if (total[i][j] > 0) {
+                    connect[i][j] = (double)cnt[i][j] / total[i][j];
+                } else {
+                    connect[i][j] = 0;
+                }
+            }
         }
 
         for (int i = 0; i < tree_map.size(); ++i) {

@@ -343,6 +343,7 @@ namespace FrequentPatternMining
                         assert(Documents::wordTokens[st] == patterns[id].tokens[0]);
 
                         if (!Documents::isEndOfSentence(ed)) {
+                        //if (!Documents::isEndOfSentence(ed) || Documents::punctuations[Documents::wordTokens[ed + 1]] == "," ) {
                             if (!pruneByPOSTag(st, ed + 1) && unigrams[Documents::wordTokens[ed + 1]] >= MIN_SUP) {
                                 ULL newHashValue = patterns[id].hashValue * MAGIC + Documents::wordTokens[ed + 1] + 1;
 
@@ -387,6 +388,7 @@ namespace FrequentPatternMining
                         TOTAL_TOKENS_TYPE st = ed - len + 1;
                         assert(Documents::wordTokens[st] == patterns[id].tokens[0]);
 
+                        //if (!Documents::isEndOfSentence(ed) || Documents::punctuations[Documents::wordTokens[ed + 1]] == "," ) {
                         if (!Documents::isEndOfSentence(ed)) {
                             if (!pruneByPOSTag(st, ed + 1) && unigrams[Documents::wordTokens[ed + 1]] >= MIN_SUP) {
                                 ULL newHashValue = patterns[id].hashValue * MAGIC + Documents::wordTokens[ed + 1] + 1;
@@ -548,6 +550,7 @@ namespace FrequentPatternMining
                         assert(Documents::posTags[st] == patterns_tag[id].tokens[0]);
                         //cerr<<"backup id-"<<id<<endl;
                         if (!Documents::isEndOfSentence(ed)) {
+                        //if (!Documents::isEndOfSentence(ed) || Documents::punctuations[Documents::wordTokens[ed + 1]] == "," ) {
                             if (!pruneByPOSTag(st, ed + 1) && unigrams_tag[Documents::posTags[ed + 1]] >= MIN_SUP) {
                                 ULL newHashValue = patterns_tag[id].hashValue * MAGIC + Documents::posTags[ed + 1] + 1;
 
@@ -594,6 +597,7 @@ namespace FrequentPatternMining
                         assert(Documents::posTags[st] == patterns_tag[id].tokens[0]);
 
                         if (!Documents::isEndOfSentence(ed)) {
+                        //if (!Documents::isEndOfSentence(ed) || Documents::punctuations[Documents::wordTokens[ed + 1]] == "," ) {
                             if (!pruneByPOSTag(st, ed + 1) && unigrams_tag[Documents::posTags[ed + 1]] >= MIN_SUP) {
                                 ULL newHashValue = patterns_tag[id].hashValue * MAGIC + Documents::posTags[ed + 1] + 1;
                                 if (pattern2id_tag.count(newHashValue)) {

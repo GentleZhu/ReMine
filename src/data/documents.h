@@ -68,6 +68,8 @@ namespace Documents
 
     set<TOKEN_ID_TYPE> stopwords;
 
+    unordered_set<TOKEN_ID_TYPE> docEnds;
+
     set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\'\'", "?", "``"};
 // ===
     inline bool hasDashAfter(int i) {
@@ -99,7 +101,10 @@ namespace Documents
     }
 
     inline bool isEndOfSentence(int i) {
-        return i < 0 || i + 1 >= totalWordTokens || wordTokenInfo[i].get(SEPARATOR_AFTER);
+        if (ENABLE_POS_TAGGING)
+            return i < 0 || i + 1 >= totalWordTokens || docEnds.count(i);
+        else
+            return i < 0 || i + 1 >= totalWordTokens || wordTokenInfo[i].get(SEPARATOR_AFTER);
     }
 
     inline bool isPunc(TOKEN_ID_TYPE token) {
@@ -281,6 +286,7 @@ namespace Documents
                 }
 
             }
+            docEnds.insert(ptr - 1);
 
             set<TOKEN_ID_TYPE> docSet(wordTokens + docStart, wordTokens + ptr);
             FOR (token, docSet) {
@@ -296,6 +302,7 @@ namespace Documents
         cerr << "# of documents = " << docs << endl;
         cerr << "# of POS tags = " << posTag2id.size() << endl;
         cerr << "# of ptrs = " << ptr << endl;
+        cerr << "# size of docEnds" << docEnds.size() << endl;
         maxPosID = posTag2id.size() - 1 ;
     }
 
