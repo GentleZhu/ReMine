@@ -70,7 +70,7 @@ void combineScore(vector<Pattern> &patterns, vector<Pattern> &patterns_tag, unor
                         
                         patterns[i].quality = 2/(1/patterns[i].quality+1/patterns_tag[index].quality);
                         patterns[i].qualityB = patterns_tag[index].quality;
-                        if (patterns[i].qualityB > 0.8)
+                        if (patterns[i].qualityB > 0.6)
                             patterns[i].indicator="ENTITY";
                         else
                             patterns[i].indicator="None";

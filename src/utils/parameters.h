@@ -30,6 +30,7 @@ const string TEST_FILE = "tmp_remine/tokenized_test.txt";
 const string TRAIN_CAPITAL_FILE = "tmp_remine/case_tokenized_train.txt";
 const string TRAIN_DEPS_FILE = "tmp_remine/deps_train.txt";
 const string STOPWORDS_FILE = "tmp_remine/tokenized_stopwords.txt";
+const string PUNC_FILE = "tmp_remine/tokenized_punctuations.txt";
 const string ALL_FILE = "tmp_remine/tokenized_quality.txt";
 //const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
 const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
@@ -48,7 +49,7 @@ const TOKEN_ID_TYPE BREAK = -911;
 
 int ITERATIONS = 2;
 int MIN_SUP = 30;
-int MAX_LEN = 6;
+int MAX_LEN = 8;
 int MAX_POSITIVE = 100;
 int NEGATIVE_RATIO = 5;
 int NTHREADS = 4;

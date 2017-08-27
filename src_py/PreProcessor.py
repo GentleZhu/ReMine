@@ -7,12 +7,13 @@ import codecs
 class PreProcessor(object):
 	"""docstring for PreProcessor"""
 	def __init__(self, train_path):
-		self.word_mapping=dict()
+		self.word_mapping = dict()
+		self.punc_mapping = dict()
 		#self.reverse_mapping=dict()
-		self.word_cnt=1
-		self.cache=[]
-		self.punc=['.',',','"',"'",'?',':',';','-','!','(',')','``',"''"]
-		self.mode="Length Penalty Mode"
+		self.word_cnt = 1
+		self.cache = []
+		self.punc = ['.',',','"',"'",'?',':',';','-','!','(',')','``',"''", '']
+		self.mode = "Length Penalty Mode"
 		if train_path:
 			with open(train_path,'r') as IN:
 				for line in IN:
@@ -25,6 +26,8 @@ class PreProcessor(object):
 			return word
 		if word not in self.word_mapping:
 			self.word_mapping[word]=self.word_cnt
+			if word in self.punc:
+				self.punc_mapping[self.word_cnt] = word
 			#self.reverse_mapping[self.word_cnt]=word
 			self.word_cnt+=1
 		return str(self.word_mapping[word])
@@ -49,6 +52,10 @@ class PreProcessor(object):
 				for w in content['tokens'][:-1]:
 					if len(w)==0:
 						continue
+					if w == '-LRB-':
+						w = '('
+					if w == '-RRB-':
+						w = ')'
 					if w.isupper() or w in self.punc:
 						CASE.write('3')
 					elif w[0].isupper():
@@ -110,6 +117,10 @@ class PreProcessor(object):
 		with open('token_mapping.txt','w') as OUT:
 			for k,v in self.word_mapping.iteritems():
 				OUT.write(str(v)+'\t'+k.encode('ascii', 'ignore').decode('ascii')+'\n')
+		if self.mode=='Constraints Mode':
+			with open('tokenized_punctuations.txt','w') as OUT:
+				for k,v in self.punc_mapping.iteritems():
+					OUT.write(str(k)+'\t'+v+'\n')
 		pickle.dump(self.test_token, open('test_token.p','wb'))
 		pickle.dump(self.test_word, open('test_word.p','wb'))
 		pickle.dump(self._punc, open('test_punc.p','wb'))

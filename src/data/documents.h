@@ -63,12 +63,12 @@ namespace Documents
     map<POS_ID_TYPE, string> posid2Tag;
     vector<string> posTag;
 
-    // dependency tree maps
-    unordered_map<string, double> tree_map;
+    // Punctuations maps
+    map<TOKEN_ID_TYPE, string> punctuations;
 
     set<TOKEN_ID_TYPE> stopwords;
 
-    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\"", "\'\'"};
+    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\'\'", "?", "``"};
 // ===
     inline bool hasDashAfter(int i) {
         return 0 <= i && i < totalWordTokens && wordTokenInfo[i].get(DASH_AFTER);
@@ -102,6 +102,10 @@ namespace Documents
         return i < 0 || i + 1 >= totalWordTokens || wordTokenInfo[i].get(SEPARATOR_AFTER);
     }
 
+    inline bool isPunc(TOKEN_ID_TYPE token) {
+        return punctuations.count(token);
+    }
+
     inline void loadStopwords(const string &filename) {
         FILE* in = tryOpen(filename, "r");
 
@@ -115,6 +119,22 @@ namespace Documents
                 }
             }
         }
+        fclose(in);
+    }
+
+    inline void loadPuncwords(const string &filename) {
+        FILE* in = tryOpen(filename, "r");
+
+        while (getLine(in)) {
+            vector<string> tokens = splitBy(line, '\t');
+            assert(tokens.size() == 2);
+            TOKEN_ID_TYPE id;
+            fromString(tokens[0], id);
+            cerr << id << endl;
+            punctuations[id] = tokens[1];
+        }
+
+        cerr << "punc size" << punctuations.size() << endl;
         fclose(in);
     }
 
@@ -208,24 +228,28 @@ namespace Documents
                 // get capital info
                 int capitalInfo = line[capitalPtr ++];
 
-                if (!flag) {
-                    string punc = temp;
+                if (!flag || (punctuations.count(token) && ENABLE_POS_TAGGING)) {
+                    string punc = flag ? punctuations[token] : temp;
                     if (ptr > 0) {
                         if (punc == "-") {
                             wordTokenInfo[ptr - 1].turnOn(DASH_AFTER);
                         }
-                        if (punc == "\"") {
+                        if (punc == "\"" || punc == "\'\'") {
+                            // cerr << "turn on" << endl;
                             wordTokenInfo[ptr - 1].turnOn(QUOTE_AFTER);
                         }
                         if (punc == ")" && ptr > 0) {
+                            //cerr << "turn on ) " << endl;
                             wordTokenInfo[ptr - 1].turnOn(PARENTHESIS_AFTER);
                         }
                         if (separatePunc.count(punc)) {
                             wordTokenInfo[ptr - 1].turnOn(SEPARATOR_AFTER);
                         }
                     }
-                    lastPunc = punc;
-                } else {
+                    if (!flag) lastPunc = punc;
+                } 
+
+                if (flag) {
                     assert(token > 0);
                     wordTokens[ptr] = token;
                     if (ENABLE_POS_TAGGING) {
@@ -233,24 +257,29 @@ namespace Documents
                     }
                     posTags[ptr] = posTagId;
 
-                    if (lastPunc == "\"") {
+                    if (lastPunc == "\"" || lastPunc == "\'\'") {
                         wordTokenInfo[ptr].turnOn(QUOTE_BEFORE);
                     } else if (lastPunc == "(") {
                         wordTokenInfo[ptr].turnOn(PARENTHESIS_BEFORE);
+                        //cerr << "turn on ( " << endl;
                     }
 
-                    if (capitalInfo & 1) {
+                    if (!punctuations.count(token) && capitalInfo & 1) {
                         wordTokenInfo[ptr].turnOn(FIRST_CAPITAL);
                     }
-                    if (capitalInfo >> 1 & 1) {
+                    if (!punctuations.count(token) && capitalInfo >> 1 & 1) {
                         wordTokenInfo[ptr].turnOn(ALL_CAPITAL);
                     }
-                    if (capitalInfo >> 2 & 1) {
+                    if (!punctuations.count(token) && capitalInfo >> 2 & 1) {
                         isDigital[token] = true;
                     }
 
+                    if (punctuations.count(token) && ENABLE_POS_TAGGING) {
+                        lastPunc = punctuations[token];
+                    }
                     ++ ptr;
                 }
+
             }
 
             set<TOKEN_ID_TYPE> docSet(wordTokens + docStart, wordTokens + ptr);
@@ -266,6 +295,7 @@ namespace Documents
 
         cerr << "# of documents = " << docs << endl;
         cerr << "# of POS tags = " << posTag2id.size() << endl;
+        cerr << "# of ptrs = " << ptr << endl;
         maxPosID = posTag2id.size() - 1 ;
     }
 

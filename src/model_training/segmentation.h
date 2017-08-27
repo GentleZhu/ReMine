@@ -160,9 +160,9 @@ public:
         int new_id = tree_map.size();
         assert(new_id == deps_prob.size());
         if (children[0].size() == 1)
-            deps_prob.push_back(0.3);
+            deps_prob.push_back(1);
         else
-            deps_prob.push_back(0.8);
+            deps_prob.push_back(0);
         return tree_map[min_representation] = new_id;
     }
 
@@ -175,11 +175,11 @@ public:
                 connect[i][j] = 1.0 / n;
             }
         }
-        getDisconnect();
+        // getDisconnect();
         total = vector<vector<TOTAL_TOKENS_TYPE>>(connect.size(), vector<TOTAL_TOKENS_TYPE>(connect.size(), 0));
-        for (TOTAL_TOKENS_TYPE i = 1; i < Documents::totalWordTokens; ++ i) {
-            if (!Documents::isEndOfSentence(i - 1)) {
-                ++ total[Documents::posTags[i - 1]][Documents::posTags[i]];
+        for (TOTAL_TOKENS_TYPE i = 1; i < Documents::totalWordTokens - 1; ++ i) {
+            if (!Documents::isEndOfSentence(i)) {
+                ++ total[Documents::posTags[i - 1]][Documents::posTags[i+1]];
             }
         }
     }
@@ -208,6 +208,31 @@ public:
                 }
             }
         }
+    }
+
+    static double GetPuncCost(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &tags, int start, int end) {
+        if (Documents::punctuations.count(tokens[start])) {
+            if  (Documents::punctuations[tokens[start]] != "(" && Documents::punctuations[tokens[start]] != "\'\'")
+                return -INF;
+            if (!Documents::punctuations.count(tokens[end])) return -INF;
+        }
+
+        if (Documents::punctuations.count(tokens[end])) {
+            if (Documents::punctuations[tokens[end]] == ")" && Documents::punctuations[tokens[start]] != "(")
+                return -INF;
+            if (Documents::punctuations[tokens[end]] == "\'\'" && Documents::punctuations[tokens[start]] != "\'\'")
+                return -INF;
+            if (Documents::punctuations[tokens[end]] != ")" && Documents::punctuations[tokens[end]] != "\'\'")
+                return -INF;
+        }
+        // cerr << "Get One" << endl;
+        double PCost = 0;
+        for (int i = start + 1; i < end ; ++i) {
+          if (Documents::isPunc(tokens[i])) {
+            PCost += log(connect[tags[i-1]][tags[i+1]] + EPS);
+          }   
+        }
+        return PCost;
     }
 
     static void getDisconnect() {
@@ -419,7 +444,7 @@ public:
         return true;
     }
 
-    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &deps, vector<double> &f, vector<int> &pre) {
+    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &deps, const vector<TOKEN_ID_TYPE>& tags, vector<double> &f, vector<int> &pre) {
         f.clear();
         f.resize(tokens.size() + 1, -INF);
         pre.clear();
@@ -444,18 +469,25 @@ public:
                     PATTERN_ID_TYPE id = trie[u].id;
                     double p = cost + prob[id];
                     // double depCost = istree(deps, i, j) ? 0 : -INF;
-                    double depCost = 0.0;
+                    double multiConstraints = 0.0;
                     
                     // TODO(branzhu): incorporate 
-                    if (j > i + 1) {
-                        int index = GetSubtreeID(deps, i, j);
-                        depCost = deps_prob[index];
+                    if (j > i) {
+                        int index = GetSubtreeID(deps, i, j+1);
+                        multiConstraints += deps_prob[index];
                     }
+                    // TODO(branzhu): add punc cost 
                     
+                    if (j > i) {
+                        multiConstraints += GetPuncCost(tokens, tags, i, j);
+                        // at the corner 1e-100 else 1e-20
+                    }
+
+
                     // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
                     // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
-                    if (f[i] + p + depCost > f[j + 1]) {
-                        f[j + 1] = f[i] + p + depCost;
+                    if (f[i] + p + multiConstraints > f[j + 1]) {
+                        f[j + 1] = f[i] + p + multiConstraints;
                         pre[j + 1] = i;
                     }
                 }
@@ -632,7 +664,7 @@ public:
             vector<double> f;
             vector<int> pre;
 
-            double bestExplain = viterbi(tokens, deps, f, pre);
+            double bestExplain = viterbi(tokens, deps, postags, f, pre);
 
             int i = (int)tokens.size();
             assert(f[i] > -1e80);
@@ -706,7 +738,7 @@ public:
             vector<double> f;
             vector<int> pre;
 
-            double bestExplain = viterbi(tokens, deps, f, pre);
+            double bestExplain = viterbi(tokens, deps, tags, f, pre);
 
             int i = (int)tokens.size();
             assert(f[i] > -1e80);

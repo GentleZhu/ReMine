@@ -47,6 +47,7 @@ void loadSegmentationModel(const string& filename)
     }
     cerr << "pattern loaded" << endl;
 
+    /*
     vector<pair<double, int>> order;
     //cerr<<"Checkpoint"<<endl;
     cerr << patterns.size() << endl;
@@ -68,6 +69,7 @@ void loadSegmentationModel(const string& filename)
     normalizePatterns(order,5000);
     order.clear();
     order.shrink_to_fit();
+    */
 
 
     // POS Tag mapping
@@ -87,6 +89,7 @@ void loadSegmentationModel(const string& filename)
         Segmentation::connect[i].resize(cnt);
         for (int j = 0; j < Segmentation::connect[i].size(); ++ j) {
             Binary::read(in, Segmentation::connect[i][j]);
+            cerr << posid2Tag[i] << "+" << posid2Tag[j] << " = " << Segmentation::connect[i][j] << endl;
         }
     }
 
@@ -100,7 +103,6 @@ void loadSegmentationModel(const string& filename)
         Binary::read(in, key);
         Binary::read(in, Segmentation::tree_map[key]);
         Binary::read(in, Segmentation::deps_prob[Segmentation::tree_map[key]]);
-        cerr << key << Segmentation::tree_map[key] << Segmentation::deps_prob[Segmentation::tree_map[key]] <<endl;
     }
     cerr << "Tree Maps transition loaded" << endl;
 

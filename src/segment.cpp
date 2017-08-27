@@ -11,15 +11,14 @@
 
 using FrequentPatternMining::Pattern;
 using FrequentPatternMining::patterns;
-using Documents::tree_map;
 
 vector<double> f;
 vector<int> pre;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, Segmentation& segmenter, FILE* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
 {
     if (ENABLE_POS_TAGGING) {
-        segmenter.viterbi(tokens, deps, f, pre);
+        segmenter.viterbi(tokens, deps, tags, f, pre);
     } else {
         segmenter.viterbi(tokens, f, pre);
     }
@@ -120,9 +119,10 @@ int main(int argc, char* argv[])
     }
 
     char currentDep[100];
+    char currentTag[100];
 
     FILE* in = tryOpen(TEXT_TO_SEG_FILE, "r");
-    // FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_FILE, "r");
+    FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_FILE, "r");
     FILE* depIn = NULL;
 
     if (ENABLE_POS_TAGGING) {
@@ -136,15 +136,19 @@ int main(int argc, char* argv[])
         stringstream sin(line);
         vector<TOTAL_TOKENS_TYPE> tokens;
         vector<TOTAL_TOKENS_TYPE> deps;
+        vector<TOTAL_TOKENS_TYPE> tags;
 
         string lastPunc = "";
         for (string temp; sin >> temp;) {
             // get pos tag
-            //POS_ID_TYPE posTagId = -1;
+            POS_ID_TYPE posTagId = -1;
             if (ENABLE_POS_TAGGING) {
                 myAssert(fscanf(depIn, "%s", currentDep) == 1, "POS file doesn't have enough POS tags");
-
-                //posTagId = currentTag;
+                if (!Documents::posTag2id.count(currentTag)) {
+                    posTagId = -1; // unknown tag
+                } else {
+                    posTagId = Documents::posTag2id[currentTag];
+                }
             }
 
             // get token
@@ -159,25 +163,27 @@ int main(int argc, char* argv[])
             if (!flag) {
                 string punc = temp;
                 if (Documents::separatePunc.count(punc)) {
-                    process(tokens, deps, *segmenter, out);
+                    process(tokens, deps, tags, *segmenter, out);
                     tokens.clear();
                     deps.clear();
+                    tags.clear();
                 }
             } else {
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
+                    tags.push_back(posTagId);
                     deps.push_back(atoi(currentDep));
                 }
             }
         }
         if (tokens.size() > 0) {
-            process(tokens, deps, *segmenter, out);
+            process(tokens, deps, tags, *segmenter, out);
         }
     }
     fclose(in);
     if (ENABLE_POS_TAGGING) {
-        for (const auto& m : tree_map) {
-            cerr << m.first << " " << m.second <<endl;
+        for (const auto& m : Segmentation::tree_map) {
+            cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
         }
         fclose(depIn);
     }

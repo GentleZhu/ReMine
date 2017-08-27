@@ -26,8 +26,11 @@ int main(int argc, char* argv[])
 
     // load stopwords, documents, and capital information
     Documents::loadStopwords(STOPWORDS_FILE);
+    if (ENABLE_POS_TAGGING) {
+        Documents::loadPuncwords(PUNC_FILE);
+    }
     Documents::loadAllTrainingFiles(TRAIN_FILE, POS_TAGS_FILE, TRAIN_CAPITAL_FILE, TRAIN_DEPS_FILE);
-    //cerr<<"here"<<endl;
+    
     Documents::splitIntoSentences(ORIGINAL_PUNC, TRAIN_FILE);
 
     // return -1;
@@ -59,7 +62,7 @@ int main(int argc, char* argv[])
     vector<vector<double>> featuresUnigram = Features::extractUnigram(featureNamesUnigram);
 
 
-    //return -1;
+    
     vector<Pattern> phrase_truth;
     vector<Pattern> entity_truth;
     vector<Pattern> relation_truth;
@@ -97,6 +100,7 @@ int main(int argc, char* argv[])
     //return -1;
     //Parser remine;
     if (ENABLE_POS_TAGGING) {
+        Segmentation::initializePosTags(Documents::posTag2id.size());
         Segmentation::initializeDeps(Documents::sentences, MAX_LEN);
     }
 
@@ -168,10 +172,13 @@ int main(int argc, char* argv[])
                         }
                         last = energy;
                 }
-                for (const auto& m : Segmentation::tree_map) {
-                    cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
-                }
             }
+            /*
+            for (const auto& m : Segmentation::tree_map) {
+                    cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
+            }
+            */
+
             /*
             if (true) {
                 Segmentation segmentation(ENABLE_POS_TAGGING);

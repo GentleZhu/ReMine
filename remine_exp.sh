@@ -1,6 +1,6 @@
 FIRST_RUN=1
 ENABLE_POS_TAGGING=1
-MIN_SUP=10
+MIN_SUP=5
 #echo $MIN_SUP
 #0 original SegPhrase, 1 in the loop, 2 at the top
 POSTAG_SCORE=1
