@@ -7,18 +7,16 @@ Preprocessing:
 3. Relation Extractor(pattern-based)
 
 Multi-Extraction:
-1> Input: Pre-defined pos_tag relation patterns, Entity Seeds
 
-2> Use Entity Seeds to generate entity pos tag patterns, pos_tag relation patterns generate relation phrases. Filter out low-frequency entity
-postag seqs and relation phrases
+1> Generate Pos Tag supervision
 
-3> Generate phrases supervision by combing unigram/multi-gram entity/multi-gram relation. <b>Tune</b>
+2> Generate phrases supervision by combing unigram/multi-gram entity/multi-gram relation. <b>Tune</b>
 
-4> Preprocess Training/Testing Corpus, using python src_py/Preprocessor.py translation mode
+3> Preprocess Training/Testing Corpus, using python src_py/Preprocessor.py translation mode
 
-5> Run ReMine, given phrases/entity postags/relation postags as supervision. Segmentation lable includes <None>/<ENTITY>/<RELATION>
+4> Run ReMine, given phrases/entity postags/relation postags as supervision. Segmentation lable includes <None>/<ENTITY>/<RELATION>
 
-6> Run ReMine segmentation, postprocess using Preprocessor.py segmentation mode
+5> Run ReMine segmentation, postprocess using Preprocessor.py segmentation mode
 
 ## Todos
 1. Ideal generative Process should be able to denoise/reduce search space in order to compete with OpenIE system: Ollie/Stanford IE/ReVerb
