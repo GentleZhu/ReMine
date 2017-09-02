@@ -1,6 +1,6 @@
 import json
 import sys
-import pickle
+import cPickle
 import re
 import codecs
 
@@ -68,7 +68,7 @@ class PreProcessor(object):
 				OUT.write(content['tokens'][-1]+'\n')
 				for p in content['pos']:
 					POS_tag.write(p+'\n')
-				for e in content['entity_mentions']:
+				for e in content['entityMentions']:
 					tokens=[]
 					#for t in content['tokens'][e['start']:e['end']]:
 					#if u',' in content['tokens'][e[0]:e[1]]:
@@ -121,9 +121,9 @@ class PreProcessor(object):
 			with open('tokenized_punctuations.txt','w') as OUT:
 				for k,v in self.punc_mapping.iteritems():
 					OUT.write(str(k)+'\t'+v+'\n')
-		pickle.dump(self.test_token, open('test_token.p','wb'))
-		pickle.dump(self.test_word, open('test_word.p','wb'))
-		pickle.dump(self._punc, open('test_punc.p','wb'))
+		cPickle.dump(self.test_token, open('test_token.p','wb'))
+		cPickle.dump(self.test_word, open('test_word.p','wb'))
+		cPickle.dump(self._punc, open('test_punc.p','wb'))
 
 	def dump_raw(self,outpath):
 		with open(outpath,'w') as OUT:
@@ -132,9 +132,9 @@ class PreProcessor(object):
 
 
 	def load(self):
-		self.test_token=pickle.load(open('tmp_remine/test_token.p','rb'))
+		self.test_token=cPickle.load(open('tmp_remine/test_token.p','rb'))
 		#print self.test_token
-		self.test_word=pickle.load(open('tmp_remine/test_word.p','rb'))
+		self.test_word=cPickle.load(open('tmp_remine/test_word.p','rb'))
 
 	def load_dict(self):
 		with open('token_mapping.txt','r') as IN:
@@ -211,17 +211,20 @@ class PreProcessor(object):
 		c_ptr=0
 		start=['<None>','<ENTITY>','<RELATION>']
 		end=['</None>','</ENTITY>','</RELATION>']
+		dictx={'<ENTITY>':'[','<RELATION>':'(','</RELATION>':')','</ENTITY>':']'}
 		with open(seg_path,'r') as _seg, open(outpath,'w') as OUT:
 			for line in _seg:
 				for token in line.strip().split(' '):
 					queue.append(token)
 				#print queue
+				in_phrase=False
 				while (len(queue)>0):
 					if queue[0] in start or queue[0] in end:
 						#if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
 						if queue[0] in start and c_ptr == len(self.test_token[r_ptr]):
+							in_phrase=True
 							if queue[0]!='<None>':
-								OUT.write('\n'+queue.pop(0)+' ')
+								OUT.write('\n'+dictx[queue.pop(0)])
 							else:
 								queue.pop(0)
 								OUT.write('\n')
@@ -229,12 +232,16 @@ class PreProcessor(object):
 							c_ptr=0
 							continue
 						else:
+							in_phrase=False
 							if 'None' not in queue[0]:
-								OUT.write(queue.pop(0)+' ')
+								OUT.write(dictx[queue.pop(0)])
 							else:
 								queue.pop(0)
 					elif c_ptr < len(self.test_token[r_ptr]) and queue[0] == self.test_token[r_ptr][c_ptr]:
-						OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+' ')
+						if not in_phrase or len(queue)>1 and queue[1] not in end:
+							OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+' ')
+						else:
+							OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii'))
 						queue.pop(0)
 						c_ptr+=1
 					else:
