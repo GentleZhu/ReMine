@@ -7,6 +7,7 @@ using FrequentPatternMining::Pattern;
 #include "random_forest.h"
 using namespace RandomForestRelated;
 
+
 void predictQuality(vector<Pattern> &patterns, vector<vector<double>> &features, vector<string> &featureNames)
 {
     vector<vector<double>> trainX;
@@ -70,7 +71,7 @@ void combineScore(vector<Pattern> &patterns, vector<Pattern> &patterns_tag, unor
                         
                         patterns[i].quality = 2/(1/patterns[i].quality+1/patterns_tag[index].quality);
                         patterns[i].qualityB = patterns_tag[index].quality;
-                        if (patterns[i].qualityB > 0.6)
+                        if (patterns[i].qualityB > 0.5)
                             patterns[i].indicator="ENTITY";
                         else
                             patterns[i].indicator="None";
@@ -78,7 +79,7 @@ void combineScore(vector<Pattern> &patterns, vector<Pattern> &patterns_tag, unor
                     else{
                         patterns[i].quality = 2/(1/patterns[i].quality+1/patterns_tag[index].qualityB);
                         patterns[i].qualityB = patterns_tag[index].qualityB;
-                        if (patterns[i].qualityB > 0.8)
+                        if (patterns[i].qualityB > 0.5)
                             patterns[i].indicator="RELATION";
                         else
                             patterns[i].indicator="None";

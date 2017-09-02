@@ -146,50 +146,21 @@ inline vector<string> splitBy(const string &line, char sep)
 	return tokens;
 }
 
-inline vector<int> splitToToken(const string &line, char sep)
-{
-	vector<int> tokens;
-	int id = 0;
-	bool flag = true;
-	for (size_t i = 0; i < line.size(); ++ i) {
-		if (line[i] == sep) {
-		    if (flag) {
-    			tokens.push_back(id);
-			}
-			flag = true;
-			id = 0;
-		} else {
-			//token += line[i];
-			flag &= isdigit(line[i]);
-			id = id * 10 + line[i] - '0';
-		}
-	}
-	if (flag) {
-    	tokens.push_back(id);
-	}
-	//if (token != "") {
-    //	tokens.push_back(token);
-	//}
-	return tokens;
-}
-
 namespace Binary
 {
-    template<class T>
-    inline void write(FILE* out, const T& x) {
-		fwrite(&x, sizeof(x), 1, out);
+	inline void write(FILE* out, const size_t &size) {
+		fwrite(&size, sizeof(size), 1, out);
 	}
 
-    template<class T>
-	inline void read(FILE* in, T &size) {
-		fread(&size, sizeof(size), 1, in);
-	}
-
-    inline void write(FILE* out, const string &s) {
+	inline void write(FILE* out, const string &s) {
 		write(out, s.size());
 		if (s.size() > 0) {
 			fwrite(&s[0], sizeof(char), s.size(), out);
 		}
+	}
+
+	inline void read(FILE* in, size_t &size) {
+		fread(&size, sizeof(size), 1, in);
 	}
 
 	inline void read(FILE* in, string &s) {

@@ -5,6 +5,7 @@ import pickle
 import sys
 from collections import defaultdict
 import json
+import snap
 
 class dep_tool(object):
 	"""docstring for dep_tool"""
@@ -28,6 +29,31 @@ class dep_tool(object):
 				line_num += 1
 			print 
 
+	def visualize_deps(self, num_lines):
+		with open(self.arg['dep_file'], 'r') as IN:
+			dep=[]
+			line_num = 0
+			#for line,json_line in zip(IN,REF):
+			G = snap.TNGraph.New()
+			for line in IN:
+				tmp=line.strip()
+				#j_tmp=json.loads(json_line)
+				if len(tmp)>0:
+					m = re.match(self.reg_pattern, line)
+					dep.append([m.group(1), m.group(3), m.group(4)])
+
+				else:
+					line_num += 1
+					if line_num == num_lines:
+						
+						for i in xrange(len(dep)):
+							G.AddNode(i + 1)
+						for i, out_buf in enumerate(dep):
+							if out_buf[1] != '0':
+								G.AddEdge(i + 1, int(out_buf[1]))
+						break
+					dep=[]
+			snap.DrawGViz(G, snap.gvlDot, "network.png", "graph 1", True)
 
 	def read_deps(self):
 		with open(self.arg['dep_file'], 'r') as IN, open(self.arg['dump_file'], 'w') as OUT:
@@ -147,6 +173,7 @@ class dep_tool(object):
 if __name__ == '__main__':
 	tmp=dep_tool({'dep_file': sys.argv[1],'dump_file': sys.argv[2],'output': sys.argv[3]})
 	#tmp.read_struct()
-	tmp.read_deps()
+	#tmp.read_deps()
+	tmp.visualize_deps(2)
 	#tmp.check_deps()
 	#tmp.analyze(sys.argv[4])

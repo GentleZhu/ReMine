@@ -162,6 +162,13 @@ public:
             TreeNode &node = nodes[curNode];
             vector<int> &bag = nodeBags[curNode];
 
+            if (bag.size() == 0) {
+                // a null tree
+                node.leaf = true;
+                node.result = 0;
+                continue;
+            }
+
             myAssert(bag.size() > 0, "[ERROR] empty node in decision tree!");
             myAssert(bag.size() >= minNodeSize, "[ERROR] bag is too small!");
 

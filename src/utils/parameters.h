@@ -49,7 +49,7 @@ const TOKEN_ID_TYPE BREAK = -911;
 
 int ITERATIONS = 2;
 int MIN_SUP = 30;
-int MAX_LEN = 8;
+int MAX_LEN = 6;
 int MAX_POSITIVE = 100;
 int NEGATIVE_RATIO = 5;
 int NTHREADS = 4;

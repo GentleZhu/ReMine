@@ -70,7 +70,7 @@ namespace Documents
 
     unordered_set<TOKEN_ID_TYPE> docEnds;
 
-    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "\'\'", "?", "``"};
+    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "?", "``","$","''", "-LRB-", "-RRB-"};
 // ===
     inline bool hasDashAfter(int i) {
         return 0 <= i && i < totalWordTokens && wordTokenInfo[i].get(DASH_AFTER);
@@ -135,7 +135,7 @@ namespace Documents
             assert(tokens.size() == 2);
             TOKEN_ID_TYPE id;
             fromString(tokens[0], id);
-            cerr << id << endl;
+            cerr << id << "''" << tokens[1]<< endl;
             punctuations[id] = tokens[1];
         }
 

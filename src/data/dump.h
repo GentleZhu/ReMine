@@ -120,11 +120,6 @@ void dumpSegmentationModel(const string& filename)
     // quality phrases & unigrams
     size_t cnt = 0;
     for (int i = 0; i < patterns.size(); ++ i) {
-        //if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
-        /*if (patterns[i].size() ) {
-            ++ cnt;
-        }*/
-        
         if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
             ++ cnt;
         }

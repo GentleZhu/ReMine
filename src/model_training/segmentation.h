@@ -114,8 +114,27 @@ public:
         return ret;
     }
 
+    static string treeToString(const map<int, vector<int>>& children, int u) {
+        vector<string> subtrees;
+        auto index = children.find(u);
+        if (index != children.end()) {
+            for (int v : index->second) {
+                subtrees.push_back(treeToString(children, v));
+            }
+        }
+        
+        sort(subtrees.begin(), subtrees.end());
+        string ret = "(x";
+        for (const string& subtree : subtrees) {
+            ret += subtree;
+
+        }
+        ret += ")";
+        return ret;
+    }
+
     static int GetSubtreeID(const vector<int> &deps, int start, int end) {
-        vector<vector<int>> children(deps.size() + 1);
+        /*vector<vector<int>> children(deps.size() + 1);
         vector<bool> isRoot(deps.size(), true);
         for (int i = start; i < end; ++ i) {
             int a = i + 1, b = deps[i];
@@ -131,15 +150,10 @@ public:
                 children[0].push_back(i);
             }
         }
+        */
+        map<int ,vector<int>> children;
+        map<int ,bool> isRoot;
 
-        string min_representation = treeToString(children, 0);
-        assert(tree_map.count(min_representation));
-        return tree_map[min_representation];
-    }
-
-    static int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end) {
-        vector<vector<int>> children(deps.size() + 1);
-        vector<bool> isRoot(deps.size(), true);
         for (int i = start; i < end; ++ i) {
             int a = i + 1, b = deps[i];
             if (b > start && b <= end) {
@@ -150,7 +164,34 @@ public:
         }
 
         for (int i = 1 + start; i < 1 + end; ++ i) {
-            if (isRoot[i]) {
+            if (!isRoot.count(i)) {
+                children[0].push_back(i);
+            }
+        }
+        string min_representation = treeToString(children, 0);
+        assert(tree_map.count(min_representation));
+        return tree_map[min_representation];
+
+    }
+
+    static int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end) {
+        //vector<vector<int>> children(deps.size() + 1);
+
+        map<int ,vector<int>> children;
+        map<int ,bool> isRoot;
+
+        //vector<bool> isRoot(deps.size(), true);
+        for (int i = start; i < end; ++ i) {
+            int a = i + 1, b = deps[i];
+            if (b > start && b <= end) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+                // isRoot[b] = false;
+            }
+        }
+
+        for (int i = 1 + start; i < 1 + end; ++ i) {
+            if (!isRoot.count(i)) {
                 children[0].push_back(i);
             }
         }
@@ -162,9 +203,9 @@ public:
         int new_id = tree_map.size();
         assert(new_id == deps_prob.size());
         if (children[0].size() == 1)
-            deps_prob.push_back(1);
+            deps_prob.push_back(0.8);
         else
-            deps_prob.push_back(0);
+            deps_prob.push_back(0.2);
         return tree_map[min_representation] = new_id;
     }
 
@@ -174,7 +215,10 @@ public:
         for (int i = 0; i < n; ++ i) {
             connect[i].resize(n);
             for (int j = 0; j < n; ++ j) {
-                connect[i][j] = 1.0 / n ;
+                if (!Documents::separatePunc.count(Documents::posid2Tag[i]) && !Documents::separatePunc.count(Documents::posid2Tag[j]))
+                    connect[i][j] = 1.0;
+                else 
+                    connect[i][j] = 0.0;
             }
         }
         // getDisconnect();
@@ -210,30 +254,48 @@ public:
                 }
             }
         }
+
+        cerr << "Debug information" << endl;
+
+        for (auto& p : deps_prob) {
+            p = 1.0 / deps_prob.size();
+        }
+/*
+        for (const auto& kv : tree_map) {
+            cerr << kv.first << deps_prob[kv.second] << endl;
+        }
+        */
     }
 
     static double GetPuncCost(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &tags, int start, int end) {
-        /*
+        
+        
         if (Documents::punctuations.count(tokens[start])) {
-            if  (Documents::punctuations[tokens[start]] != "(" && Documents::punctuations[tokens[start]] != "\'\'")
-                return -INF;
+            
+            // if  (Documents::punctuations[tokens[start]] != "(" && Documents::punctuations[tokens[start]] != "\'\'")
+            //    return -INF;
             if (!Documents::punctuations.count(tokens[end])) return -INF;
+            if (Documents::punctuations[tokens[end]] != ")" && Documents::punctuations[tokens[start]] != "''")
+                return -INF;
         }
 
         if (Documents::punctuations.count(tokens[end])) {
-            if (Documents::punctuations[tokens[end]] == ")" && Documents::punctuations[tokens[start]] != "(")
-                return -INF;
-            if (Documents::punctuations[tokens[end]] == "\'\'" && Documents::punctuations[tokens[start]] != "\'\'")
-                return -INF;
-            if (Documents::punctuations[tokens[end]] != ")" && Documents::punctuations[tokens[end]] != "\'\'")
+            
+            //ivif (Documents::punctuations[tokens[end]] == "\'\'" && Documents::punctuations[tokens[start]] != "\'\'")
+            //    return -INF;
+            if (!Documents::punctuations.count(tokens[start])) return -INF;
+            if (Documents::punctuations[tokens[start]] != "(" && Documents::punctuations[tokens[start]] != "''")
                 return -INF;
         }
-        */
+        
+        
         // cerr << "Get One" << endl;
         double PCost = 0;
         for (int i = start + 1; i < end ; ++i) {
           if (Documents::isPunc(tokens[i])) {
-            PCost += log(connect[tags[i-1]][tags[i+1]] + EPS);
+            if (!Documents::separatePunc.count(Documents::posid2Tag[tags[i-1]]) && !Documents::separatePunc.count(Documents::posid2Tag[tags[i+1]])) {
+                PCost += log(connect[tags[i-1]][tags[i+1]] + EPS);
+            }
           }   
         }
         return PCost;
@@ -476,6 +538,8 @@ public:
                     double multiConstraints = 0.0;
                     
                     // TODO(branzhu): incorporate 
+                    // if (Documents::isPunc(tokens[i]) && !Documents::isPunc(tokens[j])) continue;
+                    // if (!Documents::isPunc(tokens[i]) && Documents::isPunc(tokens[j])) continue;
                     if (j > i) {
                         int index = GetSubtreeID(deps, i, j+1);
                         multiConstraints += deps_prob[index];
@@ -483,14 +547,10 @@ public:
                     // TODO(branzhu): add punc cost 
                     
                     if (j > i) {
-                        //multiConstraints += 0;
                         multiConstraints += GetPuncCost(tokens, tags, i, j);
-                        // at the corner 1e-100 else 1e-20
                     }
-
-
-                    // cerr << i<<tokens[i] << " " << j<<tokens[j] << " " << deps[i] << " "<< depCost << endl;
                     // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
+                    
                     if (f[i] + p + multiConstraints > f[j + 1]) {
                         f[j + 1] = f[i] + p + multiConstraints;
                         pre[j + 1] = i;
@@ -692,6 +752,7 @@ public:
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();
                 }
+                
                 u = 0;
                 bool local_mis = false;
                 for (int k = j; k < i; ++ k) {
@@ -714,6 +775,7 @@ public:
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();
                 }
+                
                 i = j;
             }
         }
@@ -768,31 +830,37 @@ public:
 
                     for (int k = j + 1; k < i - 1; ++ k) {
                         if (Documents::isPunc(tokens[k])) {
-                            int index = tags[k + 1] * cnt.size() + tags[k - 1];
-                            POSTagMutex[index & SUFFIX_MASK].lock();
-                            ++ cnt[tags[k - 1]][tags[k + 1]];
-                            POSTagMutex[index & SUFFIX_MASK].unlock();
+                            if (!Documents::separatePunc.count(Documents::posid2Tag[tags[k - 1]]) && !Documents::separatePunc.count(Documents::posid2Tag[tags[k + 1]])) {
+                                int index = tags[k + 1] * cnt.size() + tags[k - 1];
+                                POSTagMutex[index & SUFFIX_MASK].lock();
+                                ++ cnt[tags[k - 1]][tags[k + 1]];
+                                POSTagMutex[index & SUFFIX_MASK].unlock();
+                            }
                         }
                     }
                 }
     			i = j;
     		}
         }
-
+        
         for (int i = 0; i < connect.size(); ++ i) {
             for (int j = 0; j < connect[i].size(); ++ j) {
-                if (total[i][j] > 0) {
-                    connect[i][j] = (double)cnt[i][j] / total[i][j];
-                } else {
-                    connect[i][j] = 0;
+                if (!Documents::separatePunc.count(Documents::posid2Tag[i]) && !Documents::separatePunc.count(Documents::posid2Tag[j])) {
+                    if (total[i][j] > 0) {
+                        connect[i][j] = (double)cnt[i][j] / total[i][j];
+                    } else {
+                        connect[i][j] = 0;
+                    }
                 }
             }
         }
-
+        
+        //normalizePosTags();
+        
         for (int i = 0; i < tree_map.size(); ++i) {
             deps_prob[i] = tree_cnt[i] / tree_total[i];
         }
-
+        
         cerr << "Energy = " << energy << endl;
         return energy;
     }

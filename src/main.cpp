@@ -47,8 +47,6 @@ int main(int argc, char* argv[])
     }
 
     FrequentPatternMining::mine_pos(MIN_SUP, MAX_LEN);
-    //vector<int> selected = Label::generate_samples(QUALITY_FILE_TAG);
-    // feature extraction
     cerr << "Extracting features..." << endl;
     Features::loadPosgroup("tmp_remine/pos_tag.map");
 
@@ -102,16 +100,17 @@ int main(int argc, char* argv[])
     if (ENABLE_POS_TAGGING) {
         Segmentation::initializePosTags(Documents::posTag2id.size());
         Segmentation::initializeDeps(Documents::sentences, MAX_LEN);
-        /*
-        for (int i = 0; i < Segmentation::connect.size(); ++ i) {
+        
+        /*for (int i = 0; i < Segmentation::connect.size(); ++ i) {
             for (int j = 0; j < Segmentation::connect.size(); ++ j) {
                 if (Segmentation::total[i][j] > 0) {
                     cerr << Documents::posid2Tag[i] << " " << Documents::posid2Tag[j] << Segmentation::total[i][j] <<endl;
                 }
             }
-        }
-        */
+        }*/
+        
     }
+
 
     // SegPhrase, +, ++, +++, ...
     for (int iteration = 0; iteration < ITERATIONS; ++ iteration) {
@@ -182,11 +181,8 @@ int main(int argc, char* argv[])
                         last = energy;
                 }
             }
-            /*
-            for (const auto& m : Segmentation::tree_map) {
-                    cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
-            }
-            */
+            
+            
 
             /*
             if (true) {

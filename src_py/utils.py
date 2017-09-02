@@ -1,8 +1,10 @@
 import json
 import sys
 from collections import defaultdict
-import pickle
+import cPickle
 import operator
+import re
+
 def cvtRaw(file_path,out_path,num):
 	OUT=open(out_path,'w')
 	for i in xrange(num):
@@ -22,65 +24,100 @@ def cvtRaw(file_path,out_path,num):
 	OUT.close()
 
 def getEntity(file_path):
+	entities = defaultdict(int)
 	with open(file_path) as IN:
 		for line in IN:
 			tmp=json.loads(line)
-			for e in tmp['entity_mentions']:
-				if e[1] - e[0] == 1:
-					print ' '.join(tmp['tokens'][e[0]:e[1]])
+			for e in tmp['entityMentions']:
+				key = ' '.join(tmp['pos'][e[0]:e[1]])
+				#if 'V' in key:
+				#	print e[2],key
+				entities[key]+=1
+		for k,v in entities.iteritems():
+			if v > 4:
+				print k
+				#if e[1] - e[0] == 1:
+				#	print ' '.join(tmp['tokens'][e[0]:e[1]])
 
 def eliminateTab(file_path,out_path):
 	with open(file_path) as IN, open(out_path,'w') as OUT:
 		for line in IN:
 			OUT.write(line.split('\t')[1].lstrip())
-def relationLinker(file_path,postag_path,prefix):
+def relationLinker(file_path, prefix=""):
 	relation_token=set(["VB","VBD","VBG","VBN","VBP","VBZ"])
+	V_pattern = "((VB|VBD|VBG|VBN|VBN|VBP|VBZ) )+"
+	P_pattern = "((IN|RP) ?)"
+	W_pattern = "((NN.{0,2}|JJ.{0,1}|RB.{0,1}|PRP.{0,1}|DT ))+"
+	relation_pattern = V_pattern+W_pattern+P_pattern+"|"+V_pattern+P_pattern+"|"+V_pattern
+	print relation_pattern
 	matched_phrases=defaultdict(int)
 	matched_unigram=defaultdict(int)
-	relation_pattern=set()
-	references=[]
+	#relation_pattern=set()
+	#references=[]
+	'''
 	with open(postag_path) as IN:
 		for line in IN:
 			if ' ' in line:
 				relation_pattern.add(line.strip())
 	for i in list(relation_pattern):
 		references.append(i.split(' '))
+	'''
 
 	with open(file_path,'r') as IN:
 		cnt=0
 		for line in IN:
-			if cnt%1000==0:
-				print cnt
+			#if cnt > 100:
+			#	break
 			cnt+=1
 			#print line
 			tmp=json.loads(line)
-			for i,e in enumerate(tmp['entity_mentions']):
-				if i == len(tmp['entity_mentions'])-1:
-					break
+
+			for i,e in enumerate(tmp['entityMentions']):
+				#if i == len(tmp['entity_mentions'])-1:
+				#	break
 				#print i,e
 				#print tmp['entityMentions'][i+1][0]-e[1]
-				for r in references:
-					length=len(r)
-					if tmp['entity_mentions'][i+1][0]-e[1] >= length:
-					#if tmp['entity_mentions'][i+1]['start']-e['end'] >= length:	
+				#for r in references:
+					#length=len(r)
+				for j in xrange(i+1, len(tmp['entityMentions'])):
+					if tmp['entityMentions'][j][0]-e[1] >= 0:
+						candidate = ' '.join(tmp['pos'][e[1]:tmp['entityMentions'][j][0]])
+						m = re.search(relation_pattern, candidate)
+						if m:
+							result=m.group(0).rstrip()
+							length = result.count(' ')
+							#print length
+							index=candidate.find(m.group(0))
+							#print candidate,index
+							index = candidate[:index].count(' ')
+							#print candidate
+							#print index,m.group(0)
+							relations=' '.join(tmp['tokens'][e[1]:tmp['entityMentions'][j][0]][index:index+length+1])
+							matched_phrases[relations]+=1
+							matched_unigram[result]+=1
+					#if tmp['entity_mentions'][i+1]['start']-e['end'] >= length:
+					'''
 						for idx in xrange(e[1],tmp['entity_mentions'][i+1][0]):
-						#for idx in xrange(e['end'],tmp['entity_mentions'][i+1]['start']):
 							if tmp['pos'][idx:idx+length] == r:
 								#print r,tmp['tokens'][idx:idx+length]
 								matched_phrases[' '.join(tmp['tokens'][idx:idx+length])]+=1
 								#print ' '.join(tmp['tokens'][idx:idx+length])
 							if tmp['pos'][idx] in relation_token:
 								matched_unigram[tmp['tokens'][idx]]+=1
-
+					'''
+	#print matched_phrases
+	#print matched_unigram
 			#break
-	pickle.dump(matched_phrases,open(prefix+'dumped_relations.p','wb'))
-	pickle.dump(matched_unigram,open(prefix+'dumped_relation_unigram.p','wb'))
+
+	cPickle.dump(matched_phrases,open(prefix+'dumped_relations.p','wb'))
+	cPickle.dump(matched_unigram,open(prefix+'dumped_relations_pattern.p','wb'))
 
 def playRelations(prefix):
-	matched_phrases=pickle.load(open(prefix+'dumped_relation_unigram.p','rb'))
+	matched_phrases=cPickle.load(open(prefix+'dumped_relations_pattern.p','rb'))
 	for k,v in matched_phrases.iteritems():
-		if v>5:
+		if v>5 and k.count(' ')==0:
 			print k.encode('ascii', 'ignore').decode('ascii')
+
 def cvtTaggedRaw(file_path,out_path):
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
 		for line in IN:
@@ -118,7 +155,7 @@ def cvtUntaggedRaw(file_path,seed_path,out_path):
 				freq_entities[k.count(' ')+1].add(k)
 		print freq_entities.keys()
 		print len(freq_entities[1])
-		pickle.dump(freq_entities, open(out_path,'wb'))
+		cPickle.dump(freq_entities, open(out_path,'wb'))
 
 		#OUT.write(json.dumps(entities))
 	#print sum_segs
@@ -128,31 +165,34 @@ def entityLinker(file_path,seed_path,out_path=None):
 	with open(seed_path,'r') as seed:
 		for line in seed:
 			tmp=line.strip().split('\t')
-			seeds[int(tmp[0])].append((tmp[1].split(' '),tmp[3]))
+			if float(tmp[4]) > 0.8:
+				seeds[int(tmp[0])].append(tmp[2])
 			#break
 		#print seeds
-	#print seeds[0]
-	#return
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
 		cnt=0
 		sum_match=0
 		for line in IN:
-			ptr=0
+			
 			tmp=json.loads(line)
 			tmp['entityMentions']=[]
 			for e in seeds[cnt]:
-				window_size=len(e[0])
-				restore_ptr=ptr
+				window_size=e.count(' ') + 1
+				if window_size == 1:
+					continue
+				
 				found=False
-				while tmp['tokens'][ptr:ptr+window_size]!=e[0] and ptr<len(tmp['tokens']):
+				ptr = 0
+				while ptr+window_size <= len(tmp['tokens']):
 					ptr+=1
-					found=True
-				if ptr>=len(tmp['tokens']):
-					ptr=restore_ptr
-				elif found:
-					tmp['entityMentions'].append([ptr,ptr+window_size,e[1]])
+					if ' '.join(tmp['tokens'][ptr:ptr+window_size]) == e:
+						found=True
+						break
+
+				if found:
+					tmp['entityMentions'].append([ptr,ptr+window_size,e])
 					sum_match+=1
-			
+			tmp['entityMentions'].sort(key=operator.itemgetter(1))
 			OUT.write(json.dumps(tmp)+'\n')
 			cnt+=1
 			#break
@@ -225,7 +265,7 @@ def addSentID(file_path,seed_path):
 def entityLinker2(file_path,seed_path,out_path,len_min=1,len_max=6):
 	seeds=defaultdict(list)
 	print len_min
-	seeds=pickle.load(open(seed_path,'rb'))
+	seeds=cPickle.load(open(seed_path,'rb'))
 	#print seeds
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
 		
@@ -282,9 +322,15 @@ if __name__ == '__main__':
 	#playRelations(sys.argv[1])
 	#getEntity(sys.argv[1])
 	
-	cvtTaggedRaw(sys.argv[1],sys.argv[2])
+	#cvtTaggedRaw(sys.argv[1],sys.argv[2])
 	#cntSegs(sys.argv[1])
 	#cvtUntaggedRaw(sys.argv[1],sys.argv[2],sys.argv[3])
+	
+	#entityLinker(sys.argv[1], sys.argv[2], sys.argv[3])
+	#relationLinker(sys.argv[1], sys.argv[2])
+
+	playRelations(sys.argv[1])
+
 	#entityLinker2(sys.argv[1],sys.argv[2],sys.argv[3])
 	#refinePos(sys.argv[1],sys.argv[2])
 	#segment_combine(sys.argv[1],sys.argv[2])
