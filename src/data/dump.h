@@ -89,7 +89,8 @@ void loadSegmentationModel(const string& filename)
         Segmentation::connect[i].resize(cnt);
         for (int j = 0; j < Segmentation::connect[i].size(); ++ j) {
             Binary::read(in, Segmentation::connect[i][j]);
-            cerr << posid2Tag[i] << "+" << posid2Tag[j] << " = " << Segmentation::connect[i][j] << endl;
+            if (Segmentation::connect[i][j] > 0)
+                cerr << posid2Tag[i] << "+" << posid2Tag[j] << " = " << Segmentation::connect[i][j] << endl;
         }
     }
 
@@ -103,6 +104,7 @@ void loadSegmentationModel(const string& filename)
         Binary::read(in, key);
         Binary::read(in, Segmentation::tree_map[key]);
         Binary::read(in, Segmentation::deps_prob[Segmentation::tree_map[key]]);
+        // Segmentation::deps_prob[Segmentation::tree_map[key]] = 0;
     }
     cerr << "Tree Maps transition loaded" << endl;
 
@@ -119,14 +121,19 @@ void dumpSegmentationModel(const string& filename)
     size_t cnt = 0;
     for (int i = 0; i < patterns.size(); ++ i) {
         //if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        /*if (patterns[i].size() ) {
+            ++ cnt;
+        }*/
+        
         if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
             ++ cnt;
         }
+        
     }
     Binary::write(out, cnt);
     cerr << "# of patterns dumped = " << cnt << endl;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        if (patterns[i].size() > 1  || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
             patterns[i].dump(out);
         }
     }
