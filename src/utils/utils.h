@@ -148,19 +148,21 @@ inline vector<string> splitBy(const string &line, char sep)
 
 namespace Binary
 {
-	inline void write(FILE* out, const size_t &size) {
-		fwrite(&size, sizeof(size), 1, out);
+    template<class T>
+    inline void write(FILE* out, const T& x) {
+		fwrite(&x, sizeof(x), 1, out);
 	}
 
-	inline void write(FILE* out, const string &s) {
+    template<class T>
+	inline void read(FILE* in, T &size) {
+		fread(&size, sizeof(size), 1, in);
+	}
+
+    inline void write(FILE* out, const string &s) {
 		write(out, s.size());
 		if (s.size() > 0) {
 			fwrite(&s[0], sizeof(char), s.size(), out);
 		}
-	}
-
-	inline void read(FILE* in, size_t &size) {
-		fread(&size, sizeof(size), 1, in);
 	}
 
 	inline void read(FILE* in, string &s) {
@@ -172,5 +174,6 @@ namespace Binary
 		}
 	}
 }
+
 
 #endif
