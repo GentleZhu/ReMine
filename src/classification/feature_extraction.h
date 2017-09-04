@@ -121,17 +121,17 @@ namespace Features
     }
 
     void extractPosRatio(const Pattern& pattern, vector<double>& feature) {
-        const vector<TOTAL_TOKENS_TYPE> &tokens = pattern.tokens;
+        const vector<TOTAL_TOKENS_TYPE> &tags = pattern.postags;
         map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, 
         {"ADJ", 0}, {"NP", 0}, {"PP", 0}, {"ADV", 0}, {"VB", 0}, {"WH", 0}, {"NA", 0}};
         for (int i = 0; i + 1 < pattern.size(); ++i) {
-            if (pos_group.count(posid2Tag[tokens[i]]) > 0)
-                ++featureMaps[pos_group[posid2Tag[tokens[i]]]];
+            if (pos_group.count(posid2Tag[tags[i]]) > 0)
+                ++featureMaps[pos_group[posid2Tag[tags[i]]]];
             else
                 ++featureMaps["NA"];
         }
         for (const auto& m : featureMaps) {
-            feature.push_back((double)m.second / tokens.size());
+            feature.push_back((double)m.second / tags.size());
         }
 
     }
@@ -485,6 +485,8 @@ namespace Features
                         // "all_capitalized",
                         "stopwords_1st", "stopwords_last", "stopwords_ratio", "avg_idf",
                         "complete_sub", "complete_super",
+                        "CC", "CD", "DT", "IN", "ADJ", "NP",
+                        "PP", "ADV", "VB", "WH", "NA",
                         };
 
         // compute features for each pattern
@@ -497,6 +499,7 @@ namespace Features
                 extractPunctuation(i, features[i]);
                 extractStopwords(patterns[i], features[i]);
                 extractCompleteness(patterns[i], features[i]);
+                extractPosRatio(patterns[i], features[i]);
                 features[i].shrink_to_fit();
             }
         }
@@ -515,8 +518,9 @@ namespace Features
                         "stopwords_1st", "stopwords_last", "stopwords_ratio",
                         "punc_quote", "punc_dash", "punc_parenthesis", "first_capitalized"};*/
         featureNames = {"stat_f1", "stat_f2", "stat_f4",
-                        "CC", "CD", "DT", "IN", "ADJ", "NP",
-                        "PP", "ADV", "VB", "WH", "NA"};
+                       // "CC", "CD", "DT", "IN", "ADJ", "NP",
+                       // "PP", "ADV", "VB", "WH", "NA",
+                        };
         //cerr<<"bigram bucket size: "<<BigramID.size()<<endl;
         //cerr<<"feature size: "<<BigramID.size()<<endl;
         
@@ -532,7 +536,7 @@ namespace Features
         for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
             if (patterns_tag[i].size() > 1) {
                 extractStatistical_tag(i, features[i]);
-                extractPosRatio(patterns_tag[i], features[i]);
+                //extractPosRatio(patterns_tag[i], features[i]);
                 //check their effectiveness
                 
                 //extractPunctuation(i, features[i]);
@@ -627,14 +631,12 @@ namespace Features
         if (extrabit_noun.count(Documents::posid2Tag[pattern.postags[0]])>0) {
             //cerr << "PosTag:" << pattern.postags[0] << " freq:" << pattern.currentFreq << endl;
             feature.push_back(1);
-            pattern.indicator="ENTITY";
         }
         else 
             feature.push_back(0);
         if (extrabit_verb.count(Documents::posid2Tag[pattern.postags[0]])>0) {
             //cerr << "PosTag:" << pattern.postags[0] << " freq:" << pattern.currentFreq << endl;
             feature.push_back(1);
-            pattern.indicator="RELATION";
         }
         else 
             feature.push_back(0);
@@ -655,6 +657,7 @@ namespace Features
                         };
 
         // compute features for each pattern
+        // cerr << "SIZEEEE" << patterns.size() << endl;
         vector<vector<double>> features(patterns.size(), vector<double>());
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
@@ -672,9 +675,13 @@ namespace Features
                 extractExtracbitUnigram(patterns[i], features[i]);
 
                 features[i].shrink_to_fit();
+                if (features[i].size() == 0) cerr << "wrong" << endl;
             }
         }
+        
         features.shrink_to_fit();
+
+        cerr << features.size() << endl;
         return features;
     }
 

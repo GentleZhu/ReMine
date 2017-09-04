@@ -55,7 +55,6 @@ void constructTrie() {
             u = trie[u].children[token];
         }
         trie[u].id = i;
-        trie[u].indicator = patterns[i].indicator;
         //cerr<<patterns[i].postagquality<<endl;
     }
     cerr << "# of trie nodes = " << trie.size() << endl;
@@ -752,7 +751,7 @@ public:
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();
                 }
-                
+                /*
                 u = 0;
                 bool local_mis = false;
                 for (int k = j; k < i; ++ k) {
@@ -774,7 +773,7 @@ public:
                         id2ends_tag[id].push_back(sentences[senID].first + i - 1);
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();
-                }
+                }*/
                 
                 i = j;
             }

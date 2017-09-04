@@ -23,19 +23,22 @@ def cvtRaw(file_path,out_path,num):
 		#break
 	OUT.close()
 
-def getEntity(file_path):
+def getEntity(file_path, output, isPos=False):
 	entities = defaultdict(int)
-	with open(file_path) as IN:
+	with open(file_path) as IN, open(output, 'w') as OUT:
 		for line in IN:
 			tmp=json.loads(line)
 			for e in tmp['entityMentions']:
-				key = ' '.join(tmp['pos'][e[0]:e[1]])
+				if isPos:
+					key = ' '.join(tmp['pos'][e[0]:e[1]])
+				else:
+					key = e[2]
 				#if 'V' in key:
 				#	print e[2],key
 				entities[key]+=1
 		for k,v in entities.iteritems():
 			if v > 4:
-				print k
+				OUT.write(k+'\n')
 				#if e[1] - e[0] == 1:
 				#	print ' '.join(tmp['tokens'][e[0]:e[1]])
 
@@ -73,12 +76,6 @@ def relationLinker(file_path, prefix=""):
 			tmp=json.loads(line)
 
 			for i,e in enumerate(tmp['entityMentions']):
-				#if i == len(tmp['entity_mentions'])-1:
-				#	break
-				#print i,e
-				#print tmp['entityMentions'][i+1][0]-e[1]
-				#for r in references:
-					#length=len(r)
 				for j in xrange(i+1, len(tmp['entityMentions'])):
 					if tmp['entityMentions'][j][0]-e[1] >= 0:
 						candidate = ' '.join(tmp['pos'][e[1]:tmp['entityMentions'][j][0]])
@@ -105,18 +102,20 @@ def relationLinker(file_path, prefix=""):
 							if tmp['pos'][idx] in relation_token:
 								matched_unigram[tmp['tokens'][idx]]+=1
 					'''
-	#print matched_phrases
-	#print matched_unigram
-			#break
 
 	cPickle.dump(matched_phrases,open(prefix+'dumped_relations.p','wb'))
 	cPickle.dump(matched_unigram,open(prefix+'dumped_relations_pattern.p','wb'))
 
-def playRelations(prefix):
-	matched_phrases=cPickle.load(open(prefix+'dumped_relations_pattern.p','rb'))
-	for k,v in matched_phrases.iteritems():
-		if v>5 and k.count(' ')==0:
-			print k.encode('ascii', 'ignore').decode('ascii')
+def dumpRelations(prefix, output, isPos=False):
+	if isPos:
+		matched_phrases=cPickle.load(open(prefix+'dumped_relations_pattern.p','rb'))
+	else:
+		matched_phrases=cPickle.load(open(prefix+'dumped_relations.p','rb'))
+	
+	with open(output, 'w') as OUT:
+		for k,v in matched_phrases.iteritems():
+			if v>5:
+				OUT.write(k.encode('ascii', 'ignore').decode('ascii') + '\n')
 
 def cvtTaggedRaw(file_path,out_path):
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
@@ -178,8 +177,8 @@ def entityLinker(file_path,seed_path,out_path=None):
 			tmp['entityMentions']=[]
 			for e in seeds[cnt]:
 				window_size=e.count(' ') + 1
-				if window_size == 1:
-					continue
+				#if window_size == 1:
+				#	continue
 				
 				found=False
 				ptr = 0

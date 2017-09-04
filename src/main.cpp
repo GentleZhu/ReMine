@@ -8,7 +8,6 @@
 #include "classification/predict_quality.h"
 #include "model_training/segmentation.h"
 #include "data/dump.h"
-#include "query/parser.h"
 #include <fstream>
 
 using FrequentPatternMining::Pattern;
@@ -53,8 +52,8 @@ int main(int argc, char* argv[])
     vector<string> featureNamesPhrase;
     vector<vector<double>> featuresPhrase = Features::extract(featureNamesPhrase);
 
-    vector<string> featureNamesSemantic;
-    vector<vector<double>> featuresSemantic = Features::extract_tag(featureNamesSemantic);
+    // vector<string> featureNamesSemantic;
+    // vector<vector<double>> featuresSemantic = Features::extract_tag(featureNamesSemantic);
 
     vector<string> featureNamesUnigram;
     vector<vector<double>> featuresUnigram = Features::extractUnigram(featureNamesUnigram);
@@ -66,22 +65,25 @@ int main(int argc, char* argv[])
     vector<Pattern> relation_truth;
 
     // semantic labels come from
-    cerr << "=== Generate Semantic Labels ===" << endl;
-    entity_truth = Label::generate_tag(featuresSemantic, QUALITY_FILE_ENTITY,true);
-    int recognized_entity = Features::recognize_tag(entity_truth);
+    // cerr << "=== Generate Semantic Labels ===" << endl;
+    // entity_truth = Label::generate_tag(featuresSemantic, QUALITY_FILE_ENTITY,true);
+    // int recognized_entity = Features::recognize_tag(entity_truth);
     cerr << "=== Generate Phrase Labels ===" << endl;
     // multi-words
     phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, ALL_FILE, QUALITY_FILE);
     TOTAL_TOKENS_TYPE recognized = Features::recognize(phrase_truth);
 
-    relation_truth = Label::generate_tag(featuresSemantic, QUALITY_FILE_RELATION,false);
-    int recognized_relation = Features::recognize_tag(relation_truth);
+    // relation_truth = Label::generate_tag(featuresSemantic, QUALITY_FILE_RELATION,false);
+    // int recognized_relation = Features::recognize_tag(relation_truth);
 
     fprintf(stderr, "Feature Matrix = %d X %d\n", featuresPhrase.size(), featuresPhrase.back().size());
-    fprintf(stderr, "Tag Feature Matrix = %d X %d\n", featuresSemantic.size(), featuresSemantic.back().size());
+    // fprintf(stderr, "Feature Matrix = %d X %d\n", featuresUnigram.size(), featuresUnigram.back().size());
+    // fprintf(stderr, "Tag Feature Matrix = %d X %d\n", featuresSemantic.size(), featuresSemantic.back().size());
+    /*
     if (POSTAG_SCORE == 1){ 
         featuresSemantic = Features::extract_tag(featureNamesSemantic);
     }
+    */
 
     // unigram
     
@@ -90,7 +92,7 @@ int main(int argc, char* argv[])
         //Dump::dumpLabels("tmp_remine/generated_label.txt", phrase_truth);
         //Dump::dumpLabels("tmp_remine/generated_unigram_label.txt", truthUnigram);
 
-        Dump::dumpFeatures("tmp_remine/features_for_labels.tsv", featuresPhrase, entity_truth);
+        //Dump::dumpFeatures("tmp_remine/features_for_labels.tsv", featuresPhrase, entity_truth);
         //Dump::dumpFeatures("tmp_remine/features_for_unigram_labels.tsv", featuresUnigram, truthUnigram);
     }
 
@@ -116,13 +118,17 @@ int main(int argc, char* argv[])
     for (int iteration = 0; iteration < ITERATIONS; ++ iteration) {
         predictQuality(patterns, featuresPhrase, featureNamesPhrase);
         predictQualityUnigram(patterns, featuresUnigram, featureNamesUnigram);
+        
+        /*
         if (POSTAG_SCORE == 1){
             predictPosTagQuality(patterns_tag, featuresSemantic, featureNamesSemantic, true);
             predictPosTagQuality(patterns_tag, featuresSemantic, featureNamesSemantic, false);
             combineScore(patterns,patterns_tag,pattern2id_tag);
         }
+        */
+
         constructTrie(); // update the current frequent enough patterns
-        constructTrie_pos(); //
+        // constructTrie_pos(); //
         //break;
         // check the quality
         if (INTERMEDIATE) {
@@ -218,29 +224,14 @@ int main(int argc, char* argv[])
             cerr << "Rectify Features..." << endl;
             Label::removeWrongLabels();
 
-            /*
-            // use number of sentences + rectified frequency to approximate the new idf
-            double docs = Documents::sentences.size() + EPS;
-            double diff = 0;
-            int cnt = 0;
-            for (int i = 0; i < patterns.size(); ++ i) {
-                if (patterns[i].size() == 1) {
-                    const TOKEN_ID_TYPE& token = patterns[i].tokens[0];
-                    TOTAL_TOKENS_TYPE freq = patterns[i].currentFreq;
-                    double newIdf = log(docs / (freq + EPS) + EPS);
-                    diff += abs(newIdf - Documents::idf[token]);
-                    ++ cnt;
-                    Documents::idf[token] = newIdf;
-                }
-            }
-            */
-
             featuresPhrase = Features::extract(featureNamesPhrase);
             featuresUnigram = Features::extractUnigram(featureNamesUnigram);
+            /*
             if (POSTAG_SCORE == 1){
                 //cerr<<"here"<<endl;
                 featuresSemantic = Features::extract_tag(featureNamesSemantic);
             }
+            */
         }
 
         // check the quality

@@ -44,8 +44,9 @@ class PreProcessor(object):
 		CASE=open('case_'+out_path,'w')
 		POS_tag=open('pos_tags_tokenized_train.txt','w')
 		# if it's a tagged file, uncomment next line
-		ENTITIES=open('tokenized_quality.txt','w')
-		ENTITIES_POS=open('postags_quality.txt','w')
+		ENTITIES = open('tokenized_quality.txt','w')
+		ENTITIES_POS = open('postags_quality.txt','w')
+		#NEGATIVES = open('tokenized_negatives.txt') 
 		with open(out_path,'w') as OUT:
 			for content in self.cache:
 				assert(len(content['tokens'])==len(content['pos']))
@@ -133,7 +134,6 @@ class PreProcessor(object):
 
 	def load(self):
 		self.test_token=cPickle.load(open('tmp_remine/test_token.p','rb'))
-		#print self.test_token
 		self.test_word=cPickle.load(open('tmp_remine/test_word.p','rb'))
 
 	def load_dict(self):
@@ -352,6 +352,7 @@ if __name__ == '__main__':
 		tmp.tokenize_test(sys.argv[4],sys.argv[5])
 		tmp.tokenize_stopwords(sys.argv[6],sys.argv[7])
 		tmp.tokenize_phrases(sys.argv[8], sys.argv[9])
+		tmp.tokenize_phrases(sys.argv[10], sys.argv[11])
 		tmp.dump()
 	elif sys.argv[1]=='segmentation':
 		tmp=PreProcessor(None)
