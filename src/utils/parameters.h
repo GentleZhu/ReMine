@@ -40,7 +40,7 @@ const string QUALITY_FILE_ENTITY = "tmp_remine/refine_postags_quality.txt";
 const string QUALITY_FILE_RELATION = "tmp_remine/pos_relation_token.txt";
 const string POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_train.txt";
 //Modify next line just for NYT13K dataset
-const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_train.txt";
+const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_text_to_seg.txt";
 const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_text_to_seg.txt";
 const string TEXT_TO_SEG_DEPS_FILE = "tmp_remine/deps_train.txt";
 
@@ -55,6 +55,7 @@ int MAX_POSITIVE = 100;
 int NEGATIVE_RATIO = 2;
 int NTHREADS = 4;
 int POSTAG_SCORE = 0;
+bool RELATION_MODE = true;
 double SEGMENT_MULTI_WORD_QUALITY_THRESHOLD = 0.5;
 double SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD = 0.8;
 bool ENABLE_POS_TAGGING = false;

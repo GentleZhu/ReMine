@@ -17,7 +17,7 @@ vector<int> pre;
 
 void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
 {
-    if (ENABLE_POS_TAGGING) {
+    if (!RELATION_MODE && ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
     } else {
         segmenter.viterbi(tokens, f, pre);

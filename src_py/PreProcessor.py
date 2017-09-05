@@ -357,7 +357,7 @@ if __name__ == '__main__':
 	elif sys.argv[1]=='segmentation':
 		tmp=PreProcessor(None)
 		tmp.load()
-		tmp.mapBack(sys.argv[2],sys.argv[3])
+		tmp.mapBackv2(sys.argv[2],sys.argv[3])
 	elif sys.argv[1]=='raw':
 		tmp=PreProcessor(sys.argv[2])
 		tmp.dump_raw(sys.argv[3])

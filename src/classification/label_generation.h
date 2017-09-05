@@ -293,7 +293,7 @@ inline vector<Pattern> generateBootstrap(vector<vector<double>> &features, vecto
     return ret;
 }
 
-inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string ALL_FILE, string QUALITY_FILE)
+inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string QUALITY_FILE, string NEGATIVE_FILE)
 {
     vector<Pattern> ret;
 

@@ -1,6 +1,6 @@
 FIRST_RUN=1
 ENABLE_POS_TAGGING=1
-MIN_SUP=5
+MIN_SUP=3
 #echo $MIN_SUP
 #0 original SegPhrase, 1 in the loop, 2 at the top
 POSTAG_SCORE=1
@@ -8,7 +8,7 @@ THREAD=10
 #THREAD=1
 LABEL_METHOD=DPDN
 MAX_POSITIVES=-1
-NEGATIVE_RATIO=5
+NEGATIVE_RATIO=2
 green=`tput setaf 2`
 reset=`tput sgr0`
 
@@ -56,14 +56,13 @@ TOKENIZER="-cp .:tools/tokenizer/lib/*:tools/tokenizer/resources/:tools/tokenize
 java $TOKENIZER -m translate -i tmp_remine/frequent_patterns.txt -o results_remine/frequent_patterns.txt -t $TOKEN_MAPPING -c N -thread $THREAD
 
 echo ${green}===Generating Output===${reset}
-java $TOKENIZER -m translate -i tmp_remine/final_quality_multi-entities.txt -o results_remine/multigram_entity.txt -t $TOKEN_MAPPING -c N -thread $THREAD
+java $TOKENIZER -m translate -i tmp_remine/final_quality_multi-phrases.txt -o results_remine/multigram_phrases.txt -t $TOKEN_MAPPING -c N -thread $THREAD
 java $TOKENIZER -m translate -i tmp_remine/final_quality_unigrams.txt -o results_remine/unigrams.txt -t $TOKEN_MAPPING -c N -thread $THREAD
-java $TOKENIZER -m translate -i tmp_remine/final_quality_multi-relations.txt -o results_remine/multigram_relation.txt -t $TOKEN_MAPPING -c N -thread $THREAD
 
 
 #java -jar $TOKENIZER -m translate -i tmp/frequent_patterns.txt -o tmp/human_frequent_patterns.txt -t $TOKEN_MAPPING -c N
 
-java $TOKENIZER -m translate -i tmp_remine/generated_label.txt -o results_remine/generated_label.txt -t $TOKEN_MAPPING -c N -thread $THREAD
+#java $TOKENIZER -m translate -i tmp_remine/generated_label.txt -o results_remine/generated_label.txt -t $TOKEN_MAPPING -c N -thread $THREAD
 
 #for (( i=0; i<2; i++ ))
 #do
