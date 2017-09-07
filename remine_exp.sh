@@ -1,6 +1,6 @@
 FIRST_RUN=1
 ENABLE_POS_TAGGING=1
-MIN_SUP=3
+MIN_SUP=5
 #echo $MIN_SUP
 #0 original SegPhrase, 1 in the loop, 2 at the top
 POSTAG_SCORE=1
@@ -35,7 +35,7 @@ make all CXX=g++ | grep -v "Nothing to be done for"
 echo ${green}===Segphrasing===${reset}
 
 if [ $ENABLE_POS_TAGGING -eq 1 ]; then
-	time ./bin/segphrase_train \
+	time ./bin/remine_train \
         --verbose \
         --pos_tag \
         --thread $THREAD \
@@ -45,7 +45,7 @@ if [ $ENABLE_POS_TAGGING -eq 1 ]; then
         --postag_score $POSTAG_SCORE \
         --min_sup $MIN_SUP
 else
-	time ./bin/segphrase_train --verbose --thread $THREAD --label_method $LABEL_METHOD --max_positives $MAX_POSITIVES --negative_ratio $NEGATIVE_RATIO --postag_score $POSTAG_SCORE --min_sup $MIN_SUP
+	time ./bin/remine_train --verbose --thread $THREAD --label_method $LABEL_METHOD --max_positives $MAX_POSITIVES --negative_ratio $NEGATIVE_RATIO --postag_score $POSTAG_SCORE --min_sup $MIN_SUP
 fi
 
 ### END Segphrasing ###
