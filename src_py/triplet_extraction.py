@@ -34,6 +34,38 @@ class Extractor(object):
 							OUTT.write(json.dumps(new_line)+'\n')
 							break
 
+	def generateDepSegments(self, input_json, input_pair, out):
+		with open(input_json, 'r') as IN, open(input_pair, 'r') as SEG, open(out, 'w') as OUT:
+			for line, line_seg in zip(IN, SEG):
+				new_line = {}
+				new_line['triples'] = []
+				tmp = json.loads(line)
+				rm_indices = dict()
+				for rm in tmp['relationMentions']:
+					rm_indices[(rm[0], rm[1] - 1)] = rm[2]
+				#print rm_indices
+				em = tmp['entityMentions']
+				for item in line_seg.split('<>'):
+					annotation = item.split('\t')
+					#print annotation
+					if len(annotation) == 1 or len(annotation[1]) == 0:
+						continue
+					indices = annotation[0].strip().split(' ')
+					ranges = set(map(lambda x:int(x) - 1, annotation[1].strip().split(' ')))
+					#print ranges
+					rms = []
+					for k,v in rm_indices.iteritems():
+						if k[0] in ranges and k[1] in ranges:
+							rms.append(v)
+					if len(rms) > 0:
+						new_line['triples'].append({'em1':em[int(indices[0])], 'em2':em[int(indices[1])], 'rm':rms})
+				#print json.dumps(new_line)
+				OUT.write(json.dumps(new_line) + '\n')
+				#break
+				
+				
+				
+	
 	def generateRPs(self, in1, in2, out):
 		with open(in1) as IN1, open(in2) as IN2, open(out, 'w') as OUT:
 			for line1, line2 in zip(IN1, IN2):
@@ -88,7 +120,8 @@ class Extractor(object):
 if __name__ == '__main__':
 	tmp = Extractor('')
 	#tmp.generateSegments(sys.argv[1], sys.argv[2], sys.argv[3])
-	tmp.generateRPs(sys.argv[1], sys.argv[2], sys.argv[3])
+	#tmp.generateRPs(sys.argv[1], sys.argv[2], sys.argv[3])
+	tmp.generateDepSegments(sys.argv[1], sys.argv[2], sys.argv[3])
 	#tmp=Extractor({'emb_path':'/shared/data/qiz3/ReMine/utils/word2vec/data/demo.txt.bin',
 	#	'corpus_path':'/shared/data/qiz3/ReMine/results_remine/sample.txt'})
 	#tmp.load_emb()

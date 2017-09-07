@@ -311,6 +311,16 @@ def cvtTest(file_path,out_path=None):
 			OUT.write(json.dumps(line)+'\n')
 		#print len(tmp['documents'][0]['sentences'])
 
+def removeDups(file_path, output):
+	with open(file_path) as IN, open(output, 'w') as OUT:
+		for line in IN:
+			tmp = json.loads(line)
+			ems = ''
+			for em in tmp['entityMentions']:
+				if len(em[2]) > 0:
+					ems += str(em[0]) + '_'  + str(em[1]) + ' '
+			OUT.write(ems.strip()+'\n')
+
 if __name__ == '__main__':
 	#TODO(branzhu): add comments for following methods
 
@@ -328,7 +338,8 @@ if __name__ == '__main__':
 	#entityLinker(sys.argv[1], sys.argv[2], sys.argv[3])
 	#relationLinker(sys.argv[1], sys.argv[2])
 
-	playRelations(sys.argv[1])
+	#playRelations(sys.argv[1])
+	removeDups(sys.argv[1], sys.argv[2])
 
 	#entityLinker2(sys.argv[1],sys.argv[2],sys.argv[3])
 	#refinePos(sys.argv[1],sys.argv[2])
