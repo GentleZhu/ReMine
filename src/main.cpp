@@ -8,7 +8,6 @@
 #include "classification/predict_quality.h"
 #include "model_training/segmentation.h"
 #include "data/dump.h"
-#include "query/parser.h"
 #include <fstream>
 
 using FrequentPatternMining::Pattern;
