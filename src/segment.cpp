@@ -17,7 +17,7 @@ vector<int> pre;
 
 void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
 {
-    if (ENABLE_POS_TAGGING) {
+    if (!RELATION_MODE && ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
     } else {
         segmenter.viterbi(tokens, f, pre);
@@ -38,11 +38,13 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_
             }
             u = trie[u].children[tokens[k]];
         }
-        quality &= trie[u].id >= 0; // && trie[u].id < SEGMENT_QUALITY_TOP_K;
-
+        quality &= trie[u].id >= 0 && (
+                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
+                    patterns[trie[u].id].size() == 1 && patterns[trie[u].id].quality >= SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD
+                   );
 
         if (quality) {
-            ret.push_back("</"+trie[u].indicator+">");
+            ret.push_back("</ENTITY>");
             //ret.push_back(to_string(patterns[trie[u].id].quality));
             //cerr<<patterns[trie[u].id].tokens[0]<<" "<<tokens[j]<<endl;
             //ret.push_back(to_string(patterns[trie[u].id].postagquality));
@@ -59,7 +61,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_
         }
         
         if (quality) {
-            ret.push_back("<"+trie[u].indicator+">");
+            ret.push_back("<ENTITY>");
         }
 
         i = j;

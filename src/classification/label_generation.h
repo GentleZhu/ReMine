@@ -69,19 +69,6 @@ inline unordered_set<ULL> loadPatterns_tag(string filename)
                 }
             }
             previous=s;
-            /*bool possibleInt = false;
-            for (int i = 0; i < s.size(); ++ i) {
-                possibleInt |= isdigit(s[i]);
-            }
-            if (possibleInt) {
-                int x;
-                fromString(s, x);
-                if (x < 0) {
-                    valid = false;
-                    break;
-                }
-                p.append(x);
-            }*/
         }
         if (valid && p.size() > 1) {
             ret.insert(p.hashValue);
@@ -306,7 +293,7 @@ inline vector<Pattern> generateBootstrap(vector<vector<double>> &features, vecto
     return ret;
 }
 
-inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string ALL_FILE, string QUALITY_FILE)
+inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string QUALITY_FILE, string NEGATIVE_FILE)
 {
     vector<Pattern> ret;
 
@@ -334,7 +321,7 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
         bool needNeg = LABEL_METHOD.find("DN") != -1;
 
         unordered_set<ULL> include = loadPatterns(QUALITY_FILE, MAX_POSITIVE);
-        unordered_set<ULL> exclude = loadPatterns(ALL_FILE, MAX_POSITIVE);
+        unordered_set<ULL> exclude = loadPatterns(NEGATIVE_FILE, MAX_POSITIVE);
 
         if (MAX_POSITIVE != -1) {
             exclude.clear();
@@ -347,6 +334,7 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
             exclude.insert(ret[i].hashValue);
         }
 
+        int random_negatives = 0;
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
             if (patterns[i].size() < 1) {
                 continue;
@@ -356,10 +344,16 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
                     ret.push_back(patterns[i]);
                     ret.back().label = 1;
                 }
-            } else if (!exclude.count(patterns[i].hashValue)) {
+            } else if (exclude.count(patterns[i].hashValue)) {
+                ret.push_back(patterns[i]);
+                ret.back().label = 0;
+            } else if (!include.count(patterns[i].hashValue)) {
                 if (needNeg) {
                     ret.push_back(patterns[i]);
                     ret.back().label = 0;
+                    ++ random_negatives;
+                    if (random_negatives > NEGATIVE_RATIO * include.size())
+                        needNeg = false;
                 }
             }
         }
@@ -410,12 +404,6 @@ inline vector<Pattern> generate_tag(vector<vector<double>> &features, string QUA
     }
 
     int REAL_POSITIVE=positives.size();
-    //for (int i = 0; i < positives.size(); ++i)
-    //{
-        /* code */
-    //    patterns_tag[positives[i]].showtag();
-    //}
-
 
     random_shuffle(negatives.begin(), negatives.end());
     if (REAL_POSITIVE > 0 && REAL_POSITIVE*NEGATIVE_RATIO < negatives.size()) {
@@ -494,17 +482,6 @@ void removeWrongLabels()
         }
     }
     //Here is removing wrong labels
-    for (Pattern& pattern : patterns_tag) {
-        if (pattern.currentFreq == 0 && pattern.label == 1) {
-            pattern.label = FrequentPatternMining::UNKNOWN_LABEL;
-            for (int i = 0; i < pattern.size(); ++i)
-            {
-                cerr<<posid2Tag[pattern.tokens[i]]<<" ";
-            }
-            cerr<<endl;
-            ++ cnt;
-        }
-    }
 }
 
 }

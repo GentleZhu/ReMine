@@ -32,6 +32,7 @@ const string TRAIN_DEPS_FILE = "tmp_remine/deps_train.txt";
 const string STOPWORDS_FILE = "tmp_remine/tokenized_stopwords.txt";
 const string PUNC_FILE = "tmp_remine/tokenized_punctuations.txt";
 const string ALL_FILE = "tmp_remine/tokenized_quality.txt";
+const string NEGATIVE_FILE = "tmp_remine/tokenized_negatives.txt";
 //const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
 const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
 const string QUALITY_FILE_ENTITY = "tmp_remine/refine_postags_quality.txt";
@@ -39,8 +40,9 @@ const string QUALITY_FILE_ENTITY = "tmp_remine/refine_postags_quality.txt";
 const string QUALITY_FILE_RELATION = "tmp_remine/pos_relation_token.txt";
 const string POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_train.txt";
 //Modify next line just for NYT13K dataset
+
 const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_train.txt";
-const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_text_to_seg.txt";
+const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/pos_tags_tokenized_train.txt";
 const string TEXT_TO_SEG_DEPS_FILE = "tmp_remine/deps_train.txt";
 
 
@@ -49,11 +51,14 @@ const TOKEN_ID_TYPE BREAK = -911;
 
 int ITERATIONS = 2;
 int MIN_SUP = 30;
-int MAX_LEN = 6;
+int MAX_LEN = 8;
 int MAX_POSITIVE = 100;
-int NEGATIVE_RATIO = 5;
+int NEGATIVE_RATIO = 2;
 int NTHREADS = 4;
 int POSTAG_SCORE = 0;
+bool RELATION_MODE = true;
+double SEGMENT_MULTI_WORD_QUALITY_THRESHOLD = 0.85;
+double SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD = 0.5;
 bool ENABLE_POS_TAGGING = false;
 bool ENABLE_POS_PRUNE = false;
 string NO_EXPANSION_POS_FILENAME = "";

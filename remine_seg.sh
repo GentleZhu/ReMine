@@ -5,7 +5,7 @@ TEXT_TO_SEG=tmp_remine/raw_text_to_seg.txt
 HIGHLIGHT_TOP_K=100000
 #HIGHLIGHT_TOP_K=$(($INTERMEDIATE * 3000))
 ENABLE_POS_TAGGING=1
-THREAD=1
+THREAD=10
 
 green=`tput setaf 2`
 reset=`tput sgr0`
