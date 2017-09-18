@@ -55,6 +55,7 @@ void constructTrie() {
             u = trie[u].children[token];
         }
         trie[u].id = i;
+        trie[u].indicator = patterns[i].indicator;
         //cerr<<patterns[i].postagquality<<endl;
     }
     cerr << "# of trie nodes = " << trie.size() << endl;
@@ -133,23 +134,6 @@ public:
     }
 
     static int GetSubtreeID(const vector<int> &deps, int start, int end) {
-        /*vector<vector<int>> children(deps.size() + 1);
-        vector<bool> isRoot(deps.size(), true);
-        for (int i = start; i < end; ++ i) {
-            int a = i + 1, b = deps[i];
-            if (b > start && b <= end) {
-                children[b].push_back(a);
-                isRoot[a] = false;
-                // isRoot[b] = false;
-            }
-        }
-
-        for (int i = 1 + start; i < 1 + end; ++ i) {
-            if (isRoot[i]) {
-                children[0].push_back(i);
-            }
-        }
-        */
         map<int ,vector<int>> children;
         map<int ,bool> isRoot;
 
@@ -173,19 +157,42 @@ public:
 
     }
 
-    static int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end) {
-        //vector<vector<int>> children(deps.size() + 1);
+    static int GetSubtreeID(const vector<pair<int, int>> &deps, int start, int end) {
+        map<int, vector<int>> children;
+        map<int, bool> isRoot;
+        int idx_start = deps[start].first;
+        int idx_end = deps[end - 1].first;
+        // assert(start == idx_start);
+        // assert(end == idx_end + 1);
+        for (int i = start; i < end; ++ i) {
+            int a = deps[i].first + 1, b = deps[i].second;
+            if (b > idx_start && b <= idx_end + 1) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+            }
+        }
 
+        for (int i = start; i < end; ++ i) {
+            int a = deps[i].first + 1;
+            if (!isRoot.count(a)) {
+                children[0].push_back(a);
+            }
+        }
+
+        string min_representation = treeToString(children, 0);
+        assert(tree_map.count(min_representation));
+        return tree_map[min_representation];
+
+    }
+
+    static int InsertOrGetSubtreeID(const vector<int> &deps, int start, int end) {
         map<int ,vector<int>> children;
         map<int ,bool> isRoot;
-
-        //vector<bool> isRoot(deps.size(), true);
         for (int i = start; i < end; ++ i) {
             int a = i + 1, b = deps[i];
             if (b > start && b <= end) {
                 children[b].push_back(a);
                 isRoot[a] = false;
-                // isRoot[b] = false;
             }
         }
 
@@ -206,6 +213,42 @@ public:
         else
             deps_prob.push_back(0.2);
         return tree_map[min_representation] = new_id;
+    }
+
+    static int InsertOrGetSubtreeID(const vector<pair<int, int>> &deps, int start, int end) {
+        map<int, vector<int>> children;
+        map<int, bool> isRoot;
+        int idx_start = deps[start].first;
+        int idx_end = deps[end - 1].first;
+        // assert(start == idx_start);
+        // assert(end == idx_end + 1);
+        for (int i = start; i < end; ++ i) {
+            int a = deps[i].first + 1, b = deps[i].second;
+            if (b > idx_start && b <= idx_end + 1) {
+                children[b].push_back(a);
+                isRoot[a] = false;
+            }
+        }
+
+        for (int i = start; i < end; ++ i) {
+            int a = deps[i].first + 1;
+            if (!isRoot.count(a)) {
+                children[0].push_back(a);
+            }
+        }
+
+        string min_representation = treeToString(children, 0);
+        if (tree_map.count(min_representation)) {
+            return tree_map[min_representation];
+        }
+        int new_id = tree_map.size();
+        assert(new_id == deps_prob.size());
+        if (children[0].size() == 1)
+            deps_prob.push_back(0.8);
+        else
+            deps_prob.push_back(0.2);
+        return tree_map[min_representation] = new_id;
+
     }
 
     static void initializePosTags(int n) {
@@ -236,7 +279,8 @@ public:
         tree_total.clear();
 
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
-            vector<TOKEN_ID_TYPE> deps;
+            // vector<TOKEN_ID_TYPE> deps;
+            vector<pair<TOKEN_ID_TYPE, TOKEN_ID_TYPE>> deps;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 deps.push_back(Documents::depPaths[i]);
             }
@@ -254,7 +298,7 @@ public:
             }
         }
 
-        cerr << "Debug information" << endl;
+        cerr << "Debug information:" << tree_map.size() << endl;
 
         for (auto& p : deps_prob) {
             p = 1.0 / deps_prob.size();
@@ -509,7 +553,7 @@ public:
         return true;
     }
 
-    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<TOKEN_ID_TYPE> &deps, const vector<TOKEN_ID_TYPE>& tags, vector<double> &f, vector<int> &pre) {
+    inline double viterbi(const vector<TOKEN_ID_TYPE> &tokens, const vector<pair<TOKEN_ID_TYPE,TOKEN_ID_TYPE>> &deps, const vector<TOKEN_ID_TYPE>& tags, vector<double> &f, vector<int> &pre) {
         f.clear();
         f.resize(tokens.size() + 1, -INF);
         pre.clear();
@@ -541,6 +585,7 @@ public:
                     // if (!Documents::isPunc(tokens[i]) && Documents::isPunc(tokens[j])) continue;
                     if (j > i) {
                         int index = GetSubtreeID(deps, i, j+1);
+                        // int index = GetSubtreeID(deps);
                         multiConstraints += deps_prob[index];
                     }
                     // TODO(branzhu): add punc cost 
@@ -719,7 +764,8 @@ public:
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
             vector<TOKEN_ID_TYPE> tokens;
             vector<TOKEN_ID_TYPE> postags;
-            vector<TOKEN_ID_TYPE> deps;
+            // vector<TOKEN_ID_TYPE> deps;
+            vector<pair<TOKEN_ID_TYPE, TOKEN_ID_TYPE>> deps;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 tokens.push_back(Documents::wordTokens[i]);
                 postags.push_back(Documents::posTags[i]);
@@ -795,7 +841,8 @@ public:
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
             vector<TOKEN_ID_TYPE> tokens;
             vector<TOKEN_ID_TYPE> tags;
-            vector<TOKEN_ID_TYPE> deps;
+            // vector<TOKEN_ID_TYPE> deps;
+            vector<pair<TOKEN_ID_TYPE, TOKEN_ID_TYPE>> deps;
             for (TOTAL_TOKENS_TYPE i = sentences[senID].first; i <= sentences[senID].second; ++ i) {
                 tokens.push_back(Documents::wordTokens[i]);
                 tags.push_back(Documents::posTags[i]);

@@ -47,7 +47,9 @@ namespace Documents
     float* idf; // 0 .. maxTokenID
     TOKEN_ID_TYPE* wordTokens; // 0 .. totalWordTokens - 1
 
-    TOKEN_ID_TYPE* depPaths;
+    pair<TOKEN_ID_TYPE, TOKEN_ID_TYPE>* depPaths;
+    // Works for rm version
+    //TOKEN_ID_TYPE* seg_depPaths;
 
     POS_ID_TYPE* posTags; // 0 .. totalWordTokens - 1
 
@@ -188,7 +190,7 @@ namespace Documents
         FILE* depIn = NULL;
         if (ENABLE_POS_TAGGING) {
             depIn = tryOpen(depFile, "r");
-            depPaths = new TOKEN_ID_TYPE[totalWordTokens];
+            depPaths = new pair<TOKEN_ID_TYPE, TOKEN_ID_TYPE>[totalWordTokens];
         }
         // posIn = tryOpen(posFile, "r");
 
@@ -196,6 +198,7 @@ namespace Documents
         TOTAL_TOKENS_TYPE ptr = 0;
         while (getLine(in)) {
             ++ docs;
+            // cerr << docs << endl;
             TOTAL_TOKENS_TYPE docStart = ptr;
 
             stringstream sin(line);
@@ -258,7 +261,10 @@ namespace Documents
                     assert(token > 0);
                     wordTokens[ptr] = token;
                     if (ENABLE_POS_TAGGING) {
-                        depPaths[ptr] = atoi(currentDep);
+                        // char* idx_ch;
+                        int idx = atoi(strtok (currentDep, "_"));
+                        int idx_dep = atoi(strtok (NULL, "_"));
+                        depPaths[ptr] = make_pair(idx, idx_dep);//atoi(currentDep);
                     }
                     posTags[ptr] = posTagId;
 

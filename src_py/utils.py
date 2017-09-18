@@ -216,7 +216,7 @@ def flatData(file_path,out_path):
 	punc=['.',',','"',"'",'?',':',';','-','!','(',')','``',"''"]
 	with open(file_path) as IN, open(out_path,'w') as OUT:
 		for line in IN:
-			temp=json.loads(line)['tokens']
+			temp=json.loads(line)['pos']
 			#OUT.write(' '.join(json.loads(line)['pos']).encode('ascii', 'ignore').decode('ascii')+'\n')
 			OUT.write(' '.join(temp).encode('ascii', 'ignore').decode('ascii')+'\n')
 			#OUT.write(line.split('\t')[1])
@@ -340,6 +340,7 @@ if __name__ == '__main__':
 
 	#playRelations(sys.argv[1])
 	removeDups(sys.argv[1], sys.argv[2])
+	#flatData(sys.argv[1], sys.argv[2])
 
 	#entityLinker2(sys.argv[1],sys.argv[2],sys.argv[3])
 	#refinePos(sys.argv[1],sys.argv[2])

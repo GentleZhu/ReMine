@@ -132,9 +132,11 @@ inline unordered_set<ULL> loadPatterns(string filename, int MAX_POSITIVE)
     for (ULL value : positiveMultiwords) {
         ret.insert(value);
     }
+    cerr << "positiveMultiwords" << ret.size () << endl;
     for (ULL value : positivesUnigrams) {
         ret.insert(value);
     }
+    cerr << "totalMultiwords" << ret.size() << endl;
     return ret;
 }
 
@@ -293,7 +295,7 @@ inline vector<Pattern> generateBootstrap(vector<vector<double>> &features, vecto
     return ret;
 }
 
-inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string QUALITY_FILE, string NEGATIVE_FILE)
+inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, string QUALITY_FILE, string NEGATIVES_FILE)
 {
     vector<Pattern> ret;
 
@@ -316,13 +318,15 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
         }
     }
 
+    vector<int> negatives;
     if (LABEL_METHOD.find("D") != -1) { // distant training
         bool needPos = LABEL_METHOD.find("DP") != -1;
         bool needNeg = LABEL_METHOD.find("DN") != -1;
 
         unordered_set<ULL> include = loadPatterns(QUALITY_FILE, MAX_POSITIVE);
-        unordered_set<ULL> exclude = loadPatterns(NEGATIVE_FILE, MAX_POSITIVE);
+        unordered_set<ULL> exclude = loadPatterns(NEGATIVES_FILE, MAX_POSITIVE);
 
+        /*
         if (MAX_POSITIVE != -1) {
             exclude.clear();
         }
@@ -333,8 +337,8 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
         for (int i = 0; i < ret.size(); ++ i) { // make sure every human label is excluded
             exclude.insert(ret[i].hashValue);
         }
+        */
 
-        int random_negatives = 0;
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
             if (patterns[i].size() < 1) {
                 continue;
@@ -342,28 +346,38 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
             if (include.count(patterns[i].hashValue)) {
                 if (needPos) {
                     ret.push_back(patterns[i]);
-                    ret.back().label = 1;
+                    ret.back().label = 2;
                 }
             } else if (exclude.count(patterns[i].hashValue)) {
-                ret.push_back(patterns[i]);
-                ret.back().label = 0;
-            } else if (!include.count(patterns[i].hashValue)) {
-                if (needNeg) {
+                if (needPos) {
                     ret.push_back(patterns[i]);
                     ret.back().label = 0;
-                    ++ random_negatives;
-                    if (random_negatives > NEGATIVE_RATIO * include.size())
-                        needNeg = false;
+                }
+            } 
+            else if (!include.count(patterns[i].hashValue)) {
+                if (needNeg) {
+                    ret.push_back(patterns[i]);
+                    ret.back().label = 1;
+                    // negatives.push_back(i);
                 }
             }
         }
+        /*
+        random_shuffle(negatives.begin(), negatives.end());
+        negatives.resize(ret.size()*NEGATIVE_RATIO);
+        for (int id : negatives) {
+            ret.push_back(patterns[id]);
+            ret.back().label = 0;
+        }
+        */
+
     }
 
     int cntPositives = 0, cntNegatives = 0;
     for (PATTERN_ID_TYPE i = 0; i < ret.size(); ++ i) {
-        if (ret[i].label == 1) {
+        if (ret[i].label == 0 || ret[i].label == 2) {
             ++ cntPositives;
-        } else if (ret[i].label == 0) {
+        } else if (ret[i].label == 1) {
             ++ cntNegatives;
         } else {
             assert(false); // It should not happen!

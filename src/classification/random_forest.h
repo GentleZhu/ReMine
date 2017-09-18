@@ -135,13 +135,13 @@ public:
         nodes.push_back(root);
 
         // bootstrapping
-        vector<int> index[2];
+        vector<int> index[3];
         for (int i = 0; i < (int)results.size(); ++ i) {
             index[(int)results[i]].push_back(i);
         }
         vector<int> rootBag;
-        for (int type = 0; type < 2; ++ type) {
-            int selected = (int)(min(index[0].size(), index[1].size())) * 16;
+        for (int type = 0; type < 3; ++ type) {
+            int selected = (int)(min(min(index[0].size(), index[1].size()), index[2].size())) * 16;
             for (int i = 0; i < selected; ++ i) {
                 int id = index[type][rng[threadID].next(index[type].size())];
                 rootBag.push_back(id);
@@ -326,6 +326,7 @@ public:
         }
         myAssert(features.size() == results.size(), "[ERROR] wrong training data!");
         trees.resize(treesNo);
+        
         #pragma omp parallel for
         for (int i = 0; i < treesNo; ++ i) {
             trees[i].train(_features, _results, minNodeSize, maxLevel, featureNames);

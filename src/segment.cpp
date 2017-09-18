@@ -15,9 +15,9 @@ using FrequentPatternMining::patterns;
 vector<double> f;
 vector<int> pre;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_TYPE>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
 {
-    if (!RELATION_MODE && ENABLE_POS_TAGGING) {
+    if (ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
     } else {
         segmenter.viterbi(tokens, f, pre);
@@ -44,7 +44,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_
                    );
 
         if (quality) {
-            ret.push_back("</ENTITY>");
+            //if (RELATION_MODE && patterns[i].indicator == "RELATION" || !RELATION_MODE && patterns[i].indicator == "ENTITY")
+                ret.push_back("</"+trie[u].indicator+">");
             //ret.push_back(to_string(patterns[trie[u].id].quality));
             //cerr<<patterns[trie[u].id].tokens[0]<<" "<<tokens[j]<<endl;
             //ret.push_back(to_string(patterns[trie[u].id].postagquality));
@@ -61,7 +62,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<TOTAL_TOKENS_
         }
         
         if (quality) {
-            ret.push_back("<ENTITY>");
+            //if (RELATION_MODE && patterns[i].indicator == "RELATION" || !RELATION_MODE && patterns[i].indicator == "ENTITY")
+                ret.push_back("<"+trie[u].indicator+">");
         }
 
         i = j;
@@ -137,7 +139,8 @@ int main(int argc, char* argv[])
     while (getLine(in)) {
         stringstream sin(line);
         vector<TOTAL_TOKENS_TYPE> tokens;
-        vector<TOTAL_TOKENS_TYPE> deps;
+        // vector<TOTAL_TOKENS_TYPE> deps;
+        vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
         vector<TOTAL_TOKENS_TYPE> tags;
 
         string lastPunc = "";
@@ -174,7 +177,10 @@ int main(int argc, char* argv[])
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
-                    deps.push_back(atoi(currentDep));
+                    int idx = atoi(strtok (currentDep, "_"));
+                    int idx_dep = atoi(strtok (NULL, "_"));
+                    // deps.push_back(atoi(currentDep));
+                    deps.push_back(make_pair(idx, idx_dep));
                 }
             }
         }

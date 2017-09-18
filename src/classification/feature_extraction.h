@@ -124,7 +124,7 @@ namespace Features
         const vector<TOTAL_TOKENS_TYPE> &tags = pattern.postags;
         map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, 
         {"ADJ", 0}, {"NP", 0}, {"PP", 0}, {"ADV", 0}, {"VB", 0}, {"WH", 0}, {"NA", 0}};
-        for (int i = 0; i + 1 < pattern.size(); ++i) {
+        for (int i = 0; i < pattern.size(); ++i) {
             if (pos_group.count(posid2Tag[tags[i]]) > 0)
                 ++featureMaps[pos_group[posid2Tag[tags[i]]]];
             else

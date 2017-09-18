@@ -43,13 +43,16 @@ class PreProcessor(object):
 	def tokenize_train(self,out_path):
 		CASE=open('case_'+out_path,'w')
 		POS_tag=open('pos_tags_tokenized_train.txt','w')
+
 		# if it's a tagged file, uncomment next line
 		ENTITIES = open('tokenized_quality.txt','w')
-		ENTITIES_POS = open('postags_quality.txt','w')
+		#ENTITIES_POS = open('postags_quality.txt','w')
 		#NEGATIVES = open('tokenized_negatives.txt') 
+		entityList = set()
 		with open(out_path,'w') as OUT:
 			for content in self.cache:
 				assert(len(content['tokens'])==len(content['pos']))
+				#comment [:-1]
 				for w in content['tokens'][:-1]:
 					if len(w)==0:
 						continue
@@ -66,6 +69,7 @@ class PreProcessor(object):
 					else:
 						CASE.write('0')
 					OUT.write(self.inWordmapping(w.lower())+' ')
+				#uncomment below line for em segmentation
 				OUT.write(content['tokens'][-1]+'\n')
 				for p in content['pos']:
 					POS_tag.write(p+'\n')
@@ -74,20 +78,22 @@ class PreProcessor(object):
 					#for t in content['tokens'][e['start']:e['end']]:
 					#if u',' in content['tokens'][e[0]:e[1]]:
 					#	continue
-					for t in content['tokens'][e[0]:e[1]]:
+					for t in e[2].split(' '):
 						if t.lower() not in self.word_mapping:
 							break
 						else:
 							tokens.append(str(self.word_mapping[t.lower()]))
 					if len(tokens)==e[1]-e[0]:
-					#if len(tokens)==e['end']-e['start']:
-						ENTITIES.write(' '.join(tokens)+'\n')
+						TOKENS = ' '.join(tokens)
+						if TOKENS not in entityList:
+							ENTITIES.write(TOKENS+'\n')
+							entityList.add(TOKENS)
 						#ENTITIES_POS.write(' '.join(content['pos'][e['start']:e['end']])+'\n')
-						ENTITIES_POS.write(' '.join(content['pos'][e[0]:e[1]])+'\n')
+						#ENTITIES_POS.write(' '.join(content['pos'][e[0]:e[1]])+'\n')
 				#OUT.write('\n')
 				CASE.write('\n')
-		#ENTITIES.close()
-		ENTITIES_POS.close()
+		ENTITIES.close()
+		#ENTITIES_POS.close()
 		CASE.close()
 		POS_tag.close()
 	
@@ -114,7 +120,7 @@ class PreProcessor(object):
 				if len(result)>0:
 					Phrases.write(result+'\n')
 
-	def dump(self):
+	def dump(self, prefix=''):
 		with open('token_mapping.txt','w') as OUT:
 			for k,v in self.word_mapping.iteritems():
 				OUT.write(str(v)+'\t'+k.encode('ascii', 'ignore').decode('ascii')+'\n')
@@ -122,9 +128,9 @@ class PreProcessor(object):
 			with open('tokenized_punctuations.txt','w') as OUT:
 				for k,v in self.punc_mapping.iteritems():
 					OUT.write(str(k)+'\t'+v+'\n')
-		cPickle.dump(self.test_token, open('test_token.p','wb'))
-		cPickle.dump(self.test_word, open('test_word.p','wb'))
-		cPickle.dump(self._punc, open('test_punc.p','wb'))
+		cPickle.dump(self.test_token, open(prefix+'test_token.p','wb'))
+		cPickle.dump(self.test_word, open(prefix+'test_word.p','wb'))
+		cPickle.dump(self._punc, open(prefix+'test_punc.p','wb'))
 
 	def dump_raw(self,outpath):
 		with open(outpath,'w') as OUT:
@@ -281,17 +287,17 @@ class PreProcessor(object):
 								start_phrase=False
 								if 'None' in queue[0]:
 									#OUT.write(':BP,')
-									OUT.write(',')
+									OUT.write(']_[')
 								elif 'ENTITY' in queue[0]:
-									OUT.write(':EP,')
+									OUT.write(':EP]_[')
 								else:
-									OUT.write(':RP,')
+									OUT.write(':RP]_[')
 							queue.pop(0)
 					elif c_ptr < len(self.test_token[r_ptr]) and queue[0] == self.test_token[r_ptr][c_ptr]:
 						if start_phrase:
 							OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+' ')
 						else:
-							OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+',')
+							OUT.write(self.test_word[r_ptr][c_ptr].encode('ascii', 'ignore').decode('ascii')+']_[')
 						queue.pop(0)
 						c_ptr+=1
 					else:
@@ -354,6 +360,16 @@ if __name__ == '__main__':
 		tmp.tokenize_phrases(sys.argv[8], sys.argv[9])
 		tmp.tokenize_phrases(sys.argv[10], sys.argv[11])
 		tmp.dump()
+	elif sys.argv[1] == 'translate_2':
+		tmp=PreProcessor(sys.argv[2])
+		tmp.mode = "Constraints Mode"
+		tmp.tokenize_train(sys.argv[3])
+		tmp.tokenize_test(sys.argv[4],sys.argv[5])
+		tmp.tokenize_stopwords(sys.argv[6],sys.argv[7])
+
+		tmp.tokenize_phrases(sys.argv[8], sys.argv[9])
+		tmp.dump('s_2')
+
 	elif sys.argv[1]=='segmentation':
 		tmp=PreProcessor(None)
 		tmp.load()
@@ -364,4 +380,5 @@ if __name__ == '__main__':
 	elif sys.argv[1]=='temp':
 		tmp=PreProcessor(None)
 		tmp.load_dict()
-		tmp.tokenize_phrases(sys.argv[2],sys.argv[3])
+		tmp.tokenize_test(sys.argv[1],sys.argv[2])
+		#tmp.tokenize_phrases(sys.argv[2],sys.argv[3])

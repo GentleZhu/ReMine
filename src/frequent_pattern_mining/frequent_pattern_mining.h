@@ -16,11 +16,13 @@ namespace FrequentPatternMining
         double probability, quality;
         ULL hashValue;
         int currentFreq;
+        string indicator;
 
         void dump(FILE* out) {
             Binary::write(out, currentFreq);
             Binary::write(out, quality);
             //cerr<<postagquality<<endl;
+            Binary::write(out, indicator);
             Binary::write(out, tokens.size());
             for (auto& token : tokens) {
                 Binary::write(out, token);
@@ -31,6 +33,7 @@ namespace FrequentPatternMining
             Binary::read(in, currentFreq);
             Binary::read(in, quality);
             //cerr<<postagquality<<endl;
+            Binary::read(in, indicator);
             size_t tokenSize;
             Binary::read(in, tokenSize);
             tokens.clear();
@@ -48,6 +51,7 @@ namespace FrequentPatternMining
             label = UNKNOWN_LABEL;
             append(token);
             quality = 1;
+            indicator = "None";
         }
 
         Pattern(const TOKEN_ID_TYPE &token,const TOKEN_ID_TYPE &postag) {
@@ -58,6 +62,7 @@ namespace FrequentPatternMining
             label = UNKNOWN_LABEL;
             appendwithpos(token,postag);
             quality = 1;
+            indicator = "None";
             //postags.push_back(postag);
         }
 
@@ -72,6 +77,7 @@ namespace FrequentPatternMining
             this->label = other.label;
             this->quality = other.quality;
             this->currentFreq = other.currentFreq;
+            this->indicator = other.indicator;
         }
 
         Pattern() {
@@ -81,6 +87,7 @@ namespace FrequentPatternMining
             currentFreq = 0;
             label = UNKNOWN_LABEL;
             quality = 1;
+            indicator = "None";
         }
 
         inline void shrink_to_fit() {

@@ -10,45 +10,111 @@ class PostProcessor(object):
 		self.entity_regex=re.compile("<phrase>(.+?)</phrase>")
 		self.ner_regex=re.compile("<.+?>(.*?)<\/.+?>")
 	
+	def combineTest(self, ner_json_a, json_file, output):
+		with open(ner_json_a) as NER, open(json_file) as IN, open(output, 'w') as OUT:
+			for ner,pm in zip(NER, IN):
+				cur_max = dict()
+				tmp = json.loads(ner)
+				tmp_2 = json.loads(pm)
+				assert(len(tmp['tokens']) == len(tmp_2['tokens']))
+				cur_max = dict()
+				for i in tmp['entity_mentions']:
+					if i[2] == "PERSON":
+						cur_max[i[0]] = i[1]
+				for i in tmp_2['entityMentions']:
+					if i[0] not in cur_max or i[1] > cur_max[i[0]]:
+						cur_max[i[0]] = i[1]
+				ptr = 0
+				tmp_2['entityMentions'] = []
+				while ptr < len(tmp_2['tokens']):
+					if ptr in cur_max:
+						tmp_2['entityMentions'].append([ptr, cur_max[ptr],' '.join(tmp['tokens'][ptr:cur_max[ptr]])])
+						ptr = cur_max[ptr]
+					else:
+						ptr += 1
+				OUT.write(json.dumps(tmp_2) + '\n')
+
 	def loadTest(self,test_file,json_file,output):
 		with open(test_file,'r') as IN, open(json_file, 'r') as IN_JSON, open(output,'w') as OUT:
+			e_not_found = 0
+			r_not_found = 0
 			for line, json_line in zip(IN, IN_JSON):
 				pred=[]
-				for item in line.split(','):
+				pred_rm = []
+				for item in line.split(']_['):
 					if ':EP' in item:
-						item = item.rstrip(' :EP')
+						pred.append(item.rstrip(' :EP').strip().replace('(','-LRB-').replace(')','-RRB-'))
+					elif ':RP' in item:
+						pred_rm.append(item.rstrip(' :RP').strip().replace('(','-LRB-').replace(')','-RRB-'))
+
 					#if ' ' in item:
 					#if ' ' in item.strip():
-						pred.append(item)
+						#pred.append(item)
 				tmp = json.loads(json_line)
 				#exists = set()
 				cur_max = dict()
 				for i in tmp['entityMentions']:
 					#exists.add((i[0], i[1]))
 					cur_max[i[1]] = i[0]
-
 				tmp['entityMentions'] = []
+				ptr = 0
 				for e in pred:
 					window_size=e.count(' ') + 1
 				
 					found=False
-					ptr = 0
+					#ptr = 0
 					while ptr+window_size <= len(tmp['tokens']):
-						ptr+=1
 						if ' '.join(tmp['tokens'][ptr:ptr+window_size]) == e:
 							found=True
 							break
+						ptr+=1
 					#if found and (ptr, ptr+window_size) not in exists:
+					if not found:
+						ptr = 0 
+						e_not_found += 1
 					if found:
 						if ptr+window_size in cur_max and ptr < cur_max[ptr+window_size]:
 							cur_max[ptr+window_size] = ptr
 						elif ptr+window_size not in cur_max:
-							tmp['entityMentions'].append([ptr, ptr+window_size, e])
-				for k,v in cur_max.iteritems():
-					tmp['entityMentions'].append([v, k, ' '.join(tmp['tokens'][v:k])])
+							cur_max[ptr+window_size] = ptr
+							#tmp['entityMentions'].append([ptr, ptr+window_size, e])
+						ptr+=window_size
+				#keys = cur_max.keys().sort(reverse=True)
+				ptr = len(tmp['tokens'])
+				while ptr > 0:
+					if ptr in cur_max:
+						tmp['entityMentions'].append([cur_max[ptr], ptr, ' '.join(tmp['tokens'][cur_max[ptr]:ptr])])
+						ptr = cur_max[ptr]
+					else:
+						ptr -= 1
+					
 				#tmp['entityMentions'] = list(exists)
 				tmp['entityMentions'].sort(key=operator.itemgetter(1))
+				'''
+				tmp['relationMentions']= []
+				ptr = 0
+				for r in pred_rm:
+					window_size=r.count(' ') + 1
+				
+					found=False
+					#ptr = 0
+					while ptr+window_size <= len(tmp['tokens']):
+						if ' '.join(tmp['tokens'][ptr:ptr+window_size]) == r:
+							found=True
+							break
+						ptr+=1
+					#if found and (ptr, ptr+window_size) not in exists:
+					if not found:
+						ptr = 0 
+						r_not_found += 1
+					if found:
+						
+						tmp['relationMentions'].append([ptr, ptr+window_size, r])
+						ptr+=window_size
+				tmp['relationMentions'].sort(key=operator.itemgetter(1))
+				'''
 				OUT.write(json.dumps(tmp) + '\n')
+			print e_not_found,r_not_found
 
 	def loadRMTest(self, test_file,json_file,output):
 		with open(test_file,'r') as IN, open(json_file, 'r') as IN_JSON, open(output,'w') as OUT:
@@ -121,7 +187,8 @@ class PostProcessor(object):
 if __name__ == '__main__':
 	tmp=PostProcessor()
 	#tmp.loadGroundTruth(sys.argv[1])
+	tmp.combineTest(sys.argv[1], sys.argv[2], sys.argv[3])
 	#tmp.loadTest(sys.argv[1], sys.argv[2], sys.argv[3])
-	tmp.loadRMTest(sys.argv[1], sys.argv[2], sys.argv[3])
+	#tmp.loadRMTest(sys.argv[1], sys.argv[2], sys.argv[3])
 	#tmp.loadNER(sys.argv[2])
 	#tmp.getMetrics()

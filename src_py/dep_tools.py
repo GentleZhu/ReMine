@@ -34,10 +34,12 @@ class dep_tool(object):
 			line_num = 0
 			#for line,json_line in zip(IN,REF):
 			
-			NIdColorH = snap.TIntStrH()
+			
 			color_seeds = ['green', 'yellow', 'red', 'purple', 'blue', 'black', 'grey']
 			for line,json_line in zip(DEP, IN):
 				G = snap.TNGraph.New()
+				NIdColorH = snap.TIntStrH()
+				print NIdColorH
 				tmp = line.strip().split(' ')
 				tmp_json = json.loads(json_line)
 				assert(len(tmp) == len(tmp_json['tokens']))
@@ -67,7 +69,8 @@ class dep_tool(object):
 				#j_tmp=json.loads(json_line)
 				if len(tmp)>0:
 					m = re.match(self.reg_pattern, line)
-					dep.append(m.group(3))
+					dep.append(str(len(dep)) + '_' + m.group(3))
+					#dep.append(m.group(1) + '_' + m.group(3))
 
 				else:
 					#if (len(j_tmp['tokens']) != len(dep)):
@@ -172,10 +175,10 @@ class dep_tool(object):
 			
 		
 if __name__ == '__main__':
-	#tmp=dep_tool({'dep_file': sys.argv[1],'dump_file': sys.argv[2],'output': sys.argv[3]})
-	tmp = dep_tool({'dep_file': sys.argv[1]})
+	tmp=dep_tool({'dep_file': sys.argv[1],'dump_file': sys.argv[2],'output': sys.argv[3]})
+	#tmp = dep_tool({'dep_file': sys.argv[1]})
 	#tmp.read_struct()
-	#tmp.read_deps()
-	tmp.visualize_deps(sys.argv[2], 100)
+	tmp.read_deps()
+	#tmp.visualize_deps(sys.argv[2], 3)
 	#tmp.check_deps()
 	#tmp.analyze(sys.argv[4])

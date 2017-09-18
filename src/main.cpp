@@ -70,12 +70,12 @@ int main(int argc, char* argv[])
     // int recognized_entity = Features::recognize_tag(entity_truth);
     cerr << "=== Generate Phrase Labels ===" << endl;
     // multi-words
-    if (RELATION_MODE) {
-        phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, NEGATIVE_FILE, QUALITY_FILE);
-    }
-    else {
-        phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, QUALITY_FILE, NEGATIVE_FILE);
-    }
+    //if (RELATION_MODE) {
+    //    phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, NEGATIVES_FILE, QUALITY_FILE);
+    //}
+    //else {
+    phrase_truth = Label::generateAll(LABEL_METHOD, LABEL_FILE, QUALITY_FILE, NEGATIVES_FILE);
+    //}
     
     TOTAL_TOKENS_TYPE recognized = Features::recognize(phrase_truth);
 

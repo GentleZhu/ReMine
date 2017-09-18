@@ -93,21 +93,24 @@ void dumpSegmentationModel(const string& filename)
     Binary::write(out, ENABLE_POS_TAGGING);
     Binary::write(out, Segmentation::penalty);
 
-    set<string> entity_tag = {"NN", "NNS", "NNP", "NNPS", "PRP", "PRP$", "VBG"};
     // quality phrases & unigrams
     size_t cnt = 0;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP &&
-            entity_tag.count(Documents::posid2Tag[patterns[i].postags[0]])) {
+        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP ) {
+            /*if (RELATION_MODE && patterns[i].indicator == "ENTITY" || !RELATION_MODE && patterns[i].indicator == "RELATION") {
+                continue;
+            }*/
             ++ cnt;
-        }
+        }///////
         
     }
     Binary::write(out, cnt);
     cerr << "# of patterns dumped = " << cnt << endl;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP &&
-            entity_tag.count(Documents::posid2Tag[patterns[i].postags[0]])) {
+        if (patterns[i].size() > 1 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP ) {
+            /*if (RELATION_MODE && patterns[i].indicator == "ENTITY" || !RELATION_MODE && patterns[i].indicator == "RELATION") {
+                continue;
+            }*/
             patterns[i].dump(out);
         }
     }
@@ -188,6 +191,7 @@ void dumpRankingList(const string& filename, vector<pair<T, int>> &order)
     for (int iter = 0; iter < order.size(); ++ iter) {
         int i = order[iter].second;
         fprintf(out, "%.10f\t", patterns[i].quality);
+        fprintf(out, "%s\t", patterns[i].indicator.c_str());
         for (int j = 0; j < patterns[i].tokens.size(); ++ j) {
             fprintf(out, "%d%c", patterns[i].tokens[j], j + 1 == patterns[i].tokens.size() ? '\n' : ' ');
             //fprintf(out, "%d%c", patterns[i].postags[j], j + 1 == patterns[i].postags.size() ? '\n' : ' ');
@@ -202,12 +206,12 @@ void dumpResults(const string& prefix)
     vector<pair<double, int>> order;
     //cerr<<"Checkpoint"<<endl;
     for (int i = 0; i < patterns.size(); ++ i) {
-        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0) {
+        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 && patterns[i].indicator[0] == 'E') {
             order.push_back(make_pair(patterns[i].quality, i));
         }
     }
     //cerr<<"Checkpoint"<<endl;
-    dumpRankingList(prefix + "_multi-phrases.txt", order);
+    dumpRankingList(prefix + "_multi-entities.txt", order);
 
     order.clear();
     for (int i = 0; i < patterns.size(); ++ i) {
@@ -220,6 +224,14 @@ void dumpResults(const string& prefix)
     //cerr<<"here"<<endl;
     dumpRankingList(prefix + "_unigrams.txt", order);
 
+    order.clear();
+    for (int i = 0; i < patterns.size(); ++ i) {
+        //if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 || patterns[i].size() == 1 && patterns[i].currentFreq > 0 && unigrams[patterns[i].tokens[0]] >= MIN_SUP) {
+        if (patterns[i].size() > 1 && patterns[i].currentFreq > 0 && patterns[i].indicator[0] == 'R') {
+            order.push_back(make_pair(patterns[i].quality, i));
+        }
+    }
+    dumpRankingList(prefix + "_multi-relations.txt", order);
 }
 
 };
