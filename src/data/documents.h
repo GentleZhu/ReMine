@@ -72,7 +72,7 @@ namespace Documents
 
     unordered_set<TOKEN_ID_TYPE> docEnds;
 
-    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "?", "``","$","''", "-LRB-", "-RRB-"};
+    set<string> separatePunc = {",", ".", "\"", ";", "!", ":", "(", ")", "?", "``","$","''", "-lrb-", "-rrb-", "-", "'"};
 // ===
     inline bool hasDashAfter(int i) {
         return 0 <= i && i < totalWordTokens && wordTokenInfo[i].get(DASH_AFTER);
@@ -333,9 +333,14 @@ namespace Documents
                 for (int i = 0; i < strlen(line); ++i) {
                     if (line[i] == ' ') words_cnt += 1;
                 }
+                string tmp = string(1, line[strlen(line) - 1]);
+                if (!separatePunc.count(tmp)) {
+                    words_cnt += 1;
+                }
                 sentences.push_back(make_pair(st, st + words_cnt - 1));
                 st += words_cnt;
             }
+            cerr << st << endl;
             assert(st == totalWordTokens);
             fclose(in);
         }

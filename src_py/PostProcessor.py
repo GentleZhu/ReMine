@@ -9,6 +9,7 @@ class PostProcessor(object):
 		self.groundtruth=[]
 		self.entity_regex=re.compile("<phrase>(.+?)</phrase>")
 		self.ner_regex=re.compile("<.+?>(.*?)<\/.+?>")
+		self.punc = ['.',',','"',"'",'?',':',';','-','!','(',')','``',"''", '']
 	
 	def combineTest(self, ner_json_a, json_file, output):
 		with open(ner_json_a) as NER, open(json_file) as IN, open(output, 'w') as OUT:
@@ -44,18 +45,16 @@ class PostProcessor(object):
 				for item in line.split(']_['):
 					if ':EP' in item:
 						pred.append(item.rstrip(' :EP').strip().replace('(','-LRB-').replace(')','-RRB-'))
-					elif ':RP' in item:
-						pred_rm.append(item.rstrip(' :RP').strip().replace('(','-LRB-').replace(')','-RRB-'))
+					#elif ':RP' in item:
+					#	pred_rm.append(item.rstrip(' :RP').strip().replace('(','-LRB-').replace(')','-RRB-'))
 
 					#if ' ' in item:
 					#if ' ' in item.strip():
 						#pred.append(item)
-				tmp = json.loads(json_line)
+				tmp = {}
+				tmp['tokens'] = json_line.strip().split(' ')
 				#exists = set()
 				cur_max = dict()
-				for i in tmp['entityMentions']:
-					#exists.add((i[0], i[1]))
-					cur_max[i[1]] = i[0]
 				tmp['entityMentions'] = []
 				ptr = 0
 				for e in pred:
@@ -73,9 +72,7 @@ class PostProcessor(object):
 						ptr = 0 
 						e_not_found += 1
 					if found:
-						if ptr+window_size in cur_max and ptr < cur_max[ptr+window_size]:
-							cur_max[ptr+window_size] = ptr
-						elif ptr+window_size not in cur_max:
+						if ptr+window_size not in cur_max:
 							cur_max[ptr+window_size] = ptr
 							#tmp['entityMentions'].append([ptr, ptr+window_size, e])
 						ptr+=window_size
@@ -116,33 +113,33 @@ class PostProcessor(object):
 				OUT.write(json.dumps(tmp) + '\n')
 			print e_not_found,r_not_found
 
-	def loadRMTest(self, test_file,json_file,output):
+	def loadRMTest(self, test_file,json_file,output, out1,out2):
+		print(output)
+		ems=dict()
+		rms=dict()
 		with open(test_file,'r') as IN, open(json_file, 'r') as IN_JSON, open(output,'w') as OUT:
 			for line, json_line in zip(IN, IN_JSON):
 				pred=[]
-				for item in line.split(','):
-					if ':EP' in item:
-						item = item.rstrip(' :EP')
+				for item in line.split(']_['):
+					if ':RP' in item:
+						item = item.rstrip(' :RP').lower().replace(' ', '_')
+						if item not in self.punc:
+							rms.add(item)
 					#if ' ' in item:
 					#if ' ' in item.strip():
-						pred.append(item)
-				tmp = json.loads(json_line)
-				tmp['relationMentions'] = []
-				for e in pred:
-					window_size=e.count(' ') + 1
-				
-					found=False
-					ptr = 0
-					while ptr+window_size <= len(tmp['tokens']):
-						ptr+=1
-						if ' '.join(tmp['tokens'][ptr:ptr+window_size]) == e:
-							found=True
-							break
-					#if found and (ptr, ptr+window_size) not in exists:
-					if found:
-						tmp['relationMentions'].append([ptr, ptr+window_size, e])
-				tmp['relationMentions'].sort(key=operator.itemgetter(1))
-				OUT.write(json.dumps(tmp) + '\n')
+							pred.append(item)
+				if len(pred) > 0:
+					tmp = json.loads(json_line)['entityMentions']
+					em_1 = tmp[0][2].lower().replace(' ', '_')
+					em_2 = tmp[1][2].lower().replace(' ', '_')
+					ems.add(em_1)
+					ems.add(em_2)
+					OUT.write(em_1 +' '+ em_2 + ' '+','.join(pred) + '\n')
+		with open(out1, 'w') as w1, open(out2, 'w') as w2:
+			for i in list(ems):
+				w1.write(i+'\n')
+			for i in list(rms):
+				w2.write(i+'\n')
 		#print self.prediction
 	def loadNER(self,test_file):
 		with open(test_file,'r') as IN:
@@ -187,8 +184,8 @@ class PostProcessor(object):
 if __name__ == '__main__':
 	tmp=PostProcessor()
 	#tmp.loadGroundTruth(sys.argv[1])
-	tmp.combineTest(sys.argv[1], sys.argv[2], sys.argv[3])
-	#tmp.loadTest(sys.argv[1], sys.argv[2], sys.argv[3])
-	#tmp.loadRMTest(sys.argv[1], sys.argv[2], sys.argv[3])
+	#tmp.combineTest(sys.argv[1], sys.argv[2], sys.argv[3])
+	tmp.loadTest(sys.argv[1], sys.argv[2], sys.argv[3])
+	#tmp.loadRMTest(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 	#tmp.loadNER(sys.argv[2])
 	#tmp.getMetrics()

@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
     // return -1;
     cerr << "Mining frequent phrases..." << endl;
     FrequentPatternMining::mine(MIN_SUP, MAX_LEN);
-    
+    FrequentPatternMining::loadExternalPatterns(EXTERNAL_PATTERNS, MAX_LEN);
     // check the patterns
     if (INTERMEDIATE) {
         vector<pair<int, int>> order;
@@ -45,7 +45,7 @@ int main(int argc, char* argv[])
         Dump::dumpRankingList("tmp_remine/frequent_patterns.txt", order);
     }
 
-    FrequentPatternMining::mine_pos(MIN_SUP, MAX_LEN);
+    // FrequentPatternMining::mine_pos(MIN_SUP, MAX_LEN);
     cerr << "Extracting features..." << endl;
     Features::loadPosgroup("tmp_remine/pos_tag.map");
 
@@ -228,7 +228,7 @@ int main(int argc, char* argv[])
         if (iteration + 1 < ITERATIONS) {
             // rectify the features
             cerr << "Rectify Features..." << endl;
-            Label::removeWrongLabels();
+            // Label::removeWrongLabels();
 
             featuresPhrase = Features::extract(featureNamesPhrase);
             featuresUnigram = Features::extractUnigram(featureNamesUnigram);
@@ -241,16 +241,18 @@ int main(int argc, char* argv[])
         }
 
         // check the quality
-        if (INTERMEDIATE) {
+        /*if (INTERMEDIATE) {
             char filename[256];
             sprintf(filename, "tmp_remine/iter_%d_frequent_quality", iteration);
             Dump::dumpResults(filename);
-        }
+        }*/
 
     }
 
     Dump::dumpResults("tmp_remine/final_quality");
     Dump::dumpSegmentationModel("results_remine/segmentation.model");
+    Dump::dumpFeatures("tmp_remine/phrase.feat", featuresPhrase);
+    Dump::dumpFeaturesUnigram("tmp_remine/unigram.feat", featuresUnigram);
 
     return 0;
 }

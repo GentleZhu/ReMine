@@ -58,11 +58,12 @@ void predictQuality(vector<Pattern> &patterns, vector<vector<double>> &features,
             //patterns[i].quality = LiblinearRelated::predict(features[i]);
             patterns[i].quality = solver->estimate(features[i]) - 1;
             patterns[i].indicator = "ENTITY";
-            if (patterns[i].quality < 0) {
+            if (patterns[i].quality < -0.2) {
                 // cerr << patterns[i].quality << endl;
                 patterns[i].indicator = "RELATION";
                 patterns[i].quality = - patterns[i].quality;
             }
+            patterns[i].quality = fabs(patterns[i].quality);
             /*
             if (RELATION_MODE && patterns[i].indicator == "ENTITY") {
                 patterns[i].quality = 0;

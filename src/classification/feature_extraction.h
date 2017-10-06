@@ -207,7 +207,7 @@ namespace Features
 
     // ready for parallel
     void extractPunctuation(int id, vector<double> &feature) {
-        if (id2ends[id].size() == 0) {
+        if (id2ends[id].size() == 0 || id >= id2ends.size()) {
             feature.push_back(0);
             feature.push_back(0);
             feature.push_back(0);
@@ -251,7 +251,7 @@ namespace Features
     // ready for parallel
     void extractStatistical(int id, vector<double> &feature) {
         const Pattern &pattern = patterns[id];
-        if (pattern.currentFreq == 0) {
+        if (pattern.currentFreq == 0 || id >= id2ends.size()) {
             feature.push_back(0);
             feature.push_back(0);
             feature.push_back(0);
@@ -480,6 +480,7 @@ namespace Features
             patterns[i].probability = (patterns[i].currentFreq + EPS) / (corpusTokensN / (double)patterns[i].size());
         }
 
+        // cerr << "Pass extract prob!" << endl;
         featureNames = {"stat_f1", "stat_f2", "stat_f4", "stat_outside",
                         "punc_quote", "punc_dash", "punc_parenthesis", "first_capitalized",
                         // "all_capitalized",
@@ -490,6 +491,7 @@ namespace Features
                         };
 
         // compute features for each pattern
+        // cerr << "Qi look here: " << patterns.size() << endl;
         vector<vector<double>> features(patterns.size(), vector<double>());
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
@@ -498,7 +500,13 @@ namespace Features
                 extractStatistical(i, features[i]);
                 extractPunctuation(i, features[i]);
                 extractStopwords(patterns[i], features[i]);
-                extractCompleteness(patterns[i], features[i]);
+                if (i < id2ends.size()) {
+                    extractCompleteness(patterns[i], features[i]);
+                }
+                else {
+                    features[i].push_back(0);
+                    features[i].push_back(0);
+                }
                 extractPosRatio(patterns[i], features[i]);
                 features[i].shrink_to_fit();
             }

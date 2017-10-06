@@ -27,6 +27,7 @@ namespace FrequentPatternMining
             for (auto& token : tokens) {
                 Binary::write(out, token);
             }
+            //TODO(Bran): Output 
         }
 
         void load(FILE* in) {
@@ -230,6 +231,30 @@ namespace FrequentPatternMining
             }
         }
         return false;
+    }
+
+    inline void loadExternalPatterns(const string &filename, int LENGTH_THRESHOLD = 6) {
+        FILE* in = tryOpen(filename, "r");
+        int num_boost = 0;
+        TOKEN_ID_TYPE id;
+        while (getLine(in)) {
+            Pattern newPattern = Pattern();
+            stringstream sin(line);
+            for (string temp; sin >> temp;) {
+                vector<string> tokens = splitBy(temp, '_');
+                assert(tokens.size() == 2);
+                fromString(tokens[0], id);
+                newPattern.appendwithpos(id, Documents::posTag2id[tokens[1]]);
+            }
+            ULL hashValue = newPattern.hashValue;
+            if (!pattern2id.count(hashValue) && newPattern.size() <= LENGTH_THRESHOLD) {
+                num_boost ++;
+                pattern2id[hashValue] = patterns.size();
+                newPattern.currentFreq = MIN_SUP;
+                patterns.push_back(newPattern);
+            }
+        }
+        cerr << id2ends.size() << "\t" <<  num_boost << endl;
     }
 
     inline void mine(int MIN_SUP, int LENGTH_THRESHOLD = 6) {

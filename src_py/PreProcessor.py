@@ -53,7 +53,7 @@ class PreProcessor(object):
 			for content in self.cache:
 				assert(len(content['tokens'])==len(content['pos']))
 				#comment [:-1]
-				for w in content['tokens'][:-1]:
+				for w in content['tokens']:#[:-1]:
 					if len(w)==0:
 						continue
 					if w == '-LRB-':
@@ -70,7 +70,7 @@ class PreProcessor(object):
 						CASE.write('0')
 					OUT.write(self.inWordmapping(w.lower())+' ')
 				#uncomment below line for em segmentation
-				OUT.write(content['tokens'][-1]+'\n')
+				#OUT.write(content['tokens'][-1]+'\n')
 				for p in content['pos']:
 					POS_tag.write(p+'\n')
 				for e in content['entityMentions']:
@@ -90,7 +90,7 @@ class PreProcessor(object):
 							entityList.add(TOKENS)
 						#ENTITIES_POS.write(' '.join(content['pos'][e['start']:e['end']])+'\n')
 						#ENTITIES_POS.write(' '.join(content['pos'][e[0]:e[1]])+'\n')
-				#OUT.write('\n')
+				OUT.write('\n')
 				CASE.write('\n')
 		ENTITIES.close()
 		#ENTITIES_POS.close()
@@ -121,7 +121,7 @@ class PreProcessor(object):
 					Phrases.write(result+'\n')
 
 	def dump(self, prefix=''):
-		with open('token_mapping.txt','w') as OUT:
+		with open(prefix+'token_mapping.txt','w') as OUT:
 			for k,v in self.word_mapping.iteritems():
 				OUT.write(str(v)+'\t'+k.encode('ascii', 'ignore').decode('ascii')+'\n')
 		if self.mode=='Constraints Mode':
@@ -139,8 +139,8 @@ class PreProcessor(object):
 
 
 	def load(self):
-		self.test_token=cPickle.load(open('tmp_remine/test_token.p','rb'))
-		self.test_word=cPickle.load(open('tmp_remine/test_word.p','rb'))
+		self.test_token=cPickle.load(open('tmp_remine/s_2test_token.p','rb'))
+		self.test_word=cPickle.load(open('tmp_remine/s_2test_word.p','rb'))
 
 	def load_dict(self):
 		with open('token_mapping.txt','r') as IN:
@@ -166,7 +166,7 @@ class PreProcessor(object):
 				token=[]
 				word=[]
 				punc_pos=[]
-				for w in content['tokens'][:-1]:
+				for w in content['tokens']:#[:-1]:
 					#if w=="``" or w=="''":
 					#	continue
 					if len(w)==0:
@@ -189,7 +189,8 @@ class PreProcessor(object):
 						word.append(w)
 					else:
 						punc_pos.append((len(word),w))
-					punc_pos.append((len(word),content['tokens'][-1]))
+					
+					#punc_pos.append((len(word),content['tokens'][-1]))
 					#if w != "``" and w!= "''": 
 					#	TEXT.write(w+' ')
 					#else:
@@ -362,6 +363,7 @@ if __name__ == '__main__':
 		tmp.dump()
 	elif sys.argv[1] == 'translate_2':
 		tmp=PreProcessor(sys.argv[2])
+		tmp.load_dict()
 		tmp.mode = "Constraints Mode"
 		tmp.tokenize_train(sys.argv[3])
 		tmp.tokenize_test(sys.argv[4],sys.argv[5])

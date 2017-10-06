@@ -78,6 +78,70 @@ void process(const vector<int>& deps, const vector<string>& tags, const vector<p
     	}
     }
 
+    // Shortest path version
+    for (int j = 1; j < entityMentions.size(); ++j) {
+        int distance = deps.size();
+        int min_i = 0;
+        int min_start = 0, min_end = 0, min_parent = 0;
+        set<int> bgs;
+        for (int i = 0; i < j; ++i) {
+            // Fix multi-out_nodes problem in this version
+            for (int start : out_nodes[i]) 
+                for (int end : out_nodes[j]) {
+                    int min_depth = min(children[start].size(), children[end].size());
+                    int parent = 0, k;
+
+                    for (k = 0; k < min_depth; ++k, parent=k) {
+                        if (children[start][k] != children[end][k]) {
+                            break;
+                        }
+                    }
+
+                    if (children[end].size() + children[start].size() + 2 - 2 * parent < distance) {
+                        distance = children[end].size() + children[start].size() + 2 - 2 * parent;
+                        min_start = start;
+                        min_end = end;
+                        min_parent = parent;
+                        min_i = i;
+                    }
+                }
+        }
+
+        assert(min_parent != 0);
+
+        for (int st = min_parent; st < children[min_start].size(); ++st) {
+            printSubtree(parents, tags, bgs, children[min_start][st]);
+        }
+
+        printSubtree(parents, tags, bgs, min_start);
+        for (int st = min_parent; st < children[min_end].size(); ++st) {
+            printSubtree(parents, tags, bgs, children[min_end][st]);
+        }
+        printSubtree(parents, tags, bgs, min_end);
+
+        vector<int> erased;
+
+        for (const auto& path : bgs) {
+            if (path <= entityMentions[min_i].second || path > entityMentions[j].first )
+                erased.push_back(path);
+        }
+
+        for (const auto& path : erased) {
+            bgs.erase(path);
+        }
+
+        fprintf(out, "%d %d\t", min_i, j);
+
+        for (const auto& t : bgs) {
+            fprintf(out, "%d ", t);
+        }
+
+        fprintf(out, "<>");
+
+    }
+
+    // All pair version
+    /*
     for (int i = 0; i < entityMentions.size(); ++i) {
     	for (int j = i + 1; j < entityMentions.size(); ++j) {
     		set<int> bgs;
@@ -116,24 +180,15 @@ void process(const vector<int>& deps, const vector<string>& tags, const vector<p
                     cerr << children[start][0] << children[end][0] << endl;
     			for (int st = parent; st < children[start].size(); ++st) {
                     printSubtree(parents, tags, bgs, children[start][st]);
-                    //printSubtree(parents, bgs, start);
                 }
 
                 printSubtree(parents, tags, bgs, start);
-                //cerr << "start phrase size:" << bgs.size() << endl;
-					// segments.back() += to_string(children[start][st]) + " ";
-				// segments.back() += "|";
-				// segments.back() += to_string(children[start][parent-1]);
-				// segments.back() += "|";
-                // cerr << "no" << endl;
 				for (int st = parent; st < children[end].size(); ++st) {
 					// segments.back() += " " + to_string(children[end][st]);
                     printSubtree(parents, tags, bgs, children[end][st]);
                     //printSubtree(parents, bgs, end);
                 }   
                 printSubtree(parents, tags, bgs, end);
-                //cerr << "end phrase size:" << bgs.size() << endl;
-                // cerr << "end" << endl;
                 
                 vector<int> erased;
 
@@ -147,15 +202,13 @@ void process(const vector<int>& deps, const vector<string>& tags, const vector<p
                 }
                 fprintf(out, "%d %d\t", i, j);
                 for (const auto& t : bgs) {
-                    // cout << t << " ";
                     fprintf(out, "%d ", t);
-                    // fprintf(out_dep, "%d\n", deps[t - 1]);
                 }
     		}
             fprintf(out, "<>");
             // cout << "<>";
     	}
-    }
+    }*/
 
     /*
     for (const auto& seg : segments) {

@@ -208,10 +208,11 @@ public:
         }
         int new_id = tree_map.size();
         assert(new_id == deps_prob.size());
-        if (children[0].size() == 1)
-            deps_prob.push_back(0.8);
-        else
-            deps_prob.push_back(0.2);
+        deps_prob.push_back(1.0);
+        // if (children[0].size() == 1)
+        //    deps_prob.push_back(0.8);
+        //else
+        //    deps_prob.push_back(0.2);
         return tree_map[min_representation] = new_id;
     }
 
@@ -299,10 +300,11 @@ public:
         }
 
         cerr << "Debug information:" << tree_map.size() << endl;
-
+        
         for (auto& p : deps_prob) {
             p = 1.0 / deps_prob.size();
         }
+        
 /*
         for (const auto& kv : tree_map) {
             cerr << kv.first << deps_prob[kv.second] << endl;
@@ -593,6 +595,7 @@ public:
                     if (j > i) {
                         multiConstraints += GetPuncCost(tokens, tags, i, j);
                     }
+
                     // double tagCost = (j + 1 < tokens.size() && tags[j] >= 0 && tags[j + 1] >= 0) ? disconnect[tags[j]][tags[j + 1]] : 0;
                     
                     if (f[i] + p + multiConstraints > f[j + 1]) {
@@ -746,19 +749,18 @@ public:
 
     inline double rectifyFrequencyDeps(vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> &sentences) {
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
+        for (PATTERN_ID_TYPE i = 0; i < id2ends.size(); ++ i) {
             patterns[i].currentFreq = 0;
-            id2ends[i].clear();
         }
 
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
-        for (PATTERN_ID_TYPE i = 0; i < patterns_tag.size(); ++ i) {
-            patterns_tag[i].currentFreq = 0;
-            id2ends_tag[i].clear();
+        for (PATTERN_ID_TYPE i = 0; i < id2ends.size(); ++ i) {
+            id2ends[i].clear();
         }
 
         logDeps();
 
+        // cerr << "Begin rectify frequency deps" << endl;
         double energy = 0;
         # pragma omp parallel for reduction(+:energy) schedule(dynamic, SENTENCE_CHUNK_SIZE)
         for (INDEX_TYPE senID = 0; senID < sentences.size(); ++ senID) {
@@ -788,11 +790,11 @@ public:
                     assert(trie[u].children.count(tokens[k]));
                     u = trie[u].children[tokens[k]];
                 }
-                if (trie[u].id != -1) {
+                if (trie[u].id != -1 && trie[u].id < id2ends.size()) {
                     PATTERN_ID_TYPE id = trie[u].id;
                     separateMutex[id & SUFFIX_MASK].lock();
                     ++ patterns[id].currentFreq;
-                    if (i - j > 1 || i - j == 1 && unigrams[patterns[id].tokens[0]] >= MIN_SUP) {
+                    if (RELATION_MODE || i - j > 1 || i - j == 1 && unigrams[patterns[id].tokens[0]] >= MIN_SUP) {
                         id2ends[id].push_back(sentences[senID].first + i - 1);
                     }
                     separateMutex[id & SUFFIX_MASK].unlock();

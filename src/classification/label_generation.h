@@ -82,6 +82,7 @@ inline unordered_set<ULL> loadPatterns_tag(string filename)
 inline unordered_set<ULL> loadPatterns(string filename, int MAX_POSITIVE)
 {
     FILE* in = tryOpen(filename, "r");
+    // cerr << "DDDDDDEBUG" << pattern2id.size() << endl;
     vector<ULL> positivesUnigrams, positiveMultiwords;
     while (getLine(in)) {
         stringstream sin(line);
@@ -347,17 +348,20 @@ inline vector<Pattern> generateAll(string LABEL_METHOD, string LABEL_FILE, strin
                 if (needPos) {
                     ret.push_back(patterns[i]);
                     ret.back().label = 2;
+                    patterns[i].label = 2;
                 }
             } else if (exclude.count(patterns[i].hashValue)) {
                 if (needPos) {
                     ret.push_back(patterns[i]);
                     ret.back().label = 0;
+                    patterns[i].label = 0;
                 }
             } 
             else if (!include.count(patterns[i].hashValue)) {
                 if (needNeg) {
                     ret.push_back(patterns[i]);
                     ret.back().label = 1;
+                    patterns[i].label = 1;
                     // negatives.push_back(i);
                 }
             }

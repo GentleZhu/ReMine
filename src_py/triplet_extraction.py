@@ -1,18 +1,33 @@
 import numpy as np
-import json,sys
+import json,sys,cPickle
+from operator import itemgetter
 
 class Extractor(object):
 	"""docstring for Extractor"""
 	def __init__(self, arg):
 		self.arg = arg
-		self.emb = dict()
+		self.em_emb = dict()
+		self.rm_emb = dict()
 
-	def load_emb(self):
-		with open(self.arg['emb_path']) as IN:
+	def load_em_emb(self):
+		with open(self.arg['em_emb_path'], 'rb') as IN:
 			IN.readline()
 			for line in IN:
-				line=line.strip()
-				self.emb[line.split(' ')[0]] = np.asarray(map(float, line.split(' ')[1:]))
+				line=line.strip().split(' ')
+				#print line
+				#print line[0], ' '.join(line[:1]).decode('ascii')
+				self.em_emb[line[0]] = np.asarray(map(float, line[1:]))
+		print "emb loaded!"
+	def load_rm_emb(self):
+		with open(self.arg['rm_emb_path'], 'rb') as IN:
+			IN.readline()
+			for line in IN:
+				line=line.strip().split(' ')
+				#print line
+				#print line[0], ' '.join(line[:1]).decode('ascii')
+				self.rm_emb[line[0]] = np.asarray(map(float, line[1:]))
+		print "emb loaded!"
+				
 
 	def generateSegments(self, input_json, out1, out2):
 		with open(input_json, 'r') as IN, open(out1, 'w') as OUT, open(out2, 'w') as OUTT:
@@ -143,8 +158,8 @@ class Extractor(object):
 					ranges = map(lambda x:int(x)-1, annotation[1].strip().split(' '))
 					idx1 = int(annotation[0].split(' ')[0])
 					idx2 = int(annotation[0].split(' ')[1])
-					ranges = range(entityMentions[idx1][0],entityMentions[idx1][1]) +\
-					ranges + range(entityMentions[idx2][0],entityMentions[idx2][1])
+					#ranges = range(entityMentions[idx1][0],entityMentions[idx1][1]) +\
+					#ranges + range(entityMentions[idx2][0],entityMentions[idx2][1])
 					#ranges = map(lambda x:str(x[0])+'_'+x[1],sorted(list(ranges)))
 					#print ranges
 					dump['tokens'] = map(lambda x: tokens[x], ranges)
@@ -216,11 +231,55 @@ class Extractor(object):
 				print head,tail
 				print scores
 
+	def process(self, tri_json, rank_out):
+		entities = cPickle.load(open('entities.p', 'rb'))
+		relations = cPickle.load(open('relations.p', 'rb'))
+		with open(tri_json, 'r') as IN, open(rank_out, 'w') as OUT:
+			for line_num, line in enumerate(IN):
+				candidates = []
+				tmp = json.loads(line)
+				for t in tmp['triples']:
+					em1 = entities[t[0].lower()]
+					em2 = entities[t[2].lower()]
+					rs = t[1].split(',')
+					for r in rs:
+						if r in relations:
+							rm = relations[r.lower()]
+							#print np.linalg.norm(self.emb[em1]+self.emb[rm]-self.emb[em2])
+							candidates.append((t[0]+','+r+','+t[2], np.linalg.norm(self.emb[em1]+self.emb[rm]-self.emb[em2], ord=1)))
+				candidates.sort(key=itemgetter(1))
+				for i in candidates:
+					OUT.write(i[0]+'\t'+str(i[1])+'\n')
+				if line_num > 15:
+					break
+	def process(self, train, rank_out):
+		candidates = []
+		with open(train, 'r') as IN, open(rank_out, 'w') as OUT:
+			for line_num, line in enumerate(IN):
+				tmp = line.strip().split(' ')
+				em1 = self.em_emb[tmp[0]]
+				em2 = self.em_emb[tmp[1]]
+				rms = tmp[2].split(',')
+				rm = self.rm_emb[rms[0]]
+				for r in rms[1:]:
+					rm += self.rm_emb[r]
+				rm /= len(rms)
+				candidates.append((line, np.linalg.norm(em1+rm-em2, ord=1)))
+				if line_num > 30:
+					break
+			candidates.sort(key=itemgetter(1))
+			for i in candidates:
+				OUT.write(i[0]+'\t'+str(i[1])+'\n')
+
 if __name__ == '__main__':
-	tmp = Extractor('')
+	#tmp = Extractor('')
+	tmp = Extractor({'em_emb_path': sys.argv[1], 'rm_emb_path': sys.argv[2]})
+	tmp.load_em_emb()
+	tmp.load_rm_emb()
+	tmp.process(sys.argv[3], sys.argv[4])
 	#tmp.generateSegments(sys.argv[1], sys.argv[2], sys.argv[3])
 	#tmp.generateRPs(sys.argv[1], sys.argv[2], sys.argv[3])
-	tmp.generatePathwords(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
+	#tmp.generatePathwords(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4], sys.argv[5])
 	#tmp=Extractor({'emb_path':'/shared/data/qiz3/ReMine/utils/word2vec/data/demo.txt.bin',
 	#	'corpus_path':'/shared/data/qiz3/ReMine/results_remine/sample.txt'})
 	#tmp.load_emb()
