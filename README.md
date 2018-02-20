@@ -15,13 +15,13 @@ We run all experiments on Ubuntu 16.04.
 $ bash phrase_extraction.sh
 ```
 ### Example Segmented Corpus
-**[background phrase]**
-`entity phrase`
-_relation phrase_
+**background_phrase**
+`entity_phrase`
+_relation_phrase_
 
-**[Gov. Tim Pawlenty of Minnesota]** _order_ **[the state health department]** **[this month]** **[to monitor]** `day-to-day operation` _at_ `the Minneapolis Veterans Home` _after_ `state inspector` _find_ _that_ **[three man]** _have die_ there _in_ **[the previous month]** because of neglect or `medical error`
+**Gov._Tim_Pawlenty_of_Minnesota** _order_ **the_state_health_department** **this_month** **to_monitor** `day-to-day_operation` _at_ the `Minneapolis_Veterans_Home` _after_ `state_inspector` _find_ _that_ **three_man** _have_die_ there _in_ **the_previous_month** because of neglect or `medical error`
 
-**[the aid group doctor]** without border _say that since_ `Saturday`, more than 275 **[wounded people]** _have_ _be_admit_ _and_ _treat at_ `Donka Hospital` in the capital of `Guinea`, **[Conakry]**. 
+**the_aid_group_doctor** without border _say_that_since_ `Saturday`, more than 275 **wounded_people** _have_ _be_admit_ _and_ _treat at_ `Donka_Hospital` in the capital of `Guinea`, **Conakry**. 
 ```
 $ bash remine-ie.sh
 ```
