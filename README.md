@@ -15,10 +15,12 @@ We run all experiments on Ubuntu 16.04.
 $ bash phrase_extraction.sh
 ```
 ### Example Segmented Corpus
-<span style="color:#0000FF">Gov. Tim Pawlenty of Minnesota</span> <span style="color:#000080">order</span> the state health department :BP this month :BP to monitor :BP day-to-day operation :EP at :RP the Minneapolis Veterans Home :EP after :RP state inspector :EP find :RP that :RP three man :BP have die :RP there in :RP the previous month :BP because of :BP neglect :RP or :RP medical error :EP 
-`` the aid group doctor :BP without border :BP say that since :RP Saturday :EP , more than 275 wounded people :BP have :RP be admit :RP and :RP treat :RP at :RP Donka Hospital :EP in the capital of :BP Guinea :EP , Conakry :BP . 
-`` the american people :BP can see :RP what be happen :BP here :RP , '' say :RP Senator Ben Nelson :EP , Democrat of Nebraska :BP . ''
-## Run Open-IE demo
+**[background phrase]**
+`entity phrase`
+_relation phrase_
+
+**[Gov. Tim Pawlenty of Minnesota]** _order_ **[the state health department]** **[this month]** **[to monitor]** `day-to-day operation` _at_ `the Minneapolis Veterans Home` _after_ `state inspector` _find_ _that_ **[three man]** _have die_ there _in_ **[the previous month]** because of neglect or `medical error`
+**[the aid group doctor]** without border _say that since_ `Saturday`, more than 275 **[wounded people]** _have_ _be_admit_ _and_ _treat at_ _RP_ `Donka Hospital` in the capital of `Guinea`, **[Conakry]**. 
 ```
 $ bash remine-ie.sh
 ```
