@@ -20,6 +20,7 @@ $ bash phrase_extraction.sh
 _relation phrase_
 
 **[Gov. Tim Pawlenty of Minnesota]** _order_ **[the state health department]** **[this month]** **[to monitor]** `day-to-day operation` _at_ `the Minneapolis Veterans Home` _after_ `state inspector` _find_ _that_ **[three man]** _have die_ there _in_ **[the previous month]** because of neglect or `medical error`
+
 **[the aid group doctor]** without border _say that since_ `Saturday`, more than 275 **[wounded people]** _have_ _be_admit_ _and_ _treat at_ `Donka Hospital` in the capital of `Guinea`, **[Conakry]**. 
 ```
 $ bash remine-ie.sh
