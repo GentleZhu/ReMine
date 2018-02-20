@@ -17,11 +17,11 @@ $ bash phrase_extraction.sh
 ### Example Segmented Corpus
 (background_phrase)
 [entity_phrase]
-<relation_phrase>
+\<relation_phrase\>
 
-(Gov. Tim Pawlenty of Minnesota) <order> (the state health department) (this month) (to monitor) [day-to-day operation] <at> the[ Minneapolis Veterans Home] <after> [state inspector] <find> <that> (three man) <have die> there <in> (the previous month) (because of)[neglect] <or> [medical error]
+(Gov. Tim Pawlenty of Minnesota) \<ordered\> (the state health department) (this month) (to monitor) [day-to-day operation] \<at\> the[ Minneapolis Veterans Home] \<after\> [state inspector] \<found\> \<that\> (three man) \<had died\> there \<in\> (the previous month) (because of) [neglect] \<or\> [medical error]
   
-(the aid group doctor) (without border) <say that since> [Saturday], more than 275 (wounded people) <have> <been admitted> <and> <treated><at> [Donka Hospital] (in the capital of) [Guinea], (Conakry).
+(The aid group Doctor) (Without Border) <said that since> [Saturday], more than 275 (wounded people) \<had\> \<been admitted\> \<and\> \<treated\> \<at\> [Donka Hospital] (in the capital of) [Guinea], (Conakry).
 ```
 $ bash remine-ie.sh
 ```
