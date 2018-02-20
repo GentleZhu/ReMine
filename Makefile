@@ -1,7 +1,7 @@
 CXX = g++
 CFLAGS = -std=c++11 -Wall -O3 -msse2  -fopenmp  -I..
 
-BIN = ./bin/remine_train ./bin/remine_segment 
+BIN = ./bin/remine_train ./bin/remine_segment ./bin/genSepath
 #./bin/remine_baseline ./bin/remine_rm_train
 .PHONY: clean all
 
@@ -9,7 +9,7 @@ all: ./bin $(BIN)
 
 ./bin/remine_train: ./src/main.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h
 ./bin/remine_segment: ./src/segment.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h 
-#./bin/remine_baseline: ./src/remine_baseline.cpp ./src/utils/*.h
+./bin/genSepath: ./src/genSepath.cpp ./src/utils/*.h
 #./bin/remine_rm_train: ./src/RM_train.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h ./src/clustering/*.h
 #./bin/remine_rm_segment: ./src/rm_segment.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h ./src/clustering/*.h
 
