@@ -32,9 +32,12 @@ class PreProcessor(object):
 	def chunk_train(self, docIn, posIn):
 
 		grammar = r"""
+			DATE:              # chunk sequences of proper nouns
+      		{<NNP><CD>}
   			NP: {<DT|PP\$>?<JJ>*<NN|NNS>+}   # chunk determiner/possessive, adjectives and noun
-      		{<NNP>+} 
-      		{<NNP>+<CD>+}               # chunk sequences of proper nouns
+      		{<NNP>+<IN><NNP>+}
+      		{<NNP>+}
+      		
 		"""
 
 		'''
@@ -53,11 +56,17 @@ class PreProcessor(object):
 				sent = list(zip(d,p))
 				tree = cp.parse(sent)
 				for subtree in tree.subtrees():
-					if subtree.label() == 'NP':
+					if subtree.label() == 'NP' or subtree.label() == 'DATE':
 						branch = subtree.leaves()
 						if len(branch) > 1:
-							out.write(' '.join(list(map(lambda x:str(self.inWordmapping(x[0]))+'_'+x[1], branch))) + '\n')
-							out.write(' '.join(list(map(lambda x:x[0], branch))) + '\n')
+							string = ' '.join(list(map(lambda x:x[0], branch)))
+							if 'www' not in string and '.com' not in string:
+								out.write(' '.join(list(map(lambda x:str(self.inWordmapping(x[0]))+'_'+x[1], branch))) + '\n')
+								# out.write(' '.join(list(map(lambda x:x[0], branch))) + '\n')
+					#if subtree.label() == 'DATE':
+					#	branch = subtree.leaves()
+					#	if len(branch) > 1:
+							#print(' '.join(list(map(lambda x:x[0], branch))) + '\n')
 							#chunks.add(map(lambda x:x[0]+'_'+x[1], branch))
 			#print(len(chunks))
 
@@ -222,8 +231,8 @@ class PreProcessor(object):
 
 		start=['<None>','<EP>','<RP>','<BP>']
 		end=['</None>','</EP>','</RP>', '</BP>']
-		dictx={'<EP>':'<phrase> ','<RELATION>':'(','</EP>':'</phrase> ','</ENTITY>':']'}
-		with open(seg_path,'r') as _seg, open(outpath,'w') as OUT:
+		dictx={'<EP>':'[ ','<RP>':'<','</EP>':'] ','</RP>':'>', '<BP>':'(', '</BP>':')'}
+		with open(seg_path,'r', encoding='utf-8') as _seg, open(outpath,'w', encoding='utf-8') as OUT:
 			for line in _seg:
 				for token in line.strip().split(' '):
 					queue.append(token)
@@ -268,7 +277,7 @@ class PreProcessor(object):
 		start=['<None>','<EP>','<RP>','<BP>']
 		end=['</None>','</EP>','</RP>', '</BP>']
 		start_phrase=False
-		with open(seg_path,'r') as _seg, open(outpath,'w') as OUT:
+		with open(seg_path,'r', encoding='utf-8') as _seg, open(outpath,'w', encoding='utf-8') as OUT:
 			for line in _seg:
 				for token in line.strip().split(' '):
 					queue.append(token)
@@ -345,7 +354,7 @@ if __name__ == '__main__':
 		tmp.tokenize(args.in1, args.out)
 	elif args.op == 'segment':
 		tmp.load_all()
-		tmp.mapBackv2(args.in1, args.out)
+		tmp.mapBack(args.in1, args.out)
 	elif args.op == 'train_rm':
 		tmp.load()
 		tmp.tokenized_train_rm(args.in1)
