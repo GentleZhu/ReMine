@@ -13,3 +13,6 @@ python3 src_py/preprocessing.py --op=translate --in1=data/stopwords.txt --out=tm
 python3 src_py/preprocessing.py --op=translate --in1=tmp/nyt.entities --out=tmp_remine/tokenized_quality.txt
 
 python3 src_py/preprocessing.py --op=translate --in1=tmp/nyt.relations --out=tmp_remine/tokenized_negatives.txt
+
+bash phrase_extraction.sh
+python3 src_py/preprocessing.py --op=segment --in1=tmp_remine/tokenized_segmented_sentences.txt --out=results_remine/segmentation.txt
