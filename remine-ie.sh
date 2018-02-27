@@ -2,6 +2,11 @@ green=`tput setaf 2`
 red=`tput setaf 1`
 blue=`tput setaf 3`
 reset=`tput sgr0`
+
+mkdir -p tmp_remine/
+mkdir -p tmp/
+mkdir -p results_remine/
+
 echo ${green}===Tokenizaztion===${reset}
 python3 src_py/preprocessing.py --op=test --in1=data/nyt/test.lemmas.txt --in2=data/nyt/test.pos.txt --in3=data/nyt/test.dep.txt
 echo ${blue}===Extracting Phrases===${reset}
