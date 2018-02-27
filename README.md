@@ -10,7 +10,7 @@ We run all experiments on Ubuntu 16.04.
 * [eigen 3.2.5](http://bitbucket.org/eigen/eigen/get/3.2.5.tar.bz2) (already included).
 ### Build
 ```
-$ make
+$ bash compile.sh
 ```
 
 ## Test with pre-trained model
