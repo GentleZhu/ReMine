@@ -29,4 +29,7 @@ $ bash phrase_extraction.sh
   
 (The aid group Doctor) (Without Border) \<said that since\> [Saturday], more than 275 (wounded people) \<had\> \<been admitted\> \<and\> \<treated\> \<at\> [Donka Hospital] (in the capital of) [Guinea], (Conakry).
 
-### Ingegrated Optimizer
+### Integrated Optimizer
+```
+$ bash train.sh
+```
