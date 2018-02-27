@@ -1,11 +1,6 @@
-/*
-Usage:
-./bin/remine_baseline ./data_remine/nyt_deps_train.txt remine_extraction/ver2/nyt_6k_remine_2.txt remine_extraction/ver2/nyt_6k_remine_pos.txt remine_extraction/ver2/nyt_6k_remine_4.txt
-*/
-
-#include <fstream>
 #include "utils/parameters.h"
 #include "utils/utils.h"
+#include "data/documents.h"
 
 namespace GenPath
 {
@@ -23,9 +18,6 @@ namespace GenPath
     }
 
     void printSubtree(const vector<vector<int>>& parent, const vector<string> tags, set<int>& bgs, int index, int left, int right, bool special = false) {
-        // cerr << index << " inserted !" << endl;
-        // if (verb_tags.count(tags[index - 1])) {
-        // if (index <= right && index >= left) {
         
         if (special || !noun_tags.count(tags[index - 1])) {
             for (int i = 0; i < parent[index].size(); ++i) {
@@ -33,37 +25,39 @@ namespace GenPath
             }
         }
         
-
-            //bgs.insert(parent[index][i]);
-        
         if (!special && !noun_tags.count(tags[index - 1])) {
             bgs.insert(index);
         }
         if (special && attach_tags.count(tags[index - 1]))
             bgs.insert(index);
-        // bgs.insert(index)
-        
-        /*if (index <= right && index > left) {
-            for (int i = 0; i < parent[index].size(); ++i) {
-                printSubtree(parent, tags, bgs, parent[index][i], left, right);
-            }
-                //bgs.insert(parent[index][i]);
-            bgs.insert(index);
-        }*/
-        //}
-
         
     }
 
-    vector<pair<int, set<int>>> genSepath(const vector<int>& deps, const vector<string>& tags, const vector<string>& types, const vector<pair<int, int>>& entityMentions, FILE* out) {
+    void printSubtree(const vector<vector<int>>& parent, const vector<int> tags, set<int>& bgs, int index, int left, int right, bool special = false) {
+        
+        if (special || !noun_tags.count(Documents::posid2Tag[tags[index - 1]])) {
+            for (int i = 0; i < parent[index].size(); ++i) {
+                printSubtree(parent, tags, bgs, parent[index][i], left, right, special);
+            }
+        }
+        
+        if (!special && !noun_tags.count(Documents::posid2Tag[tags[index - 1]])) {
+            bgs.insert(index);
+        }
+        if (special && attach_tags.count(Documents::posid2Tag[tags[index - 1]]))
+            bgs.insert(index);
+        
+    }
+
+    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> genSepath(const vector<pair<int, TOTAL_TOKENS_TYPE> >& deps, const vector<int>& tags, const vector<string>& types, const vector<pair<int, int>>& entityMentions) {
     	vector<vector<int>> children(deps.size() + 1);
         vector<vector<int>> parents(deps.size() + 1);
-        vector<pair<int, set<int>>> paths;
+        unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> paths;
         int root;
 
         assert(deps.size() == types.size());
         for (int i = 0; i < deps.size(); ++ i) {
-            int a = i + 1, b = deps[i];
+            int a = i + 1, b = deps[i].second;
             if (b == 0) {
             	children[a].push_back(a);
             }
@@ -72,8 +66,10 @@ namespace GenPath
             while (b != 0) {
                 ++ multi_root;
             	children[a].push_back(b);
-            	b = deps[b - 1];
-                if (multi_root > deps.size()) return paths;
+            	b = deps[b - 1].second;
+                if (multi_root > deps.size()) {
+                    return paths;
+                }
         	}	
         }
         
@@ -86,17 +82,19 @@ namespace GenPath
         vector<vector<string>> out_types(entityMentions.size());
         vector<string> segments;
 
-        for (int i = 0; i < entityMentions.size(); ++i) {
-            // cerr << entityMentions[i].first << " " << entityMentions[i].second << endl;
-        	for (int index = entityMentions[i].first; index < entityMentions[i].second; ++index) {
+        // cout << "here" << deps.size() << endl;
 
-        		if (deps[index] <= entityMentions[i].first || deps[index] > entityMentions[i].second) {
-        			if (deps[index] == 0) {
+        for (int i = 0; i < entityMentions.size(); ++i) {
+            // cout << entityMentions[i].first << " " << entityMentions[i].second << endl;
+        	for (int index = entityMentions[i].first; index < entityMentions[i].second; ++index) {
+                // cout << index << endl;
+        		if (deps[index].second <= entityMentions[i].first || deps[index].second > entityMentions[i].second) {
+        			if (deps[index].second == 0) {
                         /* Root node */
         				out_nodes[i].push_back(index + 1);
         			}
         			else {
-        				out_nodes[i].push_back(deps[index]);
+        				out_nodes[i].push_back(deps[index].second);
         			}
                     out_types[i].push_back(types[index]);
         		}
@@ -184,7 +182,7 @@ namespace GenPath
                 bgs.erase(path);
             }
 
-            // fprintf(out, "%d_%s %d_%s\t", min_i, start_type.c_str(), j, end_type.c_str());
+            // printf("%d_%s %d_%s\t", min_i, start_type.c_str(), j, end_type.c_str());
             // fprintf(out, "%d %d\t", min_i, j);
 
             /*
@@ -194,7 +192,8 @@ namespace GenPath
             */
 
             // fprintf(out, "<>");
-            paths.push_back(make_pair(min_i, bgs));
+            if (bgs.size() > 0) paths[j] = make_pair(min_i, bgs);
+            // paths.push_back(make_pair(pair<int>(min_i), bgs));
 
         }
         return paths;
@@ -351,71 +350,3 @@ namespace GenPath
 
     }
 };
-
-
-int main(int argc, char* argv[])
-{
-	FILE* depIn = tryOpen(argv[1], "r");
-	vector<vector<int>> depPaths;
-    vector<vector<string>> depTypes;
-    char currentDep[100];
-	while (getLine(depIn)) {
-		vector<int> tmp;
-        vector<string> tmp_type;
-		depPaths.push_back(tmp);
-        depTypes.push_back(tmp_type);
-		stringstream sin(line);
-		for(string temp; sin >> temp;) {
-            strcpy(currentDep, temp.c_str());
-            int idx = atoi(strtok (currentDep, "_"));
-            int idx_dep = atoi(strtok (NULL, "_"));
-            string xxx(strtok(NULL, "_"));
-			depPaths.back().push_back(idx_dep);
-            depTypes.back().push_back(xxx);
-            // cout << depPaths.back().back() << " " << depTypes.back().back() << endl;
-		}
-	}
-    fclose(depIn);
-
-    vector<vector<string>> posPaths;
-    FILE* posIn = tryOpen(argv[3], "r");
-    while (getLine(posIn)) {
-        vector<string> tmp;
-        posPaths.push_back(tmp);
-        stringstream sin(line);
-        for (string temp; sin >> temp;) {
-            posPaths.back().push_back(temp);
-        }
-
-    }
-
-	FILE* emIn = tryOpen(argv[2], "r");
-
-    GenPath::MIN_DIS = 4;
-	int docs = 0;
-    FILE* out = tryOpen(argv[4], "w");
-    // FILE* out_dep = tryOpen(argv[5], "w");
-    cout << "dependencies readed" << endl;
-	while (getLine(emIn)) {
-        // cerr << docs << "DOC" << endl;
-        //if (docs == 235973) {
-		stringstream sin(line);
-		vector<pair<int ,int>> ems;
-		for(string temp; sin >> temp;) {
-			vector<string> segs;
-			GenPath::split(temp, '_', segs);
-			assert(segs.size() == 2);
-			ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
-		}
-        GenPath::process(depPaths[docs], posPaths[docs], depTypes[docs], ems, out);
-        fprintf(out, "\n");
-        //}
-        ++ docs;
-        // break;
-        //if (docs == 5)
-		//  break;
-	}
-    fclose(emIn);
-    fclose(out);
-
-}

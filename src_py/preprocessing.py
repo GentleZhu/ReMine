@@ -71,8 +71,8 @@ class PreProcessor(object):
 			#print(len(chunks))
 
 	def tokenized_test(self, docIn, posIn, depIn):
-		fdep = open('data/deps_test.txt', 'w')
-		fpos = open('data/pos_tags_test.txt', 'w')
+		fdep = open('tmp_remine/deps_test.txt', 'w')
+		fpos = open('tmp_remine/pos_tags_test.txt', 'w')
 		fdoc = open('tmp_remine/tokenized_test.txt', 'w')
 		fcase = open('tmp_remine/case_tokenized_test.txt', 'w')
 
@@ -114,8 +114,8 @@ class PreProcessor(object):
 		fcase.close()
 
 	def tokenized_train(self, docIn, posIn, depIn):
-		fdep = open('data/deps_train.txt', 'w')
-		fpos = open('data/pos_tags_train.txt', 'w')
+		fdep = open('tmp_remine/deps_train.txt', 'w')
+		fpos = open('tmp_remine/pos_tags_train.txt', 'w')
 		fdoc = open('tmp_remine/tokenized_train.txt', 'w')
 		fcase = open('tmp_remine/case_tokenized_train.txt', 'w')
 		self.test_tokens = []
@@ -321,6 +321,29 @@ class PreProcessor(object):
 						c_ptr=0
 						OUT.write('\n')
 
+	def map(self,seg_path,outpath):
+		queue=[]
+		start=['<None>','<EP>','<RP>','<BP>']
+		end=['</None>','</EP>','</RP>', '</BP>']
+		start_phrase=False
+		with open(seg_path,'r', encoding='utf-8') as _seg, open(outpath,'w', encoding='utf-8') as OUT:
+			for line in _seg:
+				for token in line.strip().split(' '):
+					queue.append(token)
+				#print queue
+				flag = -1
+				for i in range(len(queue)):
+					#print c_ptr,r_ptr
+					if queue[i] in start:
+						flag = i
+					elif queue[i] in end and flag > 0:
+						OUT.write(queue[i].replace('/', '') + ' '.join(list(map(lambda x: self.inWordmapping(x), queue[flag:i]))) + queue[i] + ' ') 
+						flag = -1
+						#if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
+					else:
+						OUT.write(self.inWordmapping(queue[i]) + ' ')
+				OUT.write('\n')
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description="Run node2vec.")
@@ -354,7 +377,7 @@ if __name__ == '__main__':
 		tmp.tokenize(args.in1, args.out)
 	elif args.op == 'segment':
 		tmp.load_all()
-		tmp.mapBack(args.in1, args.out)
+		tmp.mapBackv2(args.in1, args.out)
 	elif args.op == 'train_rm':
 		tmp.load()
 		tmp.tokenized_train_rm(args.in1)
@@ -362,3 +385,7 @@ if __name__ == '__main__':
 	elif args.op == 'segment_rm':
 		tmp.load_rm_all()
 		tmp.mapBackv2(args.in1, args.out)
+	elif args.op == 'segmentation':
+		tmp.load()
+		tmp.map(args.in1, args.out)
+

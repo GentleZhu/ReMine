@@ -15,14 +15,15 @@ typedef short int POSITION_INDEX_TYPE; // position inside a sentence
 const string RM_TRAIN_FILE = "tmp_remine/rm_tokenized_train.txt";
 const string RM_TEST_FILE = "tmp_remine/rm_tokenized_test.txt";
 const string RM_TRAIN_CAPITAL_FILE = "tmp_remine/rm_case_tokenized_train.txt";
-const string RM_TRAIN_DEPS_FILE = "tmp_remine/rm_deps_train.txt";
-// const string RM_TRAIN_DEPS_FILE = "remine_extraction/ver2/nyt_6k_deps_rm.txt";
+// const string RM_TRAIN_DEPS_FILE = "tmp_remine/rm_deps_train.txt";
+const string RM_TRAIN_DEPS_FILE = "tmp_remine/deps_train_type.txt";
 const string RM_STOPWORDS_FILE = "tmp_remine/tokenized_stopwords.txt";
 const string RM_PUNC_FILE = "tmp_remine/tokenized_punctuations.txt";
 const string RM_ALL_FILE = "tmp_remine/tokenized_quality.txt";
 const string RM_NEGATIVES_FILE = "tmp_remine/tokenized_negatives.txt";
 const string RM_QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
 const string RM_POS_TAGS_FILE = "tmp_remine/rm_pos_tags_train.txt";
+const string RM_TRAIN_EMS_FILE = "tmp_remine/entity_position.txt";
 
 const string RM_TEXT_TO_SEG_FILE = "tmp_remine/rm_tokenized_train.txt";
 const string RM_TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/rm_pos_tags_train.txt";
@@ -40,13 +41,13 @@ const string PUNC_FILE = "tmp_remine/tokenized_punctuations.txt";
 const string ALL_FILE = "tmp_remine/tokenized_quality.txt";
 const string NEGATIVES_FILE = "tmp_remine/tokenized_negatives.txt";
 const string QUALITY_FILE = "tmp_remine/tokenized_quality.txt";
-const string POS_TAGS_FILE = "data/nyt/pos_tags_train.txt";
-const string TRAIN_DEPS_FILE = "data/nyt/deps_train.txt";
+const string POS_TAGS_FILE = "tmp_remine/pos_tags_train.txt";
+const string TRAIN_DEPS_FILE = "tmp_remine/deps_train.txt";
 //Modify next line just for NYT13K dataset
 
 const string TEXT_TO_SEG_FILE = "tmp_remine/tokenized_train.txt";
-const string TEXT_TO_SEG_POS_TAGS_FILE = "data/nyt/pos_tags_train.txt";
-const string TEXT_TO_SEG_DEPS_FILE = "data/nyt/deps_train.txt";
+const string TEXT_TO_SEG_POS_TAGS_FILE = "tmp_remine/pos_tags_train.txt";
+const string TEXT_TO_SEG_DEPS_FILE = "tmp_remine/deps_train.txt";
 // const string TEXT_TO_SEG_DEPS_FILE = "remine_extraction/ver2/nyt_6k_deps_rm.txt";
 
 
