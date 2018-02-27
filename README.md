@@ -8,6 +8,10 @@ We run all experiments on Ubuntu 16.04.
 * python 3.5
 * Python library dependencies
 * [eigen 3.2.5](http://bitbucket.org/eigen/eigen/get/3.2.5.tar.bz2) (already included).
+### Build
+```
+$ make
+```
 
 ## Test with pre-trained model
 ```
