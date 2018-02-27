@@ -71,8 +71,8 @@ class PreProcessor(object):
 			#print(len(chunks))
 
 	def tokenized_test(self, docIn, posIn, depIn):
-		fdep = open('data/deps_test.txt', 'w')
-		fpos = open('data/pos_tags_test.txt', 'w')
+		fdep = open('tmp_remine/deps_test.txt', 'w')
+		fpos = open('tmp_remine/pos_tags_test.txt', 'w')
 		fdoc = open('tmp_remine/tokenized_test.txt', 'w')
 		fcase = open('tmp_remine/case_tokenized_test.txt', 'w')
 
@@ -87,19 +87,21 @@ class PreProcessor(object):
 				deps = d.strip().split(' ')
 				tmp = []
 				for i,d in enumerate(deps):
-					dd=d.split('_')
-					tmp.append(str(i)+'_'+dd[0])
+					#dd=d.split('_')
+					tmp.append(str(i)+'_'+d)
 				assert(len(tokens) == len(postags) == len(deps))
+				#print(tokens)
 				for i,w in enumerate(tokens):
 					if i != len(tokens) - 1:
 						fdoc.write(self.inWordmapping(w)+' ')
 						_token.append(self.inWordmapping(w))
 					else:
-						if w not in self.punc:
-							fdoc.write(self.inWordmapping(w)+'\n')
-							_token.append(self.inWordmapping(w))
-						else:
-							fdoc.write(w+'\n')
+						#if w not in self.punc:
+						fdoc.write(self.inWordmapping(w)+'\n')
+						_token.append(self.inWordmapping(w))
+						#else:
+							#fdoc.write(w+'\n')
+							#_token.append(w)
 					_word.append(w)
 					fcase.write(self.case(w))
 				self.test_tokens.append(_token)
@@ -114,8 +116,8 @@ class PreProcessor(object):
 		fcase.close()
 
 	def tokenized_train(self, docIn, posIn, depIn):
-		fdep = open('data/deps_train.txt', 'w')
-		fpos = open('data/pos_tags_train.txt', 'w')
+		fdep = open('tmp_remine/deps_train.txt', 'w')
+		fpos = open('tmp_remine/pos_tags_train.txt', 'w')
 		fdoc = open('tmp_remine/tokenized_train.txt', 'w')
 		fcase = open('tmp_remine/case_tokenized_train.txt', 'w')
 		self.test_tokens = []
@@ -211,10 +213,10 @@ class PreProcessor(object):
 		self.test_tokens = _pickle.load(open('tmp_remine/test_tokens.p', 'rb'))
 		self.test_words = _pickle.load(open('tmp_remine/test_words.p', 'rb'))
 
-	def load_rm_all(self):
+	def load_test(self):
 		self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-		self.test_tokens = _pickle.load(open('tmp_remine/rm_test_tokens.p', 'rb'))
-		self.test_words = _pickle.load(open('tmp_remine/rm_test_words.p', 'rb'))
+		self.test_tokens = _pickle.load(open('tmp_remine/real_test_tokens.p', 'rb'))
+		self.test_words = _pickle.load(open('tmp_remine/real_test_words.p', 'rb'))
 
 	def tokenize(self, docIn, docOut):
 		with open(docIn, encoding='utf-8') as doc, open(docOut,'w', encoding='utf-8') as out:
@@ -321,6 +323,57 @@ class PreProcessor(object):
 						c_ptr=0
 						OUT.write('\n')
 
+	def map(self,seg_path,outpath):
+		queue=[]
+		r_ptr=0
+		c_ptr=0
+		start=['<None>','<EP>','<RP>','<BP>']
+		end=['</None>','</EP>','</RP>', '</BP>']
+		start_phrase=False
+		with open(seg_path,'r', encoding='utf-8') as _seg, open(outpath,'w', encoding='utf-8') as OUT:
+			for line in _seg:
+				for token in line.strip().split(' '):
+					queue.append(token)
+				#print queue
+				while (len(queue)>0):
+					#print c_ptr,r_ptr
+					if queue[0] in start or queue[0] in end:
+						#if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
+						if queue[0] in start and c_ptr == len(self.test_tokens[r_ptr]):
+							#OUT.write('\n'+queue.pop(0)+' ')
+							start_phrase=True
+							OUT.write('\n')
+							r_ptr+=1
+							c_ptr=0
+							queue.pop(0)
+							continue
+						else:
+							if queue[0] in start:
+								start_phrase=True
+							else:
+								start_phrase=False
+								if 'None' in queue[0]:
+									#OUT.write(':BP,')
+									OUT.write(']_[')
+								elif 'EP' in queue[0]:
+									OUT.write(':EP]_[')
+								elif 'RP' in queue[0]:
+									OUT.write(':RP]_[')
+								elif 'BP' in queue[0]:
+									OUT.write(':BP]_[')
+							queue.pop(0)
+					elif c_ptr < len(self.test_tokens[r_ptr]) and queue[0] == self.test_tokens[r_ptr][c_ptr]:
+						if start_phrase:
+							OUT.write(self.test_words[r_ptr][c_ptr] + ' ')
+						else:
+							OUT.write(self.test_words[r_ptr][c_ptr] + ']_[')
+						queue.pop(0)
+						c_ptr+=1
+					else:
+						r_ptr+=1
+						c_ptr=0
+						OUT.write('\n')
+
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser(description="Run node2vec.")
@@ -354,11 +407,12 @@ if __name__ == '__main__':
 		tmp.tokenize(args.in1, args.out)
 	elif args.op == 'segment':
 		tmp.load_all()
-		tmp.mapBack(args.in1, args.out)
+		tmp.mapBackv2(args.in1, args.out)
 	elif args.op == 'train_rm':
 		tmp.load()
 		tmp.tokenized_train_rm(args.in1)
 		tmp.dump_rm()
-	elif args.op == 'segment_rm':
-		tmp.load_rm_all()
+	elif args.op == 'segment_test':
+		tmp.load_test()
 		tmp.mapBackv2(args.in1, args.out)
+

@@ -477,12 +477,17 @@ public:
     }
 
     //TODO(branzhu): Change this into Enable Constraints Mode.
-    Segmentation(bool ENABLE_POS_TAGGING) {
+    Segmentation(bool ENABLE_POS_TAGGING, bool TUPLE_MODE=false) {
         assert(ENABLE_POS_TAGGING == true);
         Segmentation::ENABLE_POS_TAGGING = ENABLE_POS_TAGGING;
         initialize();
         for (int i = 0; i < patterns.size(); ++ i) {
-            prob[i] = log(prob[i] + EPS) + log(patterns[i].quality + EPS);
+            if (!TUPLE_MODE) {
+                prob[i] = log(prob[i] + EPS) + log(patterns[i].quality + EPS);
+            }
+            else {
+                prob[i] = log(prob[i] + EPS);
+            }
         }
     }
     //segmentation penalty

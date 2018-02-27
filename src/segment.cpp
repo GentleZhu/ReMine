@@ -178,7 +178,7 @@ int main(int argc, char* argv[])
         }
     }
     fclose(in);
-    if (true) {
+    if (false) {
         for (const auto& m : Segmentation::tree_map) {
             cerr << m.first << " " << Segmentation::deps_prob[m.second] <<endl;
         }

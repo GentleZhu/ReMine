@@ -34,7 +34,6 @@ void loadSegmentationModel(const string& filename)
     myAssert(ENABLE_POS_TAGGING == flag, "Model and configuration mismatch! whether ENABLE_POS_TAGGING?");
     Binary::read(in, Segmentation::penalty);
 
-    cerr << flag << " " << Segmentation::penalty << endl;
 
     // quality phrases & unigrams
     size_t cnt = 0;
@@ -45,14 +44,14 @@ void loadSegmentationModel(const string& filename)
         patterns[i].load(in);
         //cerr<<patterns[i].postagquality<<endl;
     }
-    cerr << "pattern loaded" << endl;
+    // cerr << "pattern loaded" << endl;
 
     // Binary::read(in, Documents::totalWordTokens);
 
     Binary::read(in, cnt);
     FrequentPatternMining::id2ends.resize(cnt);
     Binary::read(in, cnt);
-    cerr << "pattern2id " << cnt <<endl;
+    // cerr << "pattern2id " << cnt <<endl;
     for (int i = 0; i < cnt; ++i) {
         size_t key;
         Binary::read(in, key);
@@ -81,7 +80,7 @@ void loadSegmentationModel(const string& filename)
         }
     }
 
-    cerr << "POS tag transition loaded" << endl;
+    // cerr << "POS tag transition loaded" << endl;
 
     Binary::read(in, cnt);
     Segmentation::tree_map.clear();
@@ -93,7 +92,7 @@ void loadSegmentationModel(const string& filename)
         Binary::read(in, Segmentation::deps_prob[Segmentation::tree_map[key]]);
         // Segmentation::deps_prob[Segmentation::tree_map[key]] = 0;
     }
-    cerr << "Tree Maps transition loaded" << endl;
+    // cerr << "Tree Maps transition loaded" << endl;
 
     fclose(in);
 }
