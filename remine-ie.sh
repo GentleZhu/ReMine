@@ -18,5 +18,6 @@ echo ${red}===Extracting Tuples===${reset}
 ./bin/remine --input_file tmp_remine/tokenized_test.txt --pos_file tmp_remine/pos_tags_test.txt --deps_file tmp_remine/deps_test.txt --ems_file tmp_remine/remine_entity_position.txt --model pre_train/segmentation.model --mode 1
 TOKEN_MAPPING=tmp_remine/token_mapping.txt
 TOKENIZER="-cp .:tools/tokenizer/lib/*:tools/tokenizer/resources/:tools/tokenizer/build/ Tokenizer"
+javac -cp ".:tools/tokenizer/lib/*" tools/tokenizer/src/Tokenizer.java -d tools/tokenizer/build/
 echo ${green}===Output===${reset}
 java $TOKENIZER -m translate -l EN -c N -i tmp_remine/remine_tokenized_segmented_sentences.txt -o results_remine/remine_result.txt -t $TOKEN_MAPPING
