@@ -5,38 +5,43 @@
         <title>Remine Demo</title>
         <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='style.css') }}"/>
         <script src="{{ url_for('static', filename='func.js') }}"></script>
+        <link href="https://fonts.googleapis.com/css?family=Gaegu|Varela+Round|Open+Sans|Poiret+One" rel="stylesheet">
     </head>
 
     <body>
 
-        <p class = "title">
-            ReMine Demo
-        </p>
+        <div class = "title">
+            <a id = "b1" class = "buttons">Information Extraction</a>
+            <a id = "b2" class = "buttons">Knowledge Graph Query</a>
+            <a id = "b3" class = "buttons">Kiss me baby</a>
+            <b class = "remine">Remine</b>
+        </div>
 
         <div class = "input">
 
-            <p class = "intro">
-                This is a demo of novel open IE system—ReMine. It integrates local context signal and global structural signal in a unified framework with distant supervision. The input is corpus. The outputs will return relation tuples. Experiments on two real-world corpora of different domains demonstrate that ReMine system achieves superior precision when outputting same number of extractions, compared with several state-of-the-art open IE systems.
-            </p>
+            <div class = "intro">
+                <p id = "intro_title" class = "intro_title"></p>
+                <p class = "intro_para">This is a demo of novel open IE system—ReMine. It integrates local context signal and global structural signal in a unified framework with distant supervision. The input is corpus. The outputs will return relation tuples. Experiments on two real-world corpora of different domains demonstrate that ReMine system achieves superior precision when outputting same number of extractions, compared with several state-of-the-art open IE systems.</p>
+            </div>
 
             <div class = "selector">
+                <a class = "select">Pick a sample here!</a>
                 <select id = "selection" class = "select">
-                    <option value = "s1">s1</option>
-                    <option value = "s2">s2</option>
-                    <option value = "s3">s3</option>
-                    <option value = "s4">s4</option>
+                    <option value = "s1">sample 1</option>
+                    <option value = "s2">sample 2</option>
+                    <option value = "s3">sample 3</option>
                 </select>
             </div>
 
             <div class = "textInput">
-                <textarea id = "inText" type = "text" name = "corpus" class = "textFrame"></textarea><br>
-                <input type = "submit" value = "Submit" class = "button" onclick="submitCorpus()">
+                <textarea id = "inText" type = "text" name = "corpus" class = "textFrame"></textarea>
+                <a class = "button" onclick="submitCorpus()">Run the Model</a>
             </div>
 
         </div>
 
         <div id = "outText" class = "output">
-
+            <img id = "outputImg" src="https://cdn2.iconfinder.com/data/icons/screens-part-2/68/time_waiting_tv_screen_media_computer-512.png">
         </div>
 
     </body>

@@ -1,4 +1,6 @@
+// submission
 function submitCorpus() {
+    document.getElementById("outputImg").style.display = "none";
     let intext = document.getElementById('inText').value;
     let selection = document.getElementById('selection').value;
     console.log(intext);
@@ -28,4 +30,36 @@ function submitCorpus() {
             }
         }
     };
+}
+
+
+// button
+var button_state = 0;
+window.onload = function () {
+    change_state();
+    document.getElementById("b1").addEventListener("click", function() {
+        button_state = 0;
+        change_state();
+    });
+    document.getElementById("b2").addEventListener("click", function() {
+        button_state = 1;
+        change_state();
+    });
+    document.getElementById("b3").addEventListener("click", function() {
+        button_state = 2;
+        change_state();
+    });
+
+};
+
+function change_state() {
+    let bs = document.getElementsByClassName("buttons");
+    for (let i = 0; i < bs.length; i++) {
+        if (button_state === i) {
+            bs[i].style.backgroundColor = "#F2F2F2";
+            document.getElementById("intro_title").innerHTML = bs[i].innerHTML;
+        } else {
+            bs[i].style.backgroundColor = "white";
+        }
+    }
 }
