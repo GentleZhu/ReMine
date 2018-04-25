@@ -37,11 +37,13 @@ public class SentenceAnnotator {
                 deps.add(Integer.toString(sent.governor(i).get() + 1) + '_' + sent.incomingDependencyLabel(i).get());
             }
             // Writing to file
-            tokensWriter.write(Joiner.on(' ').join(tokens) + '\n');
-            lemmasWriter.write(Joiner.on(' ').join(lemmas) + '\n');
-            posWriter.write(Joiner.on(' ').join(posTags) + '\n');
-            nerWriter.write(Joiner.on(' ').join(nerTags) + '\n');
-            depWriter.write(Joiner.on(' ').join(deps) + '\n');
+            if (tokens.size() == lemmas.size() && lemmas.size() == posTags.size() && posTags.size() == deps.size()) {
+                tokensWriter.write(Joiner.on(' ').join(tokens) + '\n');
+                lemmasWriter.write(Joiner.on(' ').join(lemmas) + '\n');
+                posWriter.write(Joiner.on(' ').join(posTags) + '\n');
+                nerWriter.write(Joiner.on(' ').join(nerTags) + '\n');
+                depWriter.write(Joiner.on(' ').join(deps) + '\n');
+            }
         }
         br.close();
         tokensWriter.close();
