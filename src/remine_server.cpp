@@ -126,18 +126,23 @@ int main(int argc, char *argv[])
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
+
         std::cout<<"BEGIN\n";
         vector<string> files;
         vector<string> tokens;
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        for(string vertex: files){
-            std::cout << vertex << " \n";
-        }
+        string str_num = files[0]
+        istringstream buffer(str_num);
+        int lin_num;
+        buffer >> lin_num;
+//        for(string vertex: files){
+//            std::cout << vertex << " \n";
+//        }
 
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
-
+        std::cout<<lin_num;
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
 
