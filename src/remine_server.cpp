@@ -13,7 +13,7 @@ Tune the segmentation model under RM mode
 #include "data/dump.h"
 #include "genSepath.h"
 
-typedef std::vector<int>::iterator vec_iter;
+typedef std::vector<string>::iterator vec_iter;
 
 using FrequentPatternMining::Pattern;
 using FrequentPatternMining::patterns;
@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
         int count = 1;
-        for (it = files.begin() +count; it != files.begin() + count + lin_num ; ++cur, count++) {
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++cur, count++) {
             std::cout << *cur << endl;
         }
 
