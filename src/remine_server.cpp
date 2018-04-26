@@ -179,10 +179,13 @@ int main(int argc, char *argv[])
         while (!tokens_text.empty()) {
             std::cout<<tokens_text.size()<<"\n";
             stringstream sin(tokens_text.front());
+            std::cout<<tokens_text.size()<<"\n";
             tokens_text.pop_front();
             stringstream depsin(dep_text.front());
+            std::cout<<tokens_text.size()<<"\n";
             dep_text.pop_front();
             stringstream possin(pos_text.front());
+            std::cout<<tokens_text.size()<<"\n";
             pos_text.pop_front();
 
 
