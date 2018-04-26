@@ -2,7 +2,7 @@
 Use dumped patterns as initialization
 Tune the segmentation model under RM mode
 */
-
+#include "utils/crow_all.h"
 #include "utils/config.h"
 #include "utils/parameters.h"
 #include "utils/remine_flags.h"
@@ -107,7 +107,14 @@ int main(int argc, char *argv[])
     char currentDep[100];
     char currentTag[100];
 
+    crow::SimpleApp app;
 
+    CROW_ROUTE(app, "/")
+    ([]() {
+        return "Hello world!";
+    });
+
+    app.port(1111).run();
     while(1){
      //std::cin.ignore(1,' ');
         std::cout<<"READY\n";
