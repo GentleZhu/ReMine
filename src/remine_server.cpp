@@ -131,7 +131,7 @@ int main(int argc, char *argv[])
         vector<string> files;
         vector<string> tokens;
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        string str_num = files[0]
+        string str_num = files[0];
         std::istringstream buffer(str_num);
         int lin_num;
         buffer >> lin_num;
