@@ -138,13 +138,13 @@ int main(int argc, char *argv[])
         vector<string> files;
 
 
-        files = split(TEXT_TO_SEG_REMINE,'\t');
+        files = splitBy(TEXT_TO_SEG_REMINE,'\t');
 
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
         std::cout<<files[1];
-        
+
         int count = 0;
         for(unsigned i = 0; i <num_line; i++){
             std::cout<< files[count++]<< 'token\n';
