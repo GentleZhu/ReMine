@@ -120,7 +120,7 @@ int main(int argc, char *argv[])
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
         std::cin>> TEXT_TO_SEG_REMINE;
-        std::cout<< TEXT_TO_SEG_REMINE;
+        //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
@@ -130,12 +130,8 @@ int main(int argc, char *argv[])
         vector<string> files;
         vector<string> tokens;
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        tokens = split(TEXT_TO_SEG_REMINE,'\n');
         for(string vertex: files){
-            std::cout << vertex << " ";
-        }
-        for(string vertex: tokens){
-            std::cout << vertex << " ";
+            std::cout << vertex << " \n";
         }
 
        // if (MODE == 1) {
