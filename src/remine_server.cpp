@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
 
                     vector<pair<int ,int>> ems;
                     unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
-                    for(string temp; enti >> temp;) {
+                    for(string temp; entin >> temp;) {
                         vector<string> segs;
                         GenPath::split(temp, '_', segs);
                         assert(segs.size() == 2);
@@ -270,7 +270,7 @@ int main(int argc, char *argv[])
 
             // test
             // break;
-        fclose(in);
+        //fclose(in);
         fclose(out);
         FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
         fclose(FIN_IND);
