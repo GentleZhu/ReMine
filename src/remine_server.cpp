@@ -131,12 +131,16 @@ int main(int argc, char *argv[])
 
         std::cout<<"BEGIN\n";
         vector<string> files;
-        vector<string> tokens;
+
         files = split(TEXT_TO_SEG_REMINE,'\t');
         string str_num = files[0];
         std::istringstream buffer(str_num);
         int lin_num;
         buffer >> lin_num;
+        std::deque<string> tokens_text (lin_num);
+        std::deque<string> pos_text (lin_num);
+        std::deque<string> dep_text (lin_num);
+        std::deque<string> ent_text (lin_num);
 //        for(string vertex: files){
 //            std::cout << vertex << " \n";
 //        }
@@ -146,47 +150,56 @@ int main(int argc, char *argv[])
         //}
         int count = 1;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
-            std::cout << *it << 'amd'<<endl;
+            tokens.push_back(*it)
         }
         count+= lin_num;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
-            std::cout << *it << 'amd'<<endl;
+            pos_text.push_back(*it)
         }
         count+= lin_num;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
-            std::cout << *it << 'amd'<<endl;
+            dep_text.push_back(*it)
         }
         count+= lin_num;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
-            std::cout << *it << 'amd'<<endl;
+            ent_text.push_back(*it)
         }
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
 
         int docCount = 0;
-//        while (getLine(in)) {
-//            stringstream sin(line);
-//            vector<TOTAL_TOKENS_TYPE> tokens;
-//            // vector<TOTAL_TOKENS_TYPE> deps;
-//            vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
-//            vector<string> depTypes;
-//            vector<TOTAL_TOKENS_TYPE> tags;
-//
-//            string lastPunc = "";
-//            for (string temp; sin >> temp;) {
-//                // get pos tag
-//                POS_ID_TYPE posTagId = -1;
-//                if (ENABLE_POS_TAGGING) {
-//                    myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
-//                    myAssert(fscanf(depIn, "%s", currentDep) == 1, "DEP file doesn't have enough DEP tags");
-//
-//                    if (!Documents::posTag2id.count(currentTag)) {
-//                        posTagId = -1; // unknown tag
-//                    } else {
-//                        posTagId = Documents::posTag2id[currentTag];
-//                    }
-//                }
+        while (!tokens_text.empty()) {
+            stringstream sin(tokens_text.front());
+            tokens_text.pop_front();
+            stringstream depsin(dep_text.front());
+            dep_text.pop_front();
+            stringstream possin(pos_text.front());
+            pos_text.pop_front();
+            stringstream entsin(ent_text.front());
+            ent_text.pop_front();
+
+
+            vector<TOTAL_TOKENS_TYPE> tokens;
+            // vector<TOTAL_TOKENS_TYPE> deps;
+            vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
+            vector<string> depTypes;
+            vector<TOTAL_TOKENS_TYPE> tags;
+            string lastPunc = "";
+            for (string temp; sin >> temp;) {
+                // get pos tag
+                POS_ID_TYPE posTagId = -1;
+                if (ENABLE_POS_TAGGING) {
+                    myAssert(possin >> currentTag, "POS file doesn't have enough POS tags");
+                    myAssert(depsin >> currentDep, "DEP file doesn't have enough DEP tags");
+
+                    if (!Documents::posTag2id.count(currentTag)) {
+                        posTagId = -1; // unknown tag
+                    } else {
+                        posTagId = Documents::posTag2id[currentTag];
+                    }
+                }
+            std::cout<<"KK";
 //
 //                // get token
 //                bool flag = true;
