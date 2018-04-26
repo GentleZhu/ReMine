@@ -178,14 +178,16 @@ int main(int argc, char *argv[])
         int docCount = 0;
         while (!tokens_text.empty()) {
             std::cout<<tokens_text.size()<<"\n";
+            std::cout<<dep_text.size()<<"\n";
+            std::cout<<pos_text_text.size()<<"\n";
+            std::cout<<ent_text.size()<<"\n";
+
             stringstream sin(tokens_text.front());
-            std::cout<<tokens_text.size()<<"\n";
             tokens_text.pop_front();
             stringstream depsin(dep_text.front());
-            std::cout<<tokens_text.size()<<"\n";
             dep_text.pop_front();
             stringstream possin(pos_text.front());
-            std::cout<<tokens_text.size()<<"\n";
+
             pos_text.pop_front();
 
 
@@ -211,7 +213,7 @@ int main(int argc, char *argv[])
                         posTagId = Documents::posTag2id[currentTag];
                     }
                 }
-
+            std::cout<<tokens_text.size()<<"\n";
                 // get token
                 bool flag = true;
                 TOKEN_ID_TYPE token = 0;
