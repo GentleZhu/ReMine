@@ -134,7 +134,7 @@ int main(int argc, char *argv[])
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
-        count = 0
+        count = 0;
         for(unsigned i = 0; i <num_line; i++){
             std::cout<< files[count++]<< 'token\n';
             tokens[i] = files[count++];
@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
 
 
 
- 
+
 
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
