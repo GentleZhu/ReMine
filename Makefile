@@ -11,7 +11,7 @@ all: ./bin $(BIN)
 ./bin/remine_segment: ./src/segment.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h 
 ./bin/genSepath: ./src/genSepath.cpp ./src/utils/*.h
 ./bin/tuple_generation_train: ./src/tuple_generation_train.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h ./src/genSepath.h
-./bin/remine: ./src/remine.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h ./src/genSepath.h
+./bin/remine: ./src/remine_server.cpp ./src/utils/*.h ./src/frequent_pattern_mining/*.h ./src/data/*.h ./src/classification/*.h ./src/model_training/*.h ./src/genSepath.h
 
 ./bin:
 	mkdir -p bin
