@@ -120,8 +120,10 @@ int main(int argc, char *argv[])
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
         int num_line;
-        std::cin>>num_line;
-        std::cout<<num_line<<'number of line';
+        string str_num;
+        std::cin>>str_num;
+        sscanf(str_num,"%d",&num_line);
+        std::cout<<'number of lines:'<<num_line;
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
         //std::cout<< TEXT_TO_SEG_REMINE;
 
