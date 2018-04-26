@@ -130,7 +130,7 @@ int main(int argc, char *argv[])
         //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
         vector<string> files;
-        files = split(TEXT_TO_SEG_REMINE,'\t')
+        files = split(TEXT_TO_SEG_REMINE,'\t');
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
