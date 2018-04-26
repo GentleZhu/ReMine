@@ -120,14 +120,15 @@ int main(int argc, char *argv[])
         //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
+        std::getline (std::cin,TEXT_TO_SEG_REMINE);
         int num_line;
         string str_num;
         std::cin>>str_num;
         stringstream geek(str_num);
         geek >> num_line;
         //sscanf(str_num,"%d", &num_line);
-        printf("\nThe value of x : %d", num_line);
-        std::getline (std::cin,TEXT_TO_SEG_REMINE);
+        //printf("\nThe value of x : %d", num_line);
+
         //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
