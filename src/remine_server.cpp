@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
 //        fclose(out);
 //        FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
 //        fclose(FIN_IND);
-//    }
+    }
 
 
 }
