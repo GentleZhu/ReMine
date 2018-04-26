@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
         std::cin>>num_line;
         std::cout<<num_line<<'number of line';
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
-        std::cout<< TEXT_TO_SEG_REMINE;
+        //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
