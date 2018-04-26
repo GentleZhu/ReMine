@@ -115,140 +115,141 @@ int main(int argc, char *argv[])
     });
 
     app.port(1111).run();
-    while(1){
-     //std::cin.ignore(1,' ');
-        std::cout<<"READY\n";
-        //std::cin>>TEXT_TO_SEG_REMINE;
-        //std::cout<<TEXT_TO_SEG_REMINE;
-        //std::cin>>TEXT_TO_SEG_POS_TAGS_REMINE;
-        //std::cout<<TEXT_TO_SEG_POS_TAGS_REMINE;
-        //std::cin>>TEXT_TO_SEG_DEPS_REMINE;
-        //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
-        //std::cin>>TEST_EMS_REMINE;
-        //std::cout<<TEST_EMS_REMINE;
-        std:cin>> TEXT_TO_SEG_REMINE;
-        std:cout<< TEXT_TO_SEG_REMINE;
-
-        //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
-        //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
-        //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
-        //FILE* emIn = NULL;
-        std::cout<<"BEGIN\n";
-        vector<string> files;
-        vector<string> tokens;
-        files = split(TEXT_TO_SEG_REMINE,'\t')
-        tokens = split(TEXT_TO_SEG_REMINE,'\n')
-        for(string vertex: files){
-            std::cout << vertex << " ";
-        }
-        for(string vertex: tokens){
-            std::cout << vertex << " ";
-        }
-
-       // if (MODE == 1) {
-            //emIn = tryOpen(TEST_EMS_REMINE, "r");
-        //}
-
-        FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
-
-
-        int docCount = 0;
-        while (getLine(in)) {
-            stringstream sin(line);
-            vector<TOTAL_TOKENS_TYPE> tokens;
-            // vector<TOTAL_TOKENS_TYPE> deps;
-            vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
-            vector<string> depTypes;
-            vector<TOTAL_TOKENS_TYPE> tags;
-
-            string lastPunc = "";
-            for (string temp; sin >> temp;) {
-                // get pos tag
-                POS_ID_TYPE posTagId = -1;
-                if (ENABLE_POS_TAGGING) {
-                    myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
-                    myAssert(fscanf(depIn, "%s", currentDep) == 1, "DEP file doesn't have enough DEP tags");
-
-                    if (!Documents::posTag2id.count(currentTag)) {
-                        posTagId = -1; // unknown tag
-                    } else {
-                        posTagId = Documents::posTag2id[currentTag];
-                    }
-                }
-
-                // get token
-                bool flag = true;
-                TOKEN_ID_TYPE token = 0;
-                stringstream sin(temp);
-                sin >> token;
-                tokens.push_back(token);
-                if (ENABLE_POS_TAGGING) {
-                    tags.push_back(posTagId);
-                    int idx = atoi(strtok (currentDep, "_"));
-                    int idx_dep = atoi(strtok (NULL, "_"));
-                    string xxx(strtok(NULL, "_"));
-                    depTypes.push_back(xxx);
-                    // deps.push_back(atoi(currentDep));
-                    deps.push_back(make_pair(idx, idx_dep));
-                }
-            }
-            if (tokens.size() > 0) {
-                assert(tokens.size() == deps.size());
-                assert(tokens.size() == tags.size());
-                ++ docCount;
-                if (MODE == 1 && getLine(emIn)) {
-                    stringstream sin(line);
-                    vector<pair<int ,int>> ems;
-                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
-                    for(string temp; sin >> temp;) {
-                        vector<string> segs;
-                        GenPath::split(temp, '_', segs);
-                        assert(segs.size() == 2);
-                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
-                    }
-                    // remember ranges -1
-
-                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
-                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
-                    vector<TOKEN_ID_TYPE> rm_tokens;
-                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-                        const auto& it = _->second;
-                        fprintf(out, "%d\t", docCount);
-                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                        }
-                        for (const auto& __ : it.second) {
-                            rm_deps.push_back(deps[__ - 1]);
-                            rm_tokens.push_back(tokens[__ - 1]);
-                        }
-                        process(rm_tokens, rm_deps, tags, *segmenter, out);
-                        fprintf(out, "| ");
-                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
-                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        }
-                        rm_deps.clear();
-                        rm_tokens.clear();
-                    // cout << endl;
-                    }
-                }
-                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
-                // cout << "here\t"  << tokens.size() << endl;
-            }
-            // process(tokens, deps, tags, *segmenter, out);
-            tokens.clear();
-            deps.clear();
-            depTypes.clear();
-            tags.clear();
-
-            }
-
-            // test
-            // break;
-        fclose(in);
-        fclose(out);
-        FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
-        fclose(FIN_IND);
-    }
+    std::cout<<"sever run \n";
+//    while(1){
+//     //std::cin.ignore(1,' ');
+//        std::cout<<"READY\n";
+//        //std::cin>>TEXT_TO_SEG_REMINE;
+//        //std::cout<<TEXT_TO_SEG_REMINE;
+//        //std::cin>>TEXT_TO_SEG_POS_TAGS_REMINE;
+//        //std::cout<<TEXT_TO_SEG_POS_TAGS_REMINE;
+//        //std::cin>>TEXT_TO_SEG_DEPS_REMINE;
+//        //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
+//        //std::cin>>TEST_EMS_REMINE;
+//        //std::cout<<TEST_EMS_REMINE;
+//        std:cin>> TEXT_TO_SEG_REMINE;
+//        std:cout<< TEXT_TO_SEG_REMINE;
+//
+//        //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
+//        //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
+//        //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
+//        //FILE* emIn = NULL;
+//        std::cout<<"BEGIN\n";
+//        vector<string> files;
+//        vector<string> tokens;
+//        files = split(TEXT_TO_SEG_REMINE,'\t')
+//        tokens = split(TEXT_TO_SEG_REMINE,'\n')
+//        for(string vertex: files){
+//            std::cout << vertex << " ";
+//        }
+//        for(string vertex: tokens){
+//            std::cout << vertex << " ";
+//        }
+//
+//       // if (MODE == 1) {
+//            //emIn = tryOpen(TEST_EMS_REMINE, "r");
+//        //}
+//
+//        FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
+//
+//
+//        int docCount = 0;
+//        while (getLine(in)) {
+//            stringstream sin(line);
+//            vector<TOTAL_TOKENS_TYPE> tokens;
+//            // vector<TOTAL_TOKENS_TYPE> deps;
+//            vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
+//            vector<string> depTypes;
+//            vector<TOTAL_TOKENS_TYPE> tags;
+//
+//            string lastPunc = "";
+//            for (string temp; sin >> temp;) {
+//                // get pos tag
+//                POS_ID_TYPE posTagId = -1;
+//                if (ENABLE_POS_TAGGING) {
+//                    myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
+//                    myAssert(fscanf(depIn, "%s", currentDep) == 1, "DEP file doesn't have enough DEP tags");
+//
+//                    if (!Documents::posTag2id.count(currentTag)) {
+//                        posTagId = -1; // unknown tag
+//                    } else {
+//                        posTagId = Documents::posTag2id[currentTag];
+//                    }
+//                }
+//
+//                // get token
+//                bool flag = true;
+//                TOKEN_ID_TYPE token = 0;
+//                stringstream sin(temp);
+//                sin >> token;
+//                tokens.push_back(token);
+//                if (ENABLE_POS_TAGGING) {
+//                    tags.push_back(posTagId);
+//                    int idx = atoi(strtok (currentDep, "_"));
+//                    int idx_dep = atoi(strtok (NULL, "_"));
+//                    string xxx(strtok(NULL, "_"));
+//                    depTypes.push_back(xxx);
+//                    // deps.push_back(atoi(currentDep));
+//                    deps.push_back(make_pair(idx, idx_dep));
+//                }
+//            }
+//            if (tokens.size() > 0) {
+//                assert(tokens.size() == deps.size());
+//                assert(tokens.size() == tags.size());
+//                ++ docCount;
+//                if (MODE == 1 && getLine(emIn)) {
+//                    stringstream sin(line);
+//                    vector<pair<int ,int>> ems;
+//                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
+//                    for(string temp; sin >> temp;) {
+//                        vector<string> segs;
+//                        GenPath::split(temp, '_', segs);
+//                        assert(segs.size() == 2);
+//                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
+//                    }
+//                    // remember ranges -1
+//
+//                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
+//                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
+//                    vector<TOKEN_ID_TYPE> rm_tokens;
+//                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
+//                        const auto& it = _->second;
+//                        fprintf(out, "%d\t", docCount);
+//                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+//                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+//                        }
+//                        for (const auto& __ : it.second) {
+//                            rm_deps.push_back(deps[__ - 1]);
+//                            rm_tokens.push_back(tokens[__ - 1]);
+//                        }
+//                        process(rm_tokens, rm_deps, tags, *segmenter, out);
+//                        fprintf(out, "| ");
+//                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
+//                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+//                        }
+//                        rm_deps.clear();
+//                        rm_tokens.clear();
+//                    // cout << endl;
+//                    }
+//                }
+//                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
+//                // cout << "here\t"  << tokens.size() << endl;
+//            }
+//            // process(tokens, deps, tags, *segmenter, out);
+//            tokens.clear();
+//            deps.clear();
+//            depTypes.clear();
+//            tags.clear();
+//
+//            }
+//
+//            // test
+//            // break;
+//        fclose(in);
+//        fclose(out);
+//        FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
+//        fclose(FIN_IND);
+//    }
 
 
 }
