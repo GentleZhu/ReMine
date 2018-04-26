@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
                     deps.push_back(make_pair(idx, idx_dep));
                 }
             }
-            std::cout<"add";
+            std::cout<<"add";
 //            if (tokens.size() > 0) {
 //                assert(tokens.size() == deps.size());
 //                assert(tokens.size() == tags.size());
