@@ -132,7 +132,7 @@ int main(int argc, char *argv[])
         vector<string> tokens;
         files = split(TEXT_TO_SEG_REMINE,'\t');
         string str_num = files[0]
-        istringstream buffer(str_num);
+        std::istringstream buffer(str_num);
         int lin_num;
         buffer >> lin_num;
 //        for(string vertex: files){
