@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
         //}
         int count = 1;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
-            tokens.push_back(*it);
+            tokens_text.push_back(*it);
         }
         count+= lin_num;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
@@ -190,8 +190,8 @@ int main(int argc, char *argv[])
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    myAssert(possin >> currentTag, "POS file doesn't have enough POS tags");
-                    myAssert(depsin >> currentDep, "DEP file doesn't have enough DEP tags");
+                    myAssert(typeid(possin >> currentTag) == bool, "POS file doesn't have enough POS tags");
+                    myAssert(typeid(depsin >> currentDep) == bool, "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(currentTag)) {
                         posTagId = -1; // unknown tag
