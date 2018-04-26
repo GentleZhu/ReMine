@@ -134,6 +134,7 @@ inline vector<string> split(const string &s, char delim) {
     string item;
     vector<string> tokens;
     while (getline(ss, item, delim)) {
+        std::cout<<item;
         tokens.push_back(item);
     }
     return tokens;

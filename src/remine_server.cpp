@@ -135,15 +135,10 @@ int main(int argc, char *argv[])
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
-        printf("\nThe value of x : %d", num_line);
-        std::cout<< TEXT_TO_SEG_REMINE;
         vector<string> files;
 
 
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        for (std::vector<string>::const_iterator i = files.begin(); i != files.end(); ++i){
-            std::cout << *i << ' ';
-        }
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
