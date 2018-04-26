@@ -2,7 +2,7 @@
 Use dumped patterns as initialization
 Tune the segmentation model under RM mode
 */
-
+#include <iterator>
 #include "utils/config.h"
 #include "utils/parameters.h"
 #include "utils/remine_flags.h"
@@ -120,6 +120,7 @@ int main(int argc, char *argv[])
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
         //
+        std::cin<< num_line;
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
         std::cout<< TEXT_TO_SEG_REMINE;
 
@@ -129,15 +130,27 @@ int main(int argc, char *argv[])
         //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
         vector<string> files;
+        files = split(TEXT_TO_SEG_REMINE,'\t')
         vector<string> tokens;
-        files = split(TEXT_TO_SEG_REMINE,'\t');
-        tokens = split(TEXT_TO_SEG_REMINE,'\t');
-        for(string vertex: files){
-            std::cout << vertex << " haha\n";
+        vector<string> pos_tag;
+        vector<string> dep_tag;
+        count = 0
+        for(unsigned i = 0; i <num_line; i++){
+            std::cout<< files[count++]<< 'token\n';
+            tokens[i] = files[count++];
         }
-        for(string vertex: tokens){
-            std::cout << vertex << " niha\n";
+        for(unsigned i = 0; i <num_line; i++){
+            std::cout<< files[count++]<< 'pos\n';
+            pos_tag[i] = files[count++];
         }
+        for(unsigned i = 0; i <num_line; i++){
+            std::cout<< files[count++]<< 'dep\n';
+            dep_tag[i] = files[count++];
+        }
+
+
+
+ 
 
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
