@@ -132,12 +132,12 @@ int main(int argc, char *argv[])
         vector<string> tokens;
         files = split(TEXT_TO_SEG_REMINE,'\t');
         tokens = split(TEXT_TO_SEG_REMINE,'\t');
-//        for(string vertex: files){
-//            std::cout << vertex << " ";
-//        }
-//        for(string vertex: tokens){
-//            std::cout << vertex << " ";
-//        }
+        for(string vertex: files){
+            std::cout << vertex << " ";
+        }
+        for(string vertex: tokens){
+            std::cout << vertex << " ";
+        }
 
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
