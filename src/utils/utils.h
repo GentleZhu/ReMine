@@ -129,6 +129,16 @@ inline FILE* tryOpen(const string &filename, const string &param)
 	return ret;
 }
 
+inline vector<string> split(const string &s, char delim) {
+    stringstream ss(s);
+    string item;
+    vector<string> tokens;
+    while (getline(ss, item, delim)) {
+        tokens.push_back(item);
+    }
+    return tokens;
+}
+
 inline vector<string> splitBy(const string &line, char sep)
 {
 	vector<string> tokens;

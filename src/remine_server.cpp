@@ -111,24 +111,36 @@ int main(int argc, char *argv[])
     while(1){
      //std::cin.ignore(1,' ');
         std::cout<<"READY\n";
-        std::cin>>TEXT_TO_SEG_REMINE;
+        //std::cin>>TEXT_TO_SEG_REMINE;
         //std::cout<<TEXT_TO_SEG_REMINE;
-        std::cin>>TEXT_TO_SEG_POS_TAGS_REMINE;
+        //std::cin>>TEXT_TO_SEG_POS_TAGS_REMINE;
         //std::cout<<TEXT_TO_SEG_POS_TAGS_REMINE;
-        std::cin>>TEXT_TO_SEG_DEPS_REMINE;
+        //std::cin>>TEXT_TO_SEG_DEPS_REMINE;
         //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
-        std::cin>>TEST_EMS_REMINE;
+        //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
+        std:cin>> TOTAL_TEXT;
+        std:cout<< TOTAL_TEXT;
 
-
-        FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
-        FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
-        FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
-        FILE* emIn = NULL;
+        //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
+        //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
+        //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
+        //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
-        if (MODE == 1) {
-            emIn = tryOpen(TEST_EMS_REMINE, "r");
+        vector<string> files;
+        vector<string> tokens;
+        files = split(TOTAL_TEXT,'\t')
+        tokens = split(TOTAL_TEXT,'\n')
+        for(string vertex: files){
+            std::cout << vertex << " ";
         }
+        for(string vertex: tokens){
+            std::cout << vertex << " ";
+        }
+
+       // if (MODE == 1) {
+            //emIn = tryOpen(TEST_EMS_REMINE, "r");
+        //}
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
