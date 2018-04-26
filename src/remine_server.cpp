@@ -13,6 +13,8 @@ Tune the segmentation model under RM mode
 #include "data/dump.h"
 #include "genSepath.h"
 
+typedef std::vector<int>::iterator vec_iter;
+
 using FrequentPatternMining::Pattern;
 using FrequentPatternMining::patterns;
 
@@ -142,7 +144,11 @@ int main(int argc, char *argv[])
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
-        std::cout<<lin_num;
+        int count = 1;
+        for (vec_iter files.begin() +count; cur != v.begin() + count + lin_num ; ++cur) {
+            std::cout << *cur << endl;
+        }
+        
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
 
