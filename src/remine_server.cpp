@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
 
 
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        std::cout<<"BEGIN\n";
+
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
@@ -148,6 +148,7 @@ int main(int argc, char *argv[])
             std::cout<< files[count++]<< 'token\n';
             tokens[i] = files[count++];
         }
+        std::cout<<"BEGIN\n";
         for(unsigned i = 0; i <num_line; i++){
             std::cout<< files[count++]<< 'pos\n';
             pos_tag[i] = files[count++];
