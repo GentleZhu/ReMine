@@ -137,10 +137,10 @@ int main(int argc, char *argv[])
         std::istringstream buffer(str_num);
         int lin_num;
         buffer >> lin_num;
-        std::deque<string> tokens_text (lin_num);
-        std::deque<string> pos_text (lin_num);
-        std::deque<string> dep_text (lin_num);
-        std::deque<string> ent_text (lin_num);
+        std::deque<string> tokens_text;
+        std::deque<string> pos_text;
+        std::deque<string> dep_text;
+        std::deque<string> ent_text;
 //        for(string vertex: files){
 //            std::cout << vertex << " \n";
 //        }
