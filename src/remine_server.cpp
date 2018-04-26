@@ -189,9 +189,10 @@ int main(int argc, char *argv[])
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-
-                    myAssert(typeid(possin >> currentTag).name() != "bool", "POS file doesn't have enough POS tags");
-                    myAssert(typeid(depsin >> currentDep).name() != "bool", "DEP file doesn't have enough DEP tags");
+                    possin >> currentTag;
+                    depsin >> currentDep;
+                    //myAssert(typeid(possin >> currentTag).name() != "bool", "POS file doesn't have enough POS tags");
+                    //myAssert(typeid(depsin >> currentDep).name() != "bool", "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(currentTag)) {
                         posTagId = -1; // unknown tag
