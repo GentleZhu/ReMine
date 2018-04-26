@@ -134,11 +134,12 @@ int main(int argc, char *argv[])
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
-        std::cout<<"BEGIN\n";
+
         vector<string> files;
 
 
         files = split(TEXT_TO_SEG_REMINE,'\t');
+        std::cout<<"BEGIN\n";
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
