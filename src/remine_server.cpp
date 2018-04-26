@@ -139,7 +139,7 @@ int main(int argc, char *argv[])
         vector<string> files;
         files = split(TEXT_TO_SEG_REMINE,'\t');
 
-        for (std::vector<string>::const_iterator i = path.begin(); i != path.end(); ++i){
+        for (std::vector<string>::const_iterator i = files.begin(); i != files.end(); ++i){
             std::cout << *i << ' ';
         }
         vector<string> tokens;
