@@ -59,7 +59,7 @@ def runRemine():
     pos_path = 'tmp_remine/pos_tags_test.txt'
     dep_path = 'tmp_remine/deps_test.txt'
     ems_path = 'tmp_remine/remine_entity_position.txt'
-
+    line_number = 2
     token_text = 'the american people can see what be happen here , say Senator Ben Nelson , Democrat of Nebraska .\tbut Williams say she do take enormous pleasure in she 10-day visit to Senegal and Ghana in West Africa in November .'
     pos_text = 'DT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .\tCC NNP VBD PRP VBD VB JJ NN IN PRP$ JJ NN TO NNP CC NNP IN NNP NNP IN NNP .'
     dep_text = '3_det 3_amod 5_nsubj 5_aux 11_ccomp 8_nsubj 8_aux 5_ccomp 8_advmod 11_punct 0_root 14_compound 14_compound 11_nsubj 14_punct 14_appos 18_case 16_nmod:of 11_punct\t3_cc 3_nsubj 0_root 6_nsubj 6_aux 3_ccomp 8_amod 6_dobj 12_case 12_nmod:poss 12_amod 6_nmod:in 14_case 12_nmod:to 14_cc 12_nmod:to 19_case 19_compound 12_nmod:in 21_case 12_nmod:in 3_punct'
@@ -67,6 +67,7 @@ def runRemine():
     total = token_text + '\t' + pos_text + '\t' + dep_text +'\t' + ems_text
     #command = '{} {} {} {}'.format(input_path, pos_path, dep_path,ems_path)
     ret = []
+    pane.send_keys(str(line_number), enter = True)
     pane.send_keys(total, enter =False)
 
     output_path = 'remine_tokenized_segmented_sentences.txt'
