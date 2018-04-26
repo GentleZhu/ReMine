@@ -121,7 +121,6 @@ int main(int argc, char *argv[])
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
-        std::cout<< TEXT_TO_SEG_REMINE;
         int num_line;
         string str_num;
         std::cin>>str_num;
@@ -136,7 +135,8 @@ int main(int argc, char *argv[])
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
-
+        printf("\nThe value of x : %d", num_line);
+        std::cout<< TEXT_TO_SEG_REMINE;
         vector<string> files;
 
 
