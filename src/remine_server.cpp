@@ -150,6 +150,7 @@ int main(int argc, char *argv[])
         //}
         int count = 1;
         for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            std::cout<<*it<<"toek\n";
             tokens_text.push_back(*it);
         }
         count+= lin_num;
