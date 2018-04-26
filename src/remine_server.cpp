@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
         //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
-        std::cin>> TEXT_TO_SEG_REMINE;
+        std::getline (std::cin,TEXT_TO_SEG_REMINE);
         //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
