@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 //            depTypes.clear();
 //            tags.clear();
 //
-//              }
+              }
 //
 //            // test
 //            // break;
