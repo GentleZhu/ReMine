@@ -143,12 +143,14 @@ int main(int argc, char *argv[])
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
+        std::cout<<files[1];
+        
         int count = 0;
         for(unsigned i = 0; i <num_line; i++){
             std::cout<< files[count++]<< 'token\n';
             tokens[i] = files[count++];
         }
-        std::cout<<"BEGIN\n";
+
         for(unsigned i = 0; i <num_line; i++){
             std::cout<< files[count++]<< 'pos\n';
             pos_tag[i] = files[count++];
