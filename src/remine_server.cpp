@@ -108,7 +108,7 @@ int main(int argc, char *argv[])
     char currentTag[100];
 
 
-    while(1){
+    //while(1){
      //std::cin.ignore(1,' ');
         std::cout<<"READY\n";
         //std::cin>>TEXT_TO_SEG_REMINE;
@@ -242,7 +242,7 @@ int main(int argc, char *argv[])
 //        fclose(out);
 //        FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
 //        fclose(FIN_IND);
-    }
+   // }
 
 
 }
