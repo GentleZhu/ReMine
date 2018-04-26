@@ -216,57 +216,58 @@ int main(int argc, char *argv[])
                     deps.push_back(make_pair(idx, idx_dep));
                 }
             }
-            if (tokens.size() > 0) {
-                assert(tokens.size() == deps.size());
-                assert(tokens.size() == tags.size());
-                ++ docCount;
-                if (MODE == 1 && !ent_text.empty()) {
-                    stringstream entin(ent_text.front());
-                    ent_text.pop_front();
-
-                    vector<pair<int ,int>> ems;
-                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
-                    for(string temp; entin >> temp;) {
-                        vector<string> segs;
-                        GenPath::split(temp, '_', segs);
-                        assert(segs.size() == 2);
-                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
-                    }
-                    // remember ranges -1
-
-                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
-                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
-                    vector<TOKEN_ID_TYPE> rm_tokens;
-                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-                        const auto& it = _->second;
-                        fprintf(out, "%d\t", docCount);
-                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                        }
-                        for (const auto& __ : it.second) {
-                            rm_deps.push_back(deps[__ - 1]);
-                            rm_tokens.push_back(tokens[__ - 1]);
-                        }
-                        process(rm_tokens, rm_deps, tags, *segmenter, out);
-                        fprintf(out, "| ");
-                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
-                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        }
-                        rm_deps.clear();
-                        rm_tokens.clear();
-                    // cout << endl;
-                    }
-                }
-                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
-                // cout << "here\t"  << tokens.size() << endl;
-            }
-            // process(tokens, deps, tags, *segmenter, out);
-            tokens.clear();
-            deps.clear();
-            depTypes.clear();
-            tags.clear();
-
-              }
+            std::cout<"add";
+//            if (tokens.size() > 0) {
+//                assert(tokens.size() == deps.size());
+//                assert(tokens.size() == tags.size());
+//                ++ docCount;
+//                if (MODE == 1 && !ent_text.empty()) {
+//                    stringstream entin(ent_text.front());
+//                    ent_text.pop_front();
+//
+//                    vector<pair<int ,int>> ems;
+//                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
+//                    for(string temp; entin >> temp;) {
+//                        vector<string> segs;
+//                        GenPath::split(temp, '_', segs);
+//                        assert(segs.size() == 2);
+//                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
+//                    }
+//                    // remember ranges -1
+//
+//                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
+//                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
+//                    vector<TOKEN_ID_TYPE> rm_tokens;
+//                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
+//                        const auto& it = _->second;
+//                        fprintf(out, "%d\t", docCount);
+//                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+//                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+//                        }
+//                        for (const auto& __ : it.second) {
+//                            rm_deps.push_back(deps[__ - 1]);
+//                            rm_tokens.push_back(tokens[__ - 1]);
+//                        }
+//                        process(rm_tokens, rm_deps, tags, *segmenter, out);
+//                        fprintf(out, "| ");
+//                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
+//                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+//                        }
+//                        rm_deps.clear();
+//                        rm_tokens.clear();
+//                    // cout << endl;
+//                    }
+//                }
+//                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
+//                // cout << "here\t"  << tokens.size() << endl;
+//            }
+//            // process(tokens, deps, tags, *segmenter, out);
+//            tokens.clear();
+//            deps.clear();
+//            depTypes.clear();
+//            tags.clear();
+//
+//            }
 
             // test
             // break;
