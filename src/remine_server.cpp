@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 //                    // deps.push_back(atoi(currentDep));
 //                    deps.push_back(make_pair(idx, idx_dep));
 //                }
-//            }
+            }
 //            if (tokens.size() > 0) {
 //                assert(tokens.size() == deps.size());
 //                assert(tokens.size() == tags.size());
@@ -265,7 +265,7 @@ int main(int argc, char *argv[])
 //            depTypes.clear();
 //            tags.clear();
 //
-              }
+//              }
 //
 //            // test
 //            // break;
