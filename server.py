@@ -68,7 +68,7 @@ def runRemine():
     #command = '{} {} {} {}'.format(input_path, pos_path, dep_path,ems_path)
     ret = []
     pane.send_keys(total, enter=False)
-    pane.send_keys(str(line_number)+' ', enter = False)
+    pane.send_keys(str(line_number)+' ', enter = True)
 
 
     output_path = 'remine_tokenized_segmented_sentences.txt'
