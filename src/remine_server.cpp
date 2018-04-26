@@ -168,6 +168,15 @@ int main(int argc, char *argv[])
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            std::cout<<*it<<"toek\n";
+            tokens_text.push_back(*it);
+        }
+
+        std::deque<string>::iterator It;
+        for (It = tokens_text.begin(); It!= tokens_text.end();It++){
+            std::cout<<*It<< "deque\n";
+        }
 
         int docCount = 0;
         while (!tokens_text.empty()) {
