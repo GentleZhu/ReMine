@@ -147,6 +147,7 @@ int main(int argc, char *argv[])
         int count = 1;
         for (vec_iter cur = files.begin() +count; cur != v.begin() + count + lin_num ; ++cur) {
             std::cout << *cur << endl;
+            count++;
         }
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
