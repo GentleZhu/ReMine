@@ -12,7 +12,7 @@ Tune the segmentation model under RM mode
 #include "model_training/segmentation.h"
 #include "data/dump.h"
 #include "genSepath.h"
-
+#include <deque>
 typedef std::vector<string>::iterator vec_iter;
 
 using FrequentPatternMining::Pattern;
