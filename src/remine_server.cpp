@@ -2,6 +2,7 @@
 Use dumped patterns as initialization
 Tune the segmentation model under RM mode
 */
+#include <sstream>
 #include <iterator>
 #include "utils/config.h"
 #include "utils/parameters.h"
@@ -122,7 +123,9 @@ int main(int argc, char *argv[])
         int num_line;
         string str_num;
         std::cin>>str_num;
-        sscanf(str_num,"%d",&num_line);
+        stringstream geek(str_num);
+        geek >> x;
+        //sscanf(str_num,"%d", &num_line);
         std::cout<<'number of lines:'<<num_line;
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
         //std::cout<< TEXT_TO_SEG_REMINE;
