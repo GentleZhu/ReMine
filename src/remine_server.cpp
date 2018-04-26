@@ -127,7 +127,7 @@ int main(int argc, char *argv[])
         stringstream geek(str_num);
         geek >> num_line;
         //sscanf(str_num,"%d", &num_line);
-        printf("\nThe value of x : %d", num_line);
+        //printf("\nThe value of x : %d", num_line);
 
         //std::cout<< TEXT_TO_SEG_REMINE;
 
@@ -138,6 +138,10 @@ int main(int argc, char *argv[])
         std::cout<<"BEGIN\n";
         vector<string> files;
         files = split(TEXT_TO_SEG_REMINE,'\t');
+
+        for (std::vector<string>::const_iterator i = path.begin(); i != path.end(); ++i){
+            std::cout << *i << ' ';
+        }
         vector<string> tokens;
         vector<string> pos_tag;
         vector<string> dep_tag;
