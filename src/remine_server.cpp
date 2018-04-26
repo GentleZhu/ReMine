@@ -145,7 +145,7 @@ int main(int argc, char *argv[])
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
         int count = 1;
-        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++cur, count++) {
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it, count++) {
             std::cout << *cur << endl;
         }
 
