@@ -213,7 +213,7 @@ int main(int argc, char *argv[])
                         posTagId = Documents::posTag2id[currentTag];
                     }
                 }
-            std::cout<<tokens_text.size()<<"\n";
+
                 // get token
                 bool flag = true;
                 TOKEN_ID_TYPE token = 0;
@@ -228,6 +228,7 @@ int main(int argc, char *argv[])
                     depTypes.push_back(xxx);
                     // deps.push_back(atoi(currentDep));
                     deps.push_back(make_pair(idx, idx_dep));
+                    std::cout<<tokens_text.size()<<"\n";
                 }
             }
             std::cout<<"add\n";
