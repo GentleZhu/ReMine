@@ -119,8 +119,8 @@ int main(int argc, char *argv[])
         //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
-        std:cin>> TOTAL_TEXT;
-        std:cout<< TOTAL_TEXT;
+        std:cin>> TEXT_TO_SEG_REMINE;
+        std:cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
@@ -129,8 +129,8 @@ int main(int argc, char *argv[])
         std::cout<<"BEGIN\n";
         vector<string> files;
         vector<string> tokens;
-        files = split(TOTAL_TEXT,'\t')
-        tokens = split(TOTAL_TEXT,'\n')
+        files = split(TEXT_TO_SEG_REMINE,'\t')
+        tokens = split(TEXT_TO_SEG_REMINE,'\n')
         for(string vertex: files){
             std::cout << vertex << " ";
         }
