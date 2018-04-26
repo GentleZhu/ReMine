@@ -179,7 +179,7 @@ int main(int argc, char *argv[])
         while (!tokens_text.empty()) {
             std::cout<<tokens_text.size()<<"\n";
             std::cout<<dep_text.size()<<"\n";
-            std::cout<<pos_text_text.size()<<"\n";
+            std::cout<<pos_text.size()<<"\n";
             std::cout<<ent_text.size()<<"\n";
 
             stringstream sin(tokens_text.front());
