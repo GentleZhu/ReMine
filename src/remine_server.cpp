@@ -149,20 +149,20 @@ int main(int argc, char *argv[])
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
         int count = 1;
-        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it;) {
-            tokens.push_back(*it)
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            tokens.push_back(*it);
         }
         count+= lin_num;
-        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it;) {
-            pos_text.push_back(*it)
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            pos_text.push_back(*it);
         }
         count+= lin_num;
-        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it;) {
-            dep_text.push_back(*it)
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            dep_text.push_back(*it);
         }
         count+= lin_num;
-        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it;) {
-            ent_text.push_back(*it)
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            ent_text.push_back(*it);
         }
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
