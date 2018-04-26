@@ -273,6 +273,7 @@ int main(int argc, char *argv[])
             // test
             // break;
         //fclose(in);
+        std::cout<<"finish";
         fclose(out);
         FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
         fclose(FIN_IND);
