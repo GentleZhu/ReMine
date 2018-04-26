@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
         string str_num;
         std::cin>>str_num;
         stringstream geek(str_num);
-        geek >> x;
+        geek >> num_line;
         //sscanf(str_num,"%d", &num_line);
         std::cout<<'number of lines:'<<num_line;
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
