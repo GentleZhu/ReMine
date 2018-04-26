@@ -133,10 +133,10 @@ int main(int argc, char *argv[])
         files = split(TEXT_TO_SEG_REMINE,'\t');
         tokens = split(TEXT_TO_SEG_REMINE,'\t');
         for(string vertex: files){
-            std::cout << vertex << " \n";
+            std::cout << vertex << " haha\n";
         }
         for(string vertex: tokens){
-            std::cout << vertex << " \n";
+            std::cout << vertex << " niha\n";
         }
 
        // if (MODE == 1) {
