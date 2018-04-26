@@ -129,8 +129,8 @@ int main(int argc, char *argv[])
         std::cout<<"BEGIN\n";
         vector<string> files;
         vector<string> tokens;
-        files = split(TEXT_TO_SEG_REMINE,'\t');
-        tokens = split(TEXT_TO_SEG_REMINE,'\n');
+        files = split(TEXT_TO_SEG_REMINE,'\t\t');
+        tokens = split(TEXT_TO_SEG_REMINE,'\t');
         for(string vertex: files){
             std::cout << vertex << " ";
         }
