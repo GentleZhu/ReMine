@@ -134,7 +134,8 @@ int main(int argc, char *argv[])
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
-
+        std::cout<<TEXT_TO_SEG_REMINE;
+        std::cout<<num_line;
         vector<string> files;
 
 
