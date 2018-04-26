@@ -171,7 +171,7 @@ int main(int argc, char *argv[])
 
         int docCount = 0;
         while (!tokens_text.empty()) {
-            std::cout<<"startloop";
+            std::cout<<tokens_text.size()<<"\n";
             stringstream sin(tokens_text.front());
             tokens_text.pop_front();
             stringstream depsin(dep_text.front());
@@ -219,7 +219,7 @@ int main(int argc, char *argv[])
                     deps.push_back(make_pair(idx, idx_dep));
                 }
             }
-            std::cout<<"add";
+            std::cout<<"add\n";
 //            if (tokens.size() > 0) {
 //                assert(tokens.size() == deps.size());
 //                assert(tokens.size() == tags.size());
