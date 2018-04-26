@@ -224,8 +224,8 @@ int main(int argc, char *argv[])
                     tags.push_back(posTagId);
                     int idx = atoi(strtok (currentDep, "_"));
                     int idx_dep = atoi(strtok (NULL, "_"));
-                    std::cout<<tokens_text.size()<<"\n";
                     string xxx(strtok(NULL, "_"));
+                    std::cout<<tokens_text.size()<<"\n";
                     depTypes.push_back(xxx);
                     // deps.push_back(atoi(currentDep));
                     deps.push_back(make_pair(idx, idx_dep));
