@@ -121,6 +121,7 @@ int main(int argc, char *argv[])
         //std::cout<<TEST_EMS_REMINE;
         int num_line;
         std::cin>>num_line;
+        std::cout<<num_line<<'number of line';
         std::getline (std::cin,TEXT_TO_SEG_REMINE);
         std::cout<< TEXT_TO_SEG_REMINE;
 
