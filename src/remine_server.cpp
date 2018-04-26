@@ -129,7 +129,6 @@ int main(int argc, char *argv[])
         //sscanf(str_num,"%d", &num_line);
         //printf("\nThe value of x : %d", num_line);
 
-        //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
@@ -137,8 +136,9 @@ int main(int argc, char *argv[])
         //FILE* emIn = NULL;
         std::cout<<"BEGIN\n";
         vector<string> files;
+        std::cout<< TEXT_TO_SEG_REMINE;
+
         files = split(TEXT_TO_SEG_REMINE,'\t');
-        printf("\nThe value of x : %d", num_line);
         for (std::vector<string>::const_iterator i = files.begin(); i != files.end(); ++i){
             std::cout << *i << ' ';
         }
