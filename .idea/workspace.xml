@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
+      <change beforePath="$PROJECT_DIR$/src/remine_server.cpp" afterPath="$PROJECT_DIR$/src/remine_server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -44,11 +44,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="remine_server.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="remine_server.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="784">
-              <caret line="106" column="5" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="5" />
+            <state relative-caret-position="1008">
+              <caret line="129" column="29" lean-forward="true" selection-start-line="129" selection-start-column="29" selection-end-line="129" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -64,7 +64,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Makefile" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Makefile">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="364">
@@ -117,8 +117,8 @@
         <option value="$PROJECT_DIR$/src/utils/utils.h" />
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/server.cpp" />
-        <option value="$PROJECT_DIR$/src/remine_server.cpp" />
         <option value="$PROJECT_DIR$/Makefile" />
+        <option value="$PROJECT_DIR$/src/remine_server.cpp" />
       </list>
     </option>
   </component>
@@ -338,14 +338,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
-          <caret line="106" column="5" lean-forward="false" selection-start-line="106" selection-start-column="4" selection-end-line="106" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/compile.sh">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -358,6 +350,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="364">
           <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1008">
+          <caret line="129" column="29" lean-forward="true" selection-start-line="129" selection-start-column="29" selection-end-line="129" selection-end-column="29" />
           <folding />
         </state>
       </provider>
