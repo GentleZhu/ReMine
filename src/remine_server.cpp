@@ -107,6 +107,14 @@ int main(int argc, char *argv[])
     char currentDep[100];
     char currentTag[100];
 
+    crow::SimpleApp app;
+
+    CROW_ROUTE(app, "remind_data")
+    ([]() {
+
+    });
+
+    app.port(1111).run();
 
     while(1){
      //std::cin.ignore(1,' ');
