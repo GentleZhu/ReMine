@@ -92,7 +92,7 @@ int main()
 {
     //HYPER PARAMETER
     MODE = 1;
-    SEGMENTATION_MODEL_REMINE = "pre_train/segmentation.model";
+    SEGMENTATION_MODEL_REMINE = "../pre_train/segmentation.model";
     omp_set_num_threads(NTHREADS);
     // load model
     Dump::loadSegmentationModel(SEGMENTATION_MODEL_REMINE);
@@ -121,5 +121,5 @@ int main()
 
     });
 
-    app.port(8888).run();
+    app.port(10086).run();
 }
