@@ -2,7 +2,7 @@
 Use dumped patterns as initialization
 Tune the segmentation model under RM mode
 */
-#include "crow/amalgamate/crow_all.h"
+
 #include "utils/config.h"
 #include "utils/parameters.h"
 #include "utils/remine_flags.h"
@@ -12,6 +12,8 @@ Tune the segmentation model under RM mode
 #include "model_training/segmentation.h"
 #include "data/dump.h"
 #include "genSepath.h"
+#include <deque>
+typedef std::vector<string>::iterator vec_iter;
 
 using FrequentPatternMining::Pattern;
 using FrequentPatternMining::patterns;
@@ -107,14 +109,6 @@ int main(int argc, char *argv[])
     char currentDep[100];
     char currentTag[100];
 
-    crow::SimpleApp app;
-
-    CROW_ROUTE(app, "remind_data")
-    ([]() {
-
-    });
-
-    app.port(1111).run();
 
     while(1){
      //std::cin.ignore(1,' ');
@@ -127,48 +121,91 @@ int main(int argc, char *argv[])
         //std::cout<<TEXT_TO_SEG_DEPS_REMINE;
         //std::cin>>TEST_EMS_REMINE;
         //std::cout<<TEST_EMS_REMINE;
-        std:cin>> TEXT_TO_SEG_REMINE;
-        std:cout<< TEXT_TO_SEG_REMINE;
+        std::getline (std::cin,TEXT_TO_SEG_REMINE);
+        //std::cout<< TEXT_TO_SEG_REMINE;
 
         //FILE* in = tryOpen(TEXT_TO_SEG_REMINE, "r");
         //FILE* posIn = tryOpen(TEXT_TO_SEG_POS_TAGS_REMINE, "r");
         //FILE* depIn = tryOpen(TEXT_TO_SEG_DEPS_REMINE, "r");
         //FILE* emIn = NULL;
+
         std::cout<<"BEGIN\n";
         vector<string> files;
-        vector<string> tokens;
-        files = split(TEXT_TO_SEG_REMINE,'\t')
-        tokens = split(TEXT_TO_SEG_REMINE,'\n')
-        for(string vertex: files){
-            std::cout << vertex << " ";
-        }
-        for(string vertex: tokens){
-            std::cout << vertex << " ";
-        }
+
+        files = split(TEXT_TO_SEG_REMINE,'\t');
+        string str_num = files[0];
+        std::istringstream buffer(str_num);
+        int lin_num;
+        buffer >> lin_num;
+        std::deque<string> tokens_text;
+        std::deque<string> pos_text;
+        std::deque<string> dep_text;
+        std::deque<string> ent_text;
+//        for(string vertex: files){
+//            std::cout << vertex << " \n";
+//        }
 
        // if (MODE == 1) {
             //emIn = tryOpen(TEST_EMS_REMINE, "r");
         //}
+        int count = 1;
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            std::cout<<*it<<"toek\n";
+            tokens_text.push_back(*it);
+        }
+        count+= lin_num;
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            pos_text.push_back(*it);
+        }
+        count+= lin_num;
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            dep_text.push_back(*it);
+        }
+        count+= lin_num;
+        for (vec_iter it = files.begin() +count; it != files.begin() + count + lin_num ; ++it) {
+            ent_text.push_back(*it);
+        }
 
         FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
 
+        std::deque<string>::iterator It;
+        for (It = tokens_text.begin(); It!= tokens_text.end();It++){
+            std::cout<<*It<< "deque\n";
+            std::cout<<tokens_text.size()<<"\n";
+        }
+
         int docCount = 0;
-        while (getLine(in)) {
-            stringstream sin(line);
+        while (!tokens_text.empty()) {
+            std::cout<<tokens_text.size()<<"\n";
+            std::cout<<dep_text.size()<<"\n";
+            std::cout<<pos_text.size()<<"\n";
+            std::cout<<ent_text.size()<<"\n";
+
+            stringstream sin(tokens_text.front());
+            tokens_text.pop_front();
+            stringstream depsin(dep_text.front());
+            dep_text.pop_front();
+            stringstream possin(pos_text.front());
+
+            pos_text.pop_front();
+
+
+
             vector<TOTAL_TOKENS_TYPE> tokens;
             // vector<TOTAL_TOKENS_TYPE> deps;
             vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
             vector<string> depTypes;
             vector<TOTAL_TOKENS_TYPE> tags;
-
             string lastPunc = "";
             for (string temp; sin >> temp;) {
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    myAssert(fscanf(posIn, "%s", currentTag) == 1, "POS file doesn't have enough POS tags");
-                    myAssert(fscanf(depIn, "%s", currentDep) == 1, "DEP file doesn't have enough DEP tags");
+                    possin >> currentTag;
+                    depsin >> currentDep;
+                    //myAssert(typeid(possin >> currentTag).name() != "bool", "POS file doesn't have enough POS tags");
+                    //myAssert(typeid(depsin >> currentDep).name() != "bool", "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(currentTag)) {
                         posTagId = -1; // unknown tag
@@ -193,63 +230,67 @@ int main(int argc, char *argv[])
                     deps.push_back(make_pair(idx, idx_dep));
                 }
             }
-            if (tokens.size() > 0) {
-                assert(tokens.size() == deps.size());
-                assert(tokens.size() == tags.size());
-                ++ docCount;
-                if (MODE == 1 && getLine(emIn)) {
-                    stringstream sin(line);
-                    vector<pair<int ,int>> ems;
-                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
-                    for(string temp; sin >> temp;) {
-                        vector<string> segs;
-                        GenPath::split(temp, '_', segs);
-                        assert(segs.size() == 2);
-                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
-                    }
-                    // remember ranges -1
-
-                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
-                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
-                    vector<TOKEN_ID_TYPE> rm_tokens;
-                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-                        const auto& it = _->second;
-                        fprintf(out, "%d\t", docCount);
-                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                        }
-                        for (const auto& __ : it.second) {
-                            rm_deps.push_back(deps[__ - 1]);
-                            rm_tokens.push_back(tokens[__ - 1]);
-                        }
-                        process(rm_tokens, rm_deps, tags, *segmenter, out);
-                        fprintf(out, "| ");
-                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
-                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        }
-                        rm_deps.clear();
-                        rm_tokens.clear();
-                    // cout << endl;
-                    }
-                }
-                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
-                // cout << "here\t"  << tokens.size() << endl;
-            }
-            // process(tokens, deps, tags, *segmenter, out);
-            tokens.clear();
-            deps.clear();
-            depTypes.clear();
-            tags.clear();
-
-            }
+            std::cout<<"add\n";
+//            if (tokens.size() > 0) {
+//                assert(tokens.size() == deps.size());
+//                assert(tokens.size() == tags.size());
+//                ++ docCount;
+//                if (MODE == 1 && !ent_text.empty()) {
+//                    stringstream entin(ent_text.front());
+//                    ent_text.pop_front();
+//
+//                    vector<pair<int ,int>> ems;
+//                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
+//                    for(string temp; entin >> temp;) {
+//                        vector<string> segs;
+//                        GenPath::split(temp, '_', segs);
+//                        assert(segs.size() == 2);
+//                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
+//                    }
+//                    // remember ranges -1
+//
+//                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
+//                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
+//                    vector<TOKEN_ID_TYPE> rm_tokens;
+//                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
+//                        const auto& it = _->second;
+//                        fprintf(out, "%d\t", docCount);
+//                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+//                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+//                        }
+//                        for (const auto& __ : it.second) {
+//                            rm_deps.push_back(deps[__ - 1]);
+//                            rm_tokens.push_back(tokens[__ - 1]);
+//                        }
+//                        process(rm_tokens, rm_deps, tags, *segmenter, out);
+//                        fprintf(out, "| ");
+//                        for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
+//                            fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+//                        }
+//                        rm_deps.clear();
+//                        rm_tokens.clear();
+//                    // cout << endl;
+//                    }
+//                }
+//                else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
+//                // cout << "here\t"  << tokens.size() << endl;
+//            }
+//            // process(tokens, deps, tags, *segmenter, out);
+//            tokens.clear();
+//            deps.clear();
+//            depTypes.clear();
+//            tags.clear();
+//
+        }
 
             // test
             // break;
-        fclose(in);
+        //fclose(in);
+        std::cout<<"finish";
         fclose(out);
         FILE* FIN_IND = tryOpen("tmp_remine/finish.txt","w");
         fclose(FIN_IND);
-    }
+     }
 
 
 }
