@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify, Response
+from flask import Flask, request, render_template, jsonify, Response, requests
 
 import subprocess
 import sys
@@ -47,43 +47,55 @@ def render():
 #todo generate an api to set model.
 
 
+#pass information to c++ web
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
-def runRemine():
-    default_input_model = 'pre_train/segmentation.model'
-    #process = Popen(stdin=PIPE, stdout=PIPE, stderr=PIPE)
-    # input = request.data
-    # text = input.get('text')
-    # print(input)
-    input_path = 'tmp_remine/tokenized_test.txt'
-    pos_path = 'tmp_remine/pos_tags_test.txt'
-    dep_path = 'tmp_remine/deps_test.txt'
-    ems_path = 'tmp_remine/remine_entity_position.txt'
-
-    token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\t18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
+def senddata():
     pos_text = 'DT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .\nCC NNP VBD PRP VBD VB JJ NN IN PRP$ JJ NN TO NNP CC NNP IN NNP NNP IN NNP .'
-    dep_text = '3_det 3_amod 5_nsubj 5_aux 11_ccomp 8_nsubj 8_aux 5_ccomp 8_advmod 11_punct 0_root 14_compound 14_compound 11_nsubj 14_punct 14_appos 18_case 16_nmod:of 11_punct\n3_cc 3_nsubj 0_root 6_nsubj 6_aux 3_ccomp 8_amod 6_dobj 12_case 12_nmod:poss 12_amod 6_nmod:in 14_case 12_nmod:to 14_cc 12_nmod:to 19_case 19_compound 12_nmod:in 21_case 12_nmod:in 3_punct'
-    ems_text = '0_3 5_8 11_14 15_18\n1_2 6_8 9_10 10_12 13_14 15_19 20_21'
-    total = token_text + '\t' + pos_text + '\t' + dep_text
-    command = '{} {} {} {}'.format(input_path, pos_path, dep_path,ems_path)
-    ret = []
-    pane.send_keys(command, enter =True)
+    response = requests.get('http://dmserv4.cs.illinois.edu:1111/pass_result', json ={"key":pos_text})
+    json_data = json.loads(reesponse.text)
+    #print(json_data)
+    return response
 
-    output_path = 'remine_tokenized_segmented_sentences.txt'
-    while True:
-        if os.path.isfile('tmp_remine/finish.txt'):
-            try:
-                with open('tmp_remine/{}'.format(output_path), 'r') as f:
-                    for line in f:
-                        ret.append(line)
-                break
-            except IOError:
-                break
-    #clear the output
-    os.remove('tmp_remine/finish.txt')
-    os.remove('tmp_remine/remine_tokenized_segmented_sentences.txt')
 
-    return jsonify({'tuple': ret})
+
+# @app.route('/remine', methods =['POST'])
+# @cross_origin(origin='*')
+# def runRemine():
+#     default_input_model = 'pre_train/segmentation.model'
+#     #process = Popen(stdin=PIPE, stdout=PIPE, stderr=PIPE)
+#     # input = request.data
+#     # text = input.get('text')
+#     # print(input)
+#     input_path = 'tmp_remine/tokenized_test.txt'
+#     pos_path = 'tmp_remine/pos_tags_test.txt'
+#     dep_path = 'tmp_remine/deps_test.txt'
+#     ems_path = 'tmp_remine/remine_entity_position.txt'
+#
+#     token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\t18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
+#     pos_text = 'DT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .\nCC NNP VBD PRP VBD VB JJ NN IN PRP$ JJ NN TO NNP CC NNP IN NNP NNP IN NNP .'
+#     dep_text = '3_det 3_amod 5_nsubj 5_aux 11_ccomp 8_nsubj 8_aux 5_ccomp 8_advmod 11_punct 0_root 14_compound 14_compound 11_nsubj 14_punct 14_appos 18_case 16_nmod:of 11_punct\n3_cc 3_nsubj 0_root 6_nsubj 6_aux 3_ccomp 8_amod 6_dobj 12_case 12_nmod:poss 12_amod 6_nmod:in 14_case 12_nmod:to 14_cc 12_nmod:to 19_case 19_compound 12_nmod:in 21_case 12_nmod:in 3_punct'
+#     ems_text = '0_3 5_8 11_14 15_18\n1_2 6_8 9_10 10_12 13_14 15_19 20_21'
+#     total = token_text + '\t' + pos_text + '\t' + dep_text
+#     command = '{} {} {} {}'.format(input_path, pos_path, dep_path,ems_path)
+#     ret = []
+#     pane.send_keys(command, enter =True)
+#
+#     output_path = 'remine_tokenized_segmented_sentences.txt'
+#     while True:
+#         if os.path.isfile('tmp_remine/finish.txt'):
+#             try:
+#                 with open('tmp_remine/{}'.format(output_path), 'r') as f:
+#                     for line in f:
+#                         ret.append(line)
+#                 break
+#             except IOError:
+#                 break
+#     #clear the output
+#     os.remove('tmp_remine/finish.txt')
+#     os.remove('tmp_remine/remine_tokenized_segmented_sentences.txt')
+#
+#     return jsonify({'tuple': ret})
 
 if __name__=='__main__':
     #app.run(debug = True, host = '0.0.0.0',port=1111)
