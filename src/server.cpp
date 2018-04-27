@@ -113,7 +113,7 @@ int main()
         if (!x){
             return crow::response(400);
             }
-        string st =x["key"];
+        string st = x["key"].i();
         std::ostringstream os;
         os << st;
 
