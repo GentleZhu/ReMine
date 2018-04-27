@@ -60,7 +60,7 @@ def runRemine():
     dep_path = 'tmp_remine/deps_test.txt'
     ems_path = 'tmp_remine/remine_entity_position.txt'
 
-    token_text = 'the american people can see what be happen here , say Senator Ben Nelson , Democrat of Nebraska .\nbut Williams say she do take enormous pleasure in she 10-day visit to Senegal and Ghana in West Africa in November .'
+    token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\t18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
     pos_text = 'DT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .\nCC NNP VBD PRP VBD VB JJ NN IN PRP$ JJ NN TO NNP CC NNP IN NNP NNP IN NNP .'
     dep_text = '3_det 3_amod 5_nsubj 5_aux 11_ccomp 8_nsubj 8_aux 5_ccomp 8_advmod 11_punct 0_root 14_compound 14_compound 11_nsubj 14_punct 14_appos 18_case 16_nmod:of 11_punct\n3_cc 3_nsubj 0_root 6_nsubj 6_aux 3_ccomp 8_amod 6_dobj 12_case 12_nmod:poss 12_amod 6_nmod:in 14_case 12_nmod:to 14_cc 12_nmod:to 19_case 19_compound 12_nmod:in 21_case 12_nmod:in 3_punct'
     ems_text = '0_3 5_8 11_14 15_18\n1_2 6_8 9_10 10_12 13_14 15_19 20_21'

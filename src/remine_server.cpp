@@ -2,7 +2,7 @@
 Use dumped patterns as initialization
 Tune the segmentation model under RM mode
 */
-#include "utils/crow_all.h"
+#include "crow/amalgamate/crow_all.h"
 #include "utils/config.h"
 #include "utils/parameters.h"
 #include "utils/remine_flags.h"
