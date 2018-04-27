@@ -56,7 +56,7 @@ def senddata():
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"key":pos_text})
     #json_data = response.json()
     #print(json_data)
-    return response
+    return response.text
 
 
 
