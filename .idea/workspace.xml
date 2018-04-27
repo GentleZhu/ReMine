@@ -3,7 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/remine_server.cpp" afterPath="$PROJECT_DIR$/src/remine_server.cpp" />
+      <change beforePath="$PROJECT_DIR$/Makefile" afterPath="$PROJECT_DIR$/Makefile" />
+      <change beforePath="$PROJECT_DIR$/server.cpp" afterPath="$PROJECT_DIR$/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,11 +17,11 @@
     <splitter split-orientation="horizontal" split-proportion="0.88315076">
       <split-first>
         <leaf>
-          <file leaf-file-name="remine_server.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="remine_server.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="868">
-                  <caret line="109" column="25" lean-forward="true" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="25" />
+                <state relative-caret-position="2464">
+                  <caret line="118" column="49" lean-forward="true" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
                   <folding />
                 </state>
               </provider>
@@ -29,8 +30,18 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="112">
-                  <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="11" selection-end-column="25" />
+                <state relative-caret-position="364">
+                  <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Makefile" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/Makefile">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="504">
+                  <caret line="18" column="109" lean-forward="false" selection-start-line="18" selection-start-column="109" selection-end-line="18" selection-end-column="109" />
                   <folding />
                 </state>
               </provider>
@@ -98,16 +109,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="feature_extraction.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/classification/feature_extraction.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="0">
-                  <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="predict_quality.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/classification/predict_quality.h">
               <provider selected="true" editor-type-id="text-editor">
@@ -146,6 +147,7 @@
       <find>load</find>
       <find>const</find>
       <find>c</find>
+      <find>depTypes</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -155,10 +157,10 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/src/utils/utils.h" />
-        <option value="$PROJECT_DIR$/server.cpp" />
-        <option value="$PROJECT_DIR$/Makefile" />
         <option value="$PROJECT_DIR$/server.py" />
         <option value="$PROJECT_DIR$/src/remine_server.cpp" />
+        <option value="$PROJECT_DIR$/server.cpp" />
+        <option value="$PROJECT_DIR$/Makefile" />
       </list>
     </option>
   </component>
@@ -563,14 +565,6 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/func.js" />
-    <entry file="file://$PROJECT_DIR$/server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="4" column="4" lean-forward="false" selection-start-line="4" selection-start-column="4" selection-end-line="11" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/commandline_flags.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="924">
@@ -611,14 +605,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Makefile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="364">
-          <caret line="13" column="33" lean-forward="false" selection-start-line="13" selection-start-column="33" selection-end-line="13" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1255">
@@ -631,8 +617,24 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="868">
-          <caret line="109" column="25" lean-forward="true" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="25" />
+        <state relative-caret-position="2464">
+          <caret line="118" column="49" lean-forward="true" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="364">
+          <caret line="13" column="0" lean-forward="false" selection-start-line="13" selection-start-column="0" selection-end-line="13" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Makefile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="504">
+          <caret line="18" column="109" lean-forward="false" selection-start-line="18" selection-start-column="109" selection-end-line="18" selection-end-column="109" />
           <folding />
         </state>
       </provider>
