@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, jsonify, Response, requests
+from flask import Flask, request, render_template, jsonify, Response
+import requests
 
 import subprocess
 import sys
