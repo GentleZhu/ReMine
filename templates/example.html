@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Remine Demo</title>
+        <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='style.css') }}"/>
+        <script src="{{ url_for('static', filename='func.js') }}"></script>
+    </head>
+
+    <body>
+
+        <p class = "title">
+            ReMine Demo
+        </p>
+
+        <div class = "input">
+
+            <p class = "intro">
+                This is a demo of novel open IE system—ReMine. It integrates local context signal and global structural signal in a unified framework with distant supervision. The input is corpus. The outputs will return relation tuples. Experiments on two real-world corpora of different domains demonstrate that ReMine system achieves superior precision when outputting same number of extractions, compared with several state-of-the-art open IE systems.
+            </p>
+
+            <div class = "selector">
+                <select id = "selection" class = "select">
+                    <option value = "s1">s1</option>
+                    <option value = "s2">s2</option>
+                    <option value = "s3">s3</option>
+                    <option value = "s4">s4</option>
+                </select>
+            </div>
+
+            <div class = "textInput">
+                <textarea id = "inText" type = "text" name = "corpus" class = "textFrame"></textarea><br>
+                <input type = "submit" value = "Submit" class = "button" onclick="submitCorpus()">
+            </div>
+
+        </div>
+
+        <div id = "outText" class = "output">
+
+        </div>
+
+    </body>
+
+</html>
