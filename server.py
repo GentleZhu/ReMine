@@ -54,7 +54,7 @@ def render():
 def senddata():
     pos_text = 'DT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .\nCC NNP VBD PRP VBD VB JJ NN IN PRP$ JJ NN TO NNP CC NNP IN NNP NNP IN NNP .'
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"key":pos_text})
-    json_data = json.loads(reesponse.text)
+    json_data = response.json()
     #print(json_data)
     return response
 

@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/server.py" afterPath="$PROJECT_DIR$/server.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -19,7 +20,7 @@
             <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="-3291">
-                  <caret line="118" column="49" lean-forward="true" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
+                  <caret line="118" column="49" lean-forward="false" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
                   <folding />
                 </state>
               </provider>
@@ -38,8 +39,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-136">
-                  <caret line="55" column="65" lean-forward="false" selection-start-line="55" selection-start-column="65" selection-end-line="55" selection-end-column="65" />
+                <state relative-caret-position="1568">
+                  <caret line="56" column="30" lean-forward="false" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -61,7 +62,7 @@
             <entry file="file://$PROJECT_DIR$/../../forkbomb/back-end/app/api.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="868">
-                  <caret line="40" column="62" lean-forward="true" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="62" />
+                  <caret line="40" column="62" lean-forward="false" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="62" />
                   <folding>
                     <element signature="e#19#44#0" expanded="true" />
                   </folding>
@@ -107,7 +108,7 @@
             <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1512">
-                  <caret line="108" column="4" lean-forward="true" selection-start-line="108" selection-start-column="4" selection-end-line="109" selection-end-column="25" />
+                  <caret line="108" column="4" lean-forward="false" selection-start-line="108" selection-start-column="4" selection-end-line="109" selection-end-column="25" />
                   <folding />
                 </state>
               </provider>
@@ -117,7 +118,7 @@
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1551">
-                  <caret line="111" column="69" lean-forward="true" selection-start-line="111" selection-start-column="41" selection-end-line="111" selection-end-column="69" />
+                  <caret line="111" column="69" lean-forward="false" selection-start-line="111" selection-start-column="41" selection-end-line="111" selection-end-column="69" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -651,7 +652,7 @@
     <entry file="file://$PROJECT_DIR$/../../forkbomb/back-end/app/api.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="868">
-          <caret line="40" column="62" lean-forward="true" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="62" />
+          <caret line="40" column="62" lean-forward="false" selection-start-line="40" selection-start-column="15" selection-end-line="40" selection-end-column="62" />
           <folding>
             <element signature="e#19#44#0" expanded="true" />
           </folding>
@@ -661,7 +662,7 @@
     <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-3291">
-          <caret line="118" column="49" lean-forward="true" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
+          <caret line="118" column="49" lean-forward="false" selection-start-line="118" selection-start-column="49" selection-end-line="118" selection-end-column="49" />
           <folding />
         </state>
       </provider>
@@ -676,8 +677,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-136">
-          <caret line="55" column="65" lean-forward="false" selection-start-line="55" selection-start-column="65" selection-end-line="55" selection-end-column="65" />
+        <state relative-caret-position="1568">
+          <caret line="56" column="30" lean-forward="false" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="30" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
           </folding>
