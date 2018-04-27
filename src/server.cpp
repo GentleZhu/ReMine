@@ -107,7 +107,7 @@ int main()
 
     //GET RESULT FROM PYTHON WEB
     CROW_ROUTE(app, "/pass_result")
-    .methods("PUT"_method)
+    .methods("GET"_method)
     ([](const crow::request& req) {
         auto x = crow::json::load(req.body);
         if (!x){
