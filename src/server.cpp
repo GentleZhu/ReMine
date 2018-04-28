@@ -298,10 +298,11 @@ int main()
         tags.clear();
 
         //output
+        string s = out.str();
+        std::cout<<s;
         }
     //fclose(out);
-      string s = out.str();
-      std::cout<<s;
+
 
         return crow::response{'f'};
 
