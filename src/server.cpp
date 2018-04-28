@@ -230,7 +230,7 @@ int main()
                         std::cout<<"check5";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
-                        char* buf = malloc((docC_str.length() + 2));
+                        char* buf = (char*)malloc((docC_str.length() + 2));
                         //fprintf(out, "%d\t", docCount);
                         //char buf [20];
                         sprintf(buf, "%d\t", docCount);
