@@ -24,7 +24,7 @@ vector<double> f;
 vector<int> pre;
 Segmentation* segmenter;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::stringstream* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::ostringstream* out)
 {
     if (ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
@@ -138,7 +138,7 @@ int main()
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-        std::stringstream out;
+        std::ostringstream out;
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -234,7 +234,7 @@ int main()
                         std::cout<<tmp_out<<"tmp\n";
 
                         out<<tmp_out;
-                        std::cout<<'ipass';
+                        std::cout<<"I pass";
                         string test_out = out.str();
                         std::cout<<test_out;
 
