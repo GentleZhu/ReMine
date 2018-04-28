@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/src/remine.cpp" afterPath="$PROJECT_DIR$/src/remine.cpp" />
       <change beforePath="$PROJECT_DIR$/src/server.cpp" afterPath="$PROJECT_DIR$/src/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -20,18 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1008">
-                  <caret line="210" column="20" lean-forward="false" selection-start-line="210" selection-start-column="20" selection-end-line="210" selection-end-column="20" />
-                  <folding />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="genSepath.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/src/genSepath.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="704">
-                  <caret line="51" column="67" lean-forward="false" selection-start-line="51" selection-start-column="58" selection-end-line="51" selection-end-column="67" />
+                <state relative-caret-position="3612">
+                  <caret line="213" column="43" lean-forward="false" selection-start-line="213" selection-start-column="43" selection-end-line="213" selection-end-column="43" />
                   <folding />
                 </state>
               </provider>
@@ -115,7 +104,7 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/remine.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1432">
@@ -147,6 +136,16 @@
               </provider>
             </entry>
           </file>
+          <file leaf-file-name="genSepath.h" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/src/genSepath.h">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="1236">
+                  <caret line="55" column="17" lean-forward="true" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
+                  <folding />
+                </state>
+              </provider>
+            </entry>
+          </file>
         </leaf>
       </split-second>
     </splitter>
@@ -172,13 +171,13 @@
       <find>request</find>
       <find>get_movie_</find>
       <find>pos_line</find>
-      <find>rm_tokens</find>
       <find>Gen</find>
       <find>MODE</find>
       <find>genSep</find>
       <find>gen</find>
       <find>depTypes</find>
       <find>genSepath</find>
+      <find>rm_tokens</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -708,14 +707,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/genSepath.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="704">
-          <caret line="51" column="67" lean-forward="false" selection-start-line="51" selection-start-column="58" selection-end-line="51" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/remine.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1432">
@@ -724,10 +715,18 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/genSepath.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1236">
+          <caret line="55" column="17" lean-forward="true" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1008">
-          <caret line="210" column="20" lean-forward="false" selection-start-line="210" selection-start-column="20" selection-end-line="210" selection-end-column="20" />
+        <state relative-caret-position="3612">
+          <caret line="213" column="43" lean-forward="false" selection-start-line="213" selection-start-column="43" selection-end-line="213" selection-end-column="43" />
           <folding />
         </state>
       </provider>

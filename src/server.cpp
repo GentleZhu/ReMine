@@ -208,14 +208,15 @@ int main()
                         ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                     }
                     // remember ranges -1
-                    std::cout<<deps.size();
-                    std::cout<<tags.size();
-                    std::cout<<depTypes.size();
-                    std::cout<<ems.size();
+                    std::cout<<deps.size()<<"\n";
+                    std::cout<<tags.size()<<"\n";
+                    std::cout<<depTypes.size()<<"\n";
+                    std::cout<<ems.size()<<"\n";
 
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
+                    std::cout<<tmp.size()<<"genpath\n";
                     std::cout<<"check4";
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         std::cout<<"check5";
