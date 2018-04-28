@@ -159,10 +159,10 @@ int main()
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    std::getline(pos_sin,pos_line);
-                    std::getline(dep_sin,dep_line);
-                    //myAssert(std::getline(pos_sin,pos_line) == 1, "POS file doesn't have enough POS tags");
-                    //myAssert(std::getline(dep_sin,dep_line) == 1, "DEP file doesn't have enough DEP tags");
+                    //std::getline(pos_sin,pos_line);
+                    //std::getline(dep_sin,dep_line);
+                    myAssert(!std::getline(pos_sin,pos_line), "POS file doesn't have enough POS tags");
+                    myAssert(!std::getline(dep_sin,dep_line), "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(pos_line)) {
                         posTagId = -1; // unknown tag
