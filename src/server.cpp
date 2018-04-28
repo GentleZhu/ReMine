@@ -94,6 +94,7 @@ int main()
     MODE = 1;
     SEGMENTATION_MODEL_REMINE = "pre_train/segmentation.model";
     omp_set_num_threads(NTHREADS);
+
     // load model
     Dump::loadSegmentationModel(SEGMENTATION_MODEL_REMINE);
     sort(patterns.begin(), patterns.end(), byQuality);
@@ -113,11 +114,129 @@ int main()
         if (!x){
             return crow::response(400);
             }
-        string st = x["key"].s();
-        std::ostringstream os;
-        os << st;
 
-        return crow::response{os.str()};
+//      char currentDep[100];
+//      char currentTag[100];
+
+        //get input from user
+        string tokens_text = x["tokens"].s();
+        string pos_text = x["pos"].s();
+        string dep_text = x["dep"].s();
+        string ent_text = x["ent"].s();
+
+        if (MODE == 1) {
+        emIn = tryOpen(TEST_EMS_REMINE, "r");
+        }
+
+        FILE* out = tryOpen("../tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
+
+
+        //process strings
+        std::istringstream token_sin(tokens_text);
+        std::istringstream dep_sin(dep_text);
+        std::istringstream pos_sin(pos_text);
+        std::istringstream ent_sin(ent_text);
+        std::string token_line;
+        std::string dep_line;
+        std::string pos_line;
+        std::string ent_line;
+
+
+        int docCount = 0;
+
+        while (std::getline(token_sin,token_line)) {
+            stringstream sin(token_line);
+            vector<TOTAL_TOKENS_TYPE> tokens;
+            // vector<TOTAL_TOKENS_TYPE> deps;
+            vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
+            vector<string> depTypes;
+            vector<TOTAL_TOKENS_TYPE> tags;
+
+            string lastPunc = "";
+            for (string temp; sin >> temp;) {
+                // get pos tag
+                POS_ID_TYPE posTagId = -1;
+                if (ENABLE_POS_TAGGING) {
+                    myAssert(std::getline(pos_sin,pos_line), "POS file doesn't have enough POS tags");
+                    myAssert(std::getline(dep_sin,dep_line), "DEP file doesn't have enough DEP tags");
+
+                    if (!Documents::posTag2id.count(pos_line)) {
+                        posTagId = -1; // unknown tag
+                    } else {
+                        posTagId = Documents::posTag2id[pos_line];
+                    }
+                }
+
+                // get token
+                bool flag = true;
+                TOKEN_ID_TYPE token = 0;
+                stringstream sin(temp);
+                sin >> token;
+                tokens.push_back(token);
+                if (ENABLE_POS_TAGGING) {
+                    tags.push_back(posTagId);
+                    int idx = atoi(strtok (dep_line, "_"));
+                    int idx_dep = atoi(strtok (NULL, "_"));
+                    string xxx(strtok(NULL, "_"));
+                    depTypes.push_back(xxx);
+                    // deps.push_back(atoi(currentDep));
+                    deps.push_back(make_pair(idx, idx_dep));
+                }
+            }
+            if (tokens.size() > 0) {
+                assert(tokens.size() == deps.size());
+                assert(tokens.size() == tags.size());
+                ++ docCount;
+                if (MODE == 1 && std::getline(ent_sin,ent_line)) {
+                    stringstream sin(line);
+                    vector<pair<int ,int>> ems;
+                    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
+                    for(string temp; sin >> temp;) {
+                        vector<string> segs;
+                        GenPath::split(temp, '_', segs);
+                        assert(segs.size() == 2);
+                        ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
+                    }
+                    // remember ranges -1
+
+                    tmp = GenPath::genSepath(deps, tags, depTypes, ems);
+                    vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
+                    vector<TOKEN_ID_TYPE> rm_tokens;
+                    for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
+                        const auto& it = _->second;
+                        fprintf(out, "%d\t", docCount);
+                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+                        }
+                        for (const auto& __ : it.second) {
+                            rm_deps.push_back(deps[__ - 1]);
+                            rm_tokens.push_back(tokens[__ - 1]);
+                        }
+                   
+        //run process
+                        process(rm_tokens,rm_deps.tags, *segmenter)
+                         fprintf(out, "| ");
+                    for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
+                        fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+                    }
+                    rm_deps.clear();
+                    rm_tokens.clear();
+                // cout << endl;
+                }
+            }
+            else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
+            // cout << "here\t"  << tokens.size() << endl;
+        }
+
+        tokens.clear();
+        deps.clear();
+        depTypes.clear();
+        tags.clear();
+
+        //output
+        }
+    fclose(out);
+        return 0; //crow::response{os.str()};
 
     });
 
