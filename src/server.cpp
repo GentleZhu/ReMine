@@ -142,7 +142,7 @@ int main()
         std::string dep_line;
         std::string pos_line;
         std::string ent_line;
-        std::cout<<token_line;
+        std::cout<<tokens_text;
 
 
         int docCount = 0;
