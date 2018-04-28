@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/server.cpp" afterPath="$PROJECT_DIR$/src/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -19,8 +18,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="3612">
-                  <caret line="213" column="43" lean-forward="false" selection-start-line="213" selection-start-column="43" selection-end-line="213" selection-end-column="43" />
+                <state relative-caret-position="1040">
+                  <caret line="201" column="45" lean-forward="false" selection-start-line="201" selection-start-column="45" selection-end-line="201" selection-end-column="45" />
                   <folding />
                 </state>
               </provider>
@@ -104,10 +103,10 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="false">
+          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/remine.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1432">
+                <state relative-caret-position="832">
                   <caret line="173" column="0" lean-forward="false" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
                   <folding />
                 </state>
@@ -127,8 +126,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="688">
-                  <caret line="57" column="74" lean-forward="true" selection-start-line="57" selection-start-column="74" selection-end-line="57" selection-end-column="74" />
+                <state relative-caret-position="604">
+                  <caret line="54" column="22" lean-forward="false" selection-start-line="54" selection-start-column="22" selection-end-line="54" selection-end-column="22" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -136,7 +135,7 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="genSepath.h" pinned="false" current-in-tab="true">
+          <file leaf-file-name="genSepath.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/genSepath.h">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1236">
@@ -178,6 +177,7 @@
       <find>depTypes</find>
       <find>genSepath</find>
       <find>rm_tokens</find>
+      <find>ems</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -673,16 +673,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="793">
-          <caret line="56" column="234" lean-forward="false" selection-start-line="56" selection-start-column="234" selection-end-line="56" selection-end-column="234" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="672">
@@ -707,14 +697,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/remine.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1432">
-          <caret line="173" column="0" lean-forward="false" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/genSepath.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1236">
@@ -723,10 +705,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="793">
+          <caret line="56" column="234" lean-forward="false" selection-start-line="56" selection-start-column="234" selection-end-line="56" selection-end-column="234" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/remine.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="832">
+          <caret line="173" column="0" lean-forward="false" selection-start-line="173" selection-start-column="0" selection-end-line="173" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3612">
-          <caret line="213" column="43" lean-forward="false" selection-start-line="213" selection-start-column="43" selection-end-line="213" selection-end-column="43" />
+        <state relative-caret-position="1040">
+          <caret line="201" column="45" lean-forward="false" selection-start-line="201" selection-start-column="45" selection-end-line="201" selection-end-column="45" />
           <folding />
         </state>
       </provider>

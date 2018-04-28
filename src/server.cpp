@@ -198,7 +198,7 @@ int main()
                 assert(tokens.size() == tags.size());
                 ++ docCount;
                 if (MODE == 1 && std::getline(ent_sin,ent_line)) {
-                    stringstream sin(line);
+                    stringstream sin(ent_line);
                     vector<pair<int ,int>> ems;
                     unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
                     for(string temp; sin >> temp;) {
