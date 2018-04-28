@@ -230,10 +230,10 @@ int main()
                         //fprintf(out, "%d\t", docCount);
                         char buf [20];
                         sprintf(buf, "%d\t", docCount);
-                        //string tmp_out = buf;
+                        string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
 
-                        out<<buf;
+                        out<<tmp_out;
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         //std::cout<<out;
