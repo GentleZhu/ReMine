@@ -56,7 +56,7 @@ def senddata():
     token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\n18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
     pos_text = 'DT\nJJ\nNNS\nMD\nVB\nWP\nVBZ\nVBG\nRB\n,\nVBD\nNNP\nNNP\nNNP\n,\nNNP\nIN\nNNP\n.\nCC\nNNP\nVBD\nPRP\nVBD\nVB\nJJ\nNN\nIN\nPRP$\nJJ\nNN\nTO\nNNP\nCC\nNNP\nIN\nNNP\nNNP\nIN\nNNP\n.'
     ems_text = '0_3 5_8 11_14 15_18\n1_2 6_8 9_10 10_12 13_14 15_19 20_21'
-    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": pos_text, "token": token_text, "dep": dep_text, "ent": ems_text})
+    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": pos_text, "tokens": token_text, "dep": dep_text, "ent": ems_text})
     #json_data = response.json()
     #print(json_data)
     print(response.text)
