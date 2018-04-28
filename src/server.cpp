@@ -232,8 +232,9 @@ int main()
                         sprintf(buf, "%d\t", docCount);
                         string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
+                        ostringstream out213;
 
-                        out << "adadad";
+                        out123 << "adadad";
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         //std::cout<<out;
