@@ -235,7 +235,7 @@ int main()
 
                         out<<tmp_out;
                         std::cout<<'ipass';
-                        string test_out = out->str();
+                        string test_out = out.str();
                         std::cout<<test_out;
 
 
@@ -261,7 +261,7 @@ int main()
 
                         //run process
                         std::cout<<"start process";
-                        process(rm_tokens, rm_deps, tags, *segmenter, out);
+                        process(rm_tokens, rm_deps, tags, *segmenter, &out);
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
                         string tmp_out_second = "| ";
@@ -300,7 +300,7 @@ int main()
         //output
         }
     //fclose(out);
-      string s = out->str();
+      string s = out.str();
       std::cout<<s;
 
         return crow::response{'f'};
