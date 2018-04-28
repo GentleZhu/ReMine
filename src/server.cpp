@@ -83,12 +83,12 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
         char buf[300];
         sprintf(buf, "%s%c", ret[i].c_str(), ' ');
         string tmp_out = buf;
-        (*out)<<tmp_out;
+        *out += tmp_out;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
         string tmp_out = "\n";
-        (*out)<<tmp_out;
+        *out += tmp_out;
     }
 }
 
@@ -138,7 +138,7 @@ int main()
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-        std::ostringstream out;
+        string out;
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -233,7 +233,7 @@ int main()
                         string tmp_out = buf;
                         std::cout<<tmp_out<<"tmp\n";
 
-                        out<<tmp_out;
+                        out += tmp_out;
                         std::cout<<"I pass";
                         string test_out = out.str();
                         std::cout<<test_out;
@@ -252,7 +252,7 @@ int main()
 //                            }
                             sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
                             string tmp_out = buf;
-                            out<<tmp_out;
+                            out += tmp_out;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -278,7 +278,7 @@ int main()
 //                            }
                         sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
                         string tmp_out = buf;
-                        out<<tmp_out;
+                        out += tmp_out;
 
 
                     }
