@@ -144,7 +144,7 @@ int main()
         std::string ent_line;
         std::cout<<tokens_text;
         std::getline(token_sin,token_line);
-        std:::cout<<token_line;
+        std::cout<<token_line;
 
 
         int docCount = 0;
