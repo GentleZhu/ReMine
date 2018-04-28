@@ -142,6 +142,7 @@ int main()
         std::string dep_line;
         std::string pos_line;
         std::string ent_line;
+        std::cout<<token_line；
 
 
         int docCount = 0;
@@ -233,7 +234,7 @@ int main()
             // cout << "here\t"  << tokens.size() << endl;
         }
         std::cout<<"adadd";
-        
+
         tokens.clear();
         deps.clear();
         depTypes.clear();
