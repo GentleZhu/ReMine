@@ -233,7 +233,7 @@ int main()
                         string tmp_out = buf;
                         std::cout<<tmp_out<<"tmp\n";
 
-                        out += tmp_out;
+                        out.append(tmp_out);
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         std::cout<<out;
