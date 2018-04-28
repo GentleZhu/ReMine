@@ -12,6 +12,7 @@ Tune the segmentation model under RM mode
 #include "model_training/segmentation.h"
 #include "data/dump.h"
 #include "genSepath.h"
+#include <string.h>
 #include <deque>
 typedef std::vector<string>::iterator vec_iter;
 
@@ -157,8 +158,10 @@ int main()
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    myAssert(std::getline(pos_sin,pos_line) == 1, "POS file doesn't have enough POS tags");
-                    myAssert(std::getline(dep_sin,dep_line) == 1, "DEP file doesn't have enough DEP tags");
+                    std::getline(pos_sin,pos_line);
+                    std::getline(dep_sin,dep_line);
+                    //myAssert(std::getline(pos_sin,pos_line) == 1, "POS file doesn't have enough POS tags");
+                    //myAssert(std::getline(dep_sin,dep_line) == 1, "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(pos_line)) {
                         posTagId = -1; // unknown tag
@@ -175,7 +178,7 @@ int main()
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
-                    std::strcp(currentDep, dep_line.c_str());
+                    strcp(currentDep, dep_line.c_str());
                     int idx = atoi(strtok (currentDep, "_"));
                     int idx_dep = atoi(strtok (NULL, "_"));
                     string xxx(strtok(NULL, "_"));

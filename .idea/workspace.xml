@@ -19,8 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="812">
-                  <caret line="101" column="67" lean-forward="false" selection-start-line="101" selection-start-column="67" selection-end-line="101" selection-end-column="67" />
+                <state relative-caret-position="532">
+                  <caret line="160" column="50" lean-forward="true" selection-start-line="160" selection-start-column="50" selection-end-line="160" selection-end-column="50" />
                   <folding />
                 </state>
               </provider>
@@ -660,8 +660,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-616">
-          <caret line="134" column="47" lean-forward="true" selection-start-line="134" selection-start-column="47" selection-end-line="134" selection-end-column="47" />
+        <state relative-caret-position="672">
+          <caret line="105" column="28" lean-forward="true" selection-start-line="105" selection-start-column="28" selection-end-line="105" selection-end-column="28" />
           <folding />
         </state>
       </provider>
@@ -676,8 +676,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="55" column="154" lean-forward="false" selection-start-line="55" selection-start-column="154" selection-end-line="55" selection-end-column="154" />
+        <state relative-caret-position="793">
+          <caret line="56" column="148" lean-forward="false" selection-start-line="56" selection-start-column="148" selection-end-line="56" selection-end-column="148" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
           </folding>
@@ -692,18 +692,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/server.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="812">
-          <caret line="101" column="67" lean-forward="false" selection-start-line="101" selection-start-column="67" selection-end-line="101" selection-end-column="67" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/remine.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1236">
           <caret line="196" column="13" lean-forward="true" selection-start-line="196" selection-start-column="13" selection-end-line="196" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/server.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="532">
+          <caret line="160" column="50" lean-forward="true" selection-start-line="160" selection-start-column="50" selection-end-line="160" selection-end-column="50" />
           <folding />
         </state>
       </provider>
