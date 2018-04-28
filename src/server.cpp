@@ -123,7 +123,7 @@ int main()
             return crow::response(400);
             }
 
-      char currentDep[100];
+        char currentDep[100];
 //      char currentTag[100];
 
         //get input from user
@@ -152,7 +152,7 @@ int main()
         int docCount = 0;
 
         while(std::getline(token_sin,token_line)) {
-            std::cout<<"begin";
+            std::cout<<"begin\n";
             ostringstream out;
             std::cout<<token_line<<'\n';
             stringstream sin(token_line);
@@ -223,7 +223,7 @@ int main()
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
                     //std::cout<<tmp.size()<<"genpath";
-                    //std::cout<<"check4";
+                    std::cout<<"check4";
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         std::cout<<"check5";
                         const auto& it = _->second;
@@ -269,7 +269,7 @@ int main()
                         //out += tmp_out_second;
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        char buf[250];
+                        //char buf[250];
 //                            if (tokens[i]%i + 1 == ems[it.first].second) {
 //                                f = "\n";
 //
@@ -277,8 +277,8 @@ int main()
 //                            else{
 //                                f = ' ';
 //                            }
-                        sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
-                        string tmp_out = buf;
+                        //sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
+                        //string tmp_out = buf;
                         //out += tmp_out;
 
 
