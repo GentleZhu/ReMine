@@ -81,8 +81,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
         char buf[300];
-        tmp_out = sprintf(buf, "%s%c", ret[i].c_str(), ' ');
-        out<<tmp_out;
+        printf(buf, "%s%c", ret[i].c_str(), ' ');
+        out<<buf;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
@@ -227,8 +227,8 @@ int main()
                         const auto& it = _->second;
                         //fprintf(out, "%d\t", docCount);
                         char buf [20];
-                        tmp_out = sprintf(buf, "%d\t", docCount);
-                        out<<tmp_out;
+                        sprintf(buf, "%d\t", docCount);
+                        out<<buf;
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             char buf [250];
@@ -240,8 +240,8 @@ int main()
 //                            else{
 //                                f = " ";
 //                            }
-                            tmp_out = sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
-                            out <<tmp_out;
+                            sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
+                            out <<buf;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -264,8 +264,8 @@ int main()
 //                            else{
 //                                f = ' ';
 //                            }
-                        tmp_out = sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "\n" : ' ');
-                        out<<tmp_out;
+                        sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "\n" : ' ');
+                        out<<buf;
 
 
                     }
