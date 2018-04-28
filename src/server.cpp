@@ -83,12 +83,12 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
         char buf[300];
         sprintf(buf, "%s%c", ret[i].c_str(), ' ');
         string tmp_out = buf;
-        *out += tmp_out;
+        //*out += tmp_out;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
         string tmp_out = "\n";
-        *out += tmp_out;
+        //*out += tmp_out;
     }
 }
 
@@ -236,7 +236,7 @@ int main()
                         out<<buf;
                         std::cout<<"I pass";
                         //string test_out = out.str();
-                        std::cout<<out;
+                        //std::cout<<out;
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
@@ -251,8 +251,8 @@ int main()
 //                                f = " ";
 //                            }
                             sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
-                            string tmp_out = buf;
-                            out += tmp_out;
+                            //string tmp_out = buf;
+                            //out += tmp_out;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -264,7 +264,7 @@ int main()
                         process(rm_tokens, rm_deps, tags, *segmenter, &out);
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
-                        string tmp_out_second = "| ";
+                        //string tmp_out_second = "| ";
                         out += tmp_out_second;
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
@@ -278,7 +278,7 @@ int main()
 //                            }
                         sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
                         string tmp_out = buf;
-                        out += tmp_out;
+                        //out += tmp_out;
 
 
                     }
@@ -300,7 +300,7 @@ int main()
         //output
         }
     //fclose(out);
-      //string s = out.str();
+      string s = out.str();
       std::cout<<out;
 
         return crow::response{'f'};
