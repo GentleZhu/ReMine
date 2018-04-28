@@ -81,11 +81,11 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
-        out << boost::format("%1%%2%") %ret[i].c_str()%' ';
+        out<<boost::format("%1%%2%") %ret[i].c_str()%' ';
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
-        out<< "\n";
+        out<<"\n";
     }
 }
 
@@ -228,7 +228,15 @@ int main()
                         out << boost::format("%1%") %docCount;
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                            out << boost::format("%1%%2%") %tokens[i]%i + 1 == ems[it.first].second ? "| " : " ";
+                            string f;
+                            if (tokens[i]%i + 1 == ems[it.first].second) {
+                                f = '| ';
+
+                            }
+                            else{
+                                f = " ";
+                            }
+                            out << boost::format("%1%%2%") %tokens[i]%f;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -243,7 +251,15 @@ int main()
                         out << "| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                         out << boost::format("%1%%2%") %tokens[i]%i + 1 == ems[it.first].second ? "\n" : ' ';
+                        string f;
+                            if (tokens[i]%i + 1 == ems[it.first].second) {
+                                f = "\n";
+
+                            }
+                            else{
+                                f = ' ';
+                            }
+                         out<<boost::format("%1%%2%") %tokens[i]%f;
 
 
                     }
@@ -265,7 +281,7 @@ int main()
         //output
         }
     //fclose(out);
-      string s = *out.str();
+      string s = out->str();
       std::cout<<s;
 
         return crow::response{'f'};
