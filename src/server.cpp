@@ -153,7 +153,7 @@ int main()
 
         while(std::getline(token_sin,token_line)) {
             std::cout<<"begin";
-            std::ostringstream out;
+            ostringstream out;
             std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
@@ -233,7 +233,7 @@ int main()
                         string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
 
-                        out<<"adadad";
+                        out << "adadad";
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         //std::cout<<out;
