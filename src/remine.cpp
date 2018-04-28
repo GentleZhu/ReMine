@@ -171,7 +171,7 @@ int main(int argc, char* argv[])
                     ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                 }
                 // remember ranges -1
-                
+
                 tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                 vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                 vector<TOKEN_ID_TYPE> rm_tokens;

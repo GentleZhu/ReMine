@@ -208,6 +208,10 @@ int main()
                         ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                     }
                     // remember ranges -1
+                    std::cout<<deps.size();
+                    std::cout<<tags.size();
+                    std::cout<<depTypes.size();
+                    std::cout<<ems.size();
 
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
