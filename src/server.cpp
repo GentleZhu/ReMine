@@ -138,7 +138,7 @@ int main()
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-        std::ostringstream out;
+
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -153,7 +153,7 @@ int main()
 
         while(std::getline(token_sin,token_line)) {
             std::cout<<"begin";
-
+            std::ostringstream out;
             std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
