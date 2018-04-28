@@ -169,7 +169,7 @@ int main()
                 if (ENABLE_POS_TAGGING) {
                     //std::getline(pos_sin,pos_line);
                     //std::getline(dep_sin,dep_line);
-                    std::cout<<"check1";
+                    //std::cout<<"check1";
                     myAssert(static_cast<bool>(std::getline(pos_sin,pos_line)), "POS file doesn't have enough POS tags");
                     myAssert(static_cast<bool>(std::getline(dep_sin,dep_line)), "DEP file doesn't have enough DEP tags");
 
@@ -186,7 +186,7 @@ int main()
                 stringstream sin(temp);
                 sin >> token;
                 tokens.push_back(token);
-                std::cout<<"check2";
+                //std::cout<<"check2";
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
                     std::strcpy(currentDep, dep_line.c_str());
@@ -199,7 +199,7 @@ int main()
                 }
             }
             if (tokens.size() > 0) {
-                std::cout<<"check3";
+                //std::cout<<"check3";
                 assert(tokens.size() == deps.size());
                 assert(tokens.size() == tags.size());
                 ++ docCount;
@@ -222,7 +222,7 @@ int main()
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
-                    std::cout<<tmp.size()<<"genpath\n";
+                    //std::cout<<tmp.size()<<"genpath";
                     std::cout<<"check4";
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         std::cout<<"check5";
@@ -242,7 +242,7 @@ int main()
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                            char buf [250];
+                            //char buf [250];
 
 //                            if (tokens[i]%i + 1 == ems[it.first].second) {
 //                                f = '| ';
@@ -251,7 +251,7 @@ int main()
 //                            else{
 //                                f = " ";
 //                            }
-                            sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
+                            //sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
                             //string tmp_out = buf;
                             //out += tmp_out;
                         }
