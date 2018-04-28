@@ -24,7 +24,7 @@ vector<double> f;
 vector<int> pre;
 Segmentation* segmenter;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::istringstream* out)
 {
     if (ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
@@ -79,10 +79,12 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     std::cout<<"process";
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
-        fprintf(out, "%s%c", ret[i].c_str(), ' ');
+        //fprintf(out, "%s%c", ret[i].c_str(), ' ');
+        out << boost::format("%1%%2%") %ret[i].c_str()%' ';
     }
     if (MODE == 0) {
-        fprintf(out, "\n");
+        //fprintf(out, "\n");
+        out<< "\n";
     }
 }
 
@@ -132,7 +134,7 @@ int main()
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-        std:: istringstream* out;
+        std::istringstream* out;
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -221,9 +223,11 @@ int main()
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         std::cout<<"check5";
                         const auto& it = _->second;
-                        fprintf(out, "%d\t", docCount);
+                        //fprintf(out, "%d\t", docCount);
+                        out << boost::format("%1%") %docCount;
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                            fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+                            //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+                            out << boost::format("%1%%2%") %tokens[i]%i + 1 == ems[it.first].second ? "| " : " ";
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -234,9 +238,13 @@ int main()
                         std::cout<<"start process";
                         process(rm_tokens, rm_deps, tags, *segmenter, out);
                         std::cout<<"finish process";
-                        fprintf(out, "| ");
+                        //fprintf(out, "| ");
+                        out << "| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
-                        fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+                        //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
+                         out << boost::format("%1%%2%") %tokens[i]%i + 1 == ems[it.first].second ? "\n" : ' ';
+
+
                     }
                     rm_deps.clear();
                     rm_tokens.clear();
@@ -258,7 +266,7 @@ int main()
     //fclose(out);
       string s = out.str();
       std::cout<<s;
-      
+
         return crow::response{'f'};
 
     });
