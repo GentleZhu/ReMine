@@ -87,7 +87,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
-        string tmp_out = '\n';
+        string tmp_out = "\n";
         *out<<tmp_out;
     }
 }
@@ -257,8 +257,8 @@ int main()
                         process(rm_tokens, rm_deps, tags, *segmenter, out);
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
-                        string tmp_out = "| ";
-                        *out <<tmp_out;
+                        string tmp_out_second = "| ";
+                        *out <<tmp_out_second;
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char buf[250];
