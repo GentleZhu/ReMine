@@ -234,7 +234,7 @@ int main()
                         //std::cout<<tmp_out<<"tmp\n";
                         ostringstream out213;
 
-                        out123 << "adadad";
+                        out213 << "adadad";
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         //std::cout<<out;
