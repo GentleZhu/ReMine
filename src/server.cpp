@@ -24,7 +24,7 @@ vector<double> f;
 vector<int> pre;
 Segmentation* segmenter;
 
-void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::ostringstream* out)
+void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, string* out)
 {
     if (ENABLE_POS_TAGGING) {
         segmenter.viterbi(tokens, deps, tags, f, pre);
@@ -235,8 +235,8 @@ int main()
 
                         out += tmp_out;
                         std::cout<<"I pass";
-                        string test_out = out.str();
-                        std::cout<<test_out;
+                        //string test_out = out.str();
+                        std::cout<<out;
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
