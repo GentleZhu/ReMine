@@ -266,7 +266,7 @@ int main()
 //                            else{
 //                                f = ' ';
 //                            }
-                        sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "\n" : ' ');
+                        sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
                         string tmp_out = buf;
                         out<<tmp_out;
 
