@@ -138,7 +138,7 @@ int main()
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-        string out;
+        std::ostringstream out;
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -233,7 +233,7 @@ int main()
                         //string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
 
-                        out.append(buf);
+                        out<<buf;
                         std::cout<<"I pass";
                         //string test_out = out.str();
                         std::cout<<out;
