@@ -83,11 +83,11 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
         char buf[300];
         sprintf(buf, "%s%c", ret[i].c_str(), ' ');
         string tmp_out = buf;
-        out<<tmp_out;
+        *out<<tmp_out;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
-        out<<"\n";
+        *out<<"\n";
     }
 }
 
@@ -229,7 +229,8 @@ int main()
                         //fprintf(out, "%d\t", docCount);
                         char buf [20];
                         sprintf(buf, "%d\t", docCount);
-                        out<<buf;
+                        string tmp_out = buf;
+                        *out<<tmp_out;
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             char buf [250];
@@ -243,7 +244,7 @@ int main()
 //                            }
                             sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
                             string tmp_out = buf;
-                            out<<tmp_out;
+                            *out<<tmp_out;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -255,7 +256,7 @@ int main()
                         process(rm_tokens, rm_deps, tags, *segmenter, out);
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
-                        out << "| ";
+                        *out << "| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char buf[250];
@@ -268,7 +269,7 @@ int main()
 //                            }
                         sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
                         string tmp_out = buf;
-                        out<<tmp_out;
+                        *out<<tmp_out;
 
 
                     }
