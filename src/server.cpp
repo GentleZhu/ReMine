@@ -231,7 +231,11 @@ int main()
                         char buf [20];
                         sprintf(buf, "%d\t", docCount);
                         string tmp_out = buf;
-                        *out<<tmp_out;
+                        *out <<tmp_out;
+                        string test_out = out->str();
+                        std::cout<<test_out;
+
+
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             char buf [250];
