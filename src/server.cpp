@@ -219,8 +219,10 @@ int main()
                             rm_tokens.push_back(tokens[__ - 1]);
                         }
 
-        //run process
+                        //run process
+                        std::cout<<"start proces";
                         process(rm_tokens, rm_deps, tags, *segmenter, out);
+                        std::cout<<"finish process";
                          fprintf(out, "| ");
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
@@ -233,7 +235,7 @@ int main()
             else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
             // cout << "here\t"  << tokens.size() << endl;
         }
-        std::cout<<"adadd";
+
 
         tokens.clear();
         deps.clear();
