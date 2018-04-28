@@ -13,7 +13,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5295736">
+    <splitter split-orientation="horizontal" split-proportion="0.45136344">
       <split-first>
         <leaf>
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
@@ -30,7 +30,7 @@
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="793">
-                  <caret line="56" column="148" lean-forward="false" selection-start-line="56" selection-start-column="148" selection-end-line="56" selection-end-column="148" />
+                  <caret line="56" column="234" lean-forward="false" selection-start-line="56" selection-start-column="234" selection-end-line="56" selection-end-column="234" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -127,8 +127,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="700">
-                  <caret line="57" column="73" lean-forward="false" selection-start-line="57" selection-start-column="73" selection-end-line="57" selection-end-column="73" />
+                <state relative-caret-position="716">
+                  <caret line="58" column="30" lean-forward="false" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -189,7 +189,7 @@
   </component>
   <component name="ProjectFrameBounds">
     <option name="x" value="-10" />
-    <option name="width" value="2203" />
+    <option name="width" value="2479" />
     <option name="height" value="2110" />
   </component>
   <component name="ProjectView">
@@ -323,7 +323,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-10" y="0" width="2203" height="2110" extended-state="0" />
+    <frame x="-10" y="0" width="2479" height="2110" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -700,8 +700,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="700">
-          <caret line="57" column="73" lean-forward="false" selection-start-line="57" selection-start-column="73" selection-end-line="57" selection-end-column="73" />
+        <state relative-caret-position="716">
+          <caret line="58" column="30" lean-forward="false" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
           </folding>
