@@ -130,7 +130,7 @@ int main()
 //        emIn = tryOpen(TEST_EMS_REMINE, "r");
 //        }
 
-        FILE* out = tryOpen("../tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
+        FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
 
         //process strings
