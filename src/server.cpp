@@ -179,7 +179,7 @@ int main()
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
-                    strcp(currentDep, dep_line.c_str());
+                    std::strcp(currentDep, dep_line.c_str());
                     int idx = atoi(strtok (currentDep, "_"));
                     int idx_dep = atoi(strtok (NULL, "_"));
                     string xxx(strtok(NULL, "_"));
