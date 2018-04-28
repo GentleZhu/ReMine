@@ -13,6 +13,7 @@ Tune the segmentation model under RM mode
 #include "data/dump.h"
 #include "genSepath.h"
 #include <cstring>
+#include <stdio.h>
 #include <deque>
 typedef std::vector<string>::iterator vec_iter;
 
