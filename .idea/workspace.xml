@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/server.cpp" afterPath="$PROJECT_DIR$/src/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="980">
-                  <caret line="164" column="78" lean-forward="false" selection-start-line="164" selection-start-column="78" selection-end-line="164" selection-end-column="78" />
+                <state relative-caret-position="1292">
+                  <caret line="235" column="8" lean-forward="false" selection-start-line="235" selection-start-column="8" selection-end-line="235" selection-end-column="8" />
                   <folding />
                 </state>
               </provider>
@@ -126,8 +127,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="716">
-                  <caret line="58" column="30" lean-forward="false" selection-start-line="58" selection-start-column="30" selection-end-line="58" selection-end-column="30" />
+                <state relative-caret-position="744">
+                  <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -186,8 +187,9 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-10" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-11" />
+    <option name="y" value="-11" />
     <option name="width" value="2479" />
     <option name="height" value="2110" />
   </component>
@@ -322,7 +324,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-10" y="0" width="2479" height="2110" extended-state="0" />
+    <frame x="-11" y="-11" width="3862" height="2122" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -701,8 +703,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="980">
-          <caret line="164" column="78" lean-forward="false" selection-start-line="164" selection-start-column="78" selection-end-line="164" selection-end-column="78" />
+        <state relative-caret-position="1292">
+          <caret line="235" column="8" lean-forward="false" selection-start-line="235" selection-start-column="8" selection-end-line="235" selection-end-column="8" />
           <folding />
         </state>
       </provider>

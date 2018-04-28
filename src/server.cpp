@@ -232,7 +232,8 @@ int main()
             else if (MODE == 0) process(tokens, deps, tags, *segmenter, out);
             // cout << "here\t"  << tokens.size() << endl;
         }
-
+        std::cout<<"adadd";
+        
         tokens.clear();
         deps.clear();
         depTypes.clear();
