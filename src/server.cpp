@@ -143,7 +143,7 @@ int main()
         std::string pos_line;
         std::string ent_line;
         std::cout<<tokens_text;
-        std::getline(token_sin,token_line)
+        std::getline(token_sin,token_line);
         std:::cout<<token_line;
 
 
