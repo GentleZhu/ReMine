@@ -145,9 +145,9 @@ int main()
 
         int docCount = 0;
 
-        while (!token_sin.eof()) {
+        while (std::getline(token_sin,token_line)) {
             std::cout<<"begin";
-            std::getline(token_sin,token_line);
+
             std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
