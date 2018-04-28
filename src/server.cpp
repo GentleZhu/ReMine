@@ -76,7 +76,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
 
         i = j;
     }
-    std::cout<<"1";
+    std::cout<<"process";
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
         fprintf(out, "%s%c", ret[i].c_str(), ' ');
