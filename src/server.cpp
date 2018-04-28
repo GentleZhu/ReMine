@@ -130,9 +130,9 @@ int main()
 //        emIn = tryOpen(TEST_EMS_REMINE, "r");
 //        }
 
-        FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
+        //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
-
+        std:: istringstream* out;
         //process strings
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
@@ -234,7 +234,7 @@ int main()
                         std::cout<<"start process";
                         process(rm_tokens, rm_deps, tags, *segmenter, out);
                         std::cout<<"finish process";
-                         fprintf(out, "| ");
+                        fprintf(out, "| ");
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                     }
@@ -255,7 +255,10 @@ int main()
 
         //output
         }
-    fclose(out);
+    //fclose(out);
+      string s = out.str();
+      std::cout<<s;
+      
         return crow::response{'f'};
 
     });
