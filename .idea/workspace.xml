@@ -19,8 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1609">
-                  <caret line="236" column="43" lean-forward="false" selection-start-line="236" selection-start-column="43" selection-end-line="236" selection-end-column="43" />
+                <state relative-caret-position="-1016">
+                  <caret line="140" column="22" lean-forward="false" selection-start-line="140" selection-start-column="22" selection-end-line="140" selection-end-column="22" />
                   <folding />
                 </state>
               </provider>
@@ -179,8 +179,8 @@
       <find>genSepath</find>
       <find>ems</find>
       <find>rm_tokens</find>
-      <find>out</find>
       <find>fprintf</find>
+      <find>out</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -728,8 +728,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1609">
-          <caret line="236" column="43" lean-forward="false" selection-start-line="236" selection-start-column="43" selection-end-line="236" selection-end-column="43" />
+        <state relative-caret-position="-1016">
+          <caret line="140" column="22" lean-forward="false" selection-start-line="140" selection-start-column="22" selection-end-line="140" selection-end-column="22" />
           <folding />
         </state>
       </provider>
