@@ -142,17 +142,13 @@ int main()
         std::string dep_line;
         std::string pos_line;
         std::string ent_line;
-        std::cout<<tokens_text;
-        std::getline(token_sin,token_line);
-        std::getline(token_sin,token_line);
-        std::getline(token_sin,token_line);
-        std::cout<<token_line;
-
 
         int docCount = 0;
 
-        while (std::getline(token_sin,token_line)) {
+        while (!token_sin.eof()) {
             std::cout<<"begin";
+            std::getline(token_sin,token_line);
+            std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
             // vector<TOTAL_TOKENS_TYPE> deps;
