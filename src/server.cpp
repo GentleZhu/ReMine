@@ -265,7 +265,7 @@ int main()
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
                         string tmp_out_second = "| ";
-                        out <<tmp_out_second;
+                        out += tmp_out_second;
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char buf[250];
@@ -300,8 +300,8 @@ int main()
         //output
         }
     //fclose(out);
-      string s = out.str();
-      std::cout<<s;
+      //string s = out.str();
+      std::cout<<out;
 
         return crow::response{'f'};
 
