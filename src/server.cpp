@@ -15,6 +15,7 @@ Tune the segmentation model under RM mode
 #include <cstring>
 #include <stdio.h>
 #include <deque>
+#include <boost/format.hpp>
 typedef std::vector<string>::iterator vec_iter;
 
 using FrequentPatternMining::Pattern;
@@ -264,7 +265,7 @@ int main()
         //output
         }
     //fclose(out);
-      string s = out.str();
+      string s = *out.str();
       std::cout<<s;
 
         return crow::response{'f'};
