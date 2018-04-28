@@ -20,6 +20,7 @@ using FrequentPatternMining::patterns;
 
 vector<double> f;
 vector<int> pre;
+Segmentation* segmenter;
 
 void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, FILE* out)
 {
@@ -115,7 +116,7 @@ int main()
             return crow::response(400);
             }
 
-//      char currentDep[100];
+      char currentDep[100];
 //      char currentTag[100];
 
         //get input from user
@@ -124,9 +125,9 @@ int main()
         string dep_text = x["dep"].s();
         string ent_text = x["ent"].s();
 
-        if (MODE == 1) {
-        emIn = tryOpen(TEST_EMS_REMINE, "r");
-        }
+//        if (MODE == 1) {
+//        emIn = tryOpen(TEST_EMS_REMINE, "r");
+//        }
 
         FILE* out = tryOpen("../tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
@@ -157,8 +158,8 @@ int main()
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    myAssert(std::getline(pos_sin,pos_line), "POS file doesn't have enough POS tags");
-                    myAssert(std::getline(dep_sin,dep_line), "DEP file doesn't have enough DEP tags");
+                    myAssert(std::getline(pos_sin,pos_line) == 1, "POS file doesn't have enough POS tags");
+                    myAssert(std::getline(dep_sin,dep_line) == 1, "DEP file doesn't have enough DEP tags");
 
                     if (!Documents::posTag2id.count(pos_line)) {
                         posTagId = -1; // unknown tag
@@ -175,7 +176,8 @@ int main()
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
-                    int idx = atoi(strtok (dep_line, "_"));
+                    strcp(currentDep, dep_line.c_str());
+                    int idx = atoi(strtok (currentDep, "_"));
                     int idx_dep = atoi(strtok (NULL, "_"));
                     string xxx(strtok(NULL, "_"));
                     depTypes.push_back(xxx);
@@ -212,9 +214,9 @@ int main()
                             rm_deps.push_back(deps[__ - 1]);
                             rm_tokens.push_back(tokens[__ - 1]);
                         }
-                   
+
         //run process
-                        process(rm_tokens,rm_deps.tags, *segmenter)
+                        process(rm_tokens,rm_deps, tags, *segmenter)
                          fprintf(out, "| ");
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
@@ -236,7 +238,7 @@ int main()
         //output
         }
     fclose(out);
-        return 0; //crow::response{os.str()};
+        return 'f'; //crow::response{os.str()};
 
     });
 
