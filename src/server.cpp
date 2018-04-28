@@ -100,7 +100,6 @@ int main()
     Dump::loadSegmentationModel(SEGMENTATION_MODEL_REMINE);
     sort(patterns.begin(), patterns.end(), byQuality);
     constructTrie(); // update the current frequent enough patterns
-    Segmentation* segmenter;
     segmenter = new Segmentation(ENABLE_POS_TAGGING, MODE > 0);
 
 
@@ -176,7 +175,7 @@ int main()
                 tokens.push_back(token);
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
-                    strcp(currentDep, dep_line.c_str());
+                    std::strcp(currentDep, dep_line.c_str());
                     int idx = atoi(strtok (currentDep, "_"));
                     int idx_dep = atoi(strtok (NULL, "_"));
                     string xxx(strtok(NULL, "_"));
