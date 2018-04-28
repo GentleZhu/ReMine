@@ -12,7 +12,7 @@ Tune the segmentation model under RM mode
 #include "model_training/segmentation.h"
 #include "data/dump.h"
 #include "genSepath.h"
-#include <string.h>
+#include <cstring>
 #include <deque>
 typedef std::vector<string>::iterator vec_iter;
 
@@ -218,7 +218,7 @@ int main()
                         }
 
         //run process
-                        process(rm_tokens,rm_deps, tags, *segmenter)
+                        process(rm_tokens, rm_deps, tags, *segmenter, out);
                          fprintf(out, "| ");
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
@@ -240,7 +240,7 @@ int main()
         //output
         }
     fclose(out);
-        return 'f'; //crow::response{os.str()};
+        return crow::response{'f'};
 
     });
 
