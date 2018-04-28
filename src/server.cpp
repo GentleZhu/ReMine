@@ -81,8 +81,9 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
         char buf[300];
-        printf(buf, "%s%c", ret[i].c_str(), ' ');
-        out<<buf;
+        sprintf(buf, "%s%c", ret[i].c_str(), ' ');
+        string tmp_out = buf;
+        out<<tmp_out;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
@@ -241,7 +242,8 @@ int main()
 //                                f = " ";
 //                            }
                             sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
-                            out <<buf;
+                            string tmp_out = buf;
+                            out<<tmp_out;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -265,7 +267,8 @@ int main()
 //                                f = ' ';
 //                            }
                         sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "\n" : ' ');
-                        out<<buf;
+                        string tmp_out = buf;
+                        out<<tmp_out;
 
 
                     }
