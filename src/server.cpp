@@ -230,14 +230,13 @@ int main()
                         std::cout<<"check5";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
-                        buf = (char*)malloc((docC_str.length() + 2));
+                        char* buf = malloc((docC_str.length() + 2));
                         //fprintf(out, "%d\t", docCount);
                         //char buf [20];
                         sprintf(buf, "%d\t", docCount);
                         string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
-
-
+                        free(buf);
                         std::cout<<"I pass";
                         out<< tmp_out;
 
