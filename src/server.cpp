@@ -228,8 +228,8 @@ int main()
                         std::cout<<"check5";
                         const auto& it = _->second;
                         //fprintf(out, "%d\t", docCount);
-                        char buf [20];
-                        sprintf(buf, "%d\t", docCount);
+                        //char buf [20];
+                        //sprintf(buf, "%d\t", docCount);
                         string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
                         ostringstream out213;
