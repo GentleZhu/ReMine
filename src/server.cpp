@@ -265,6 +265,7 @@ int main()
                             string tmp_out = buf;
                             free(buf);
                             out<<tmp_out;
+                            out.clear();
                         }
 //                        for (const auto& __ : it.second) {
 //                            rm_deps.push_back(deps[__ - 1]);
