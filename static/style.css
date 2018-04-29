@@ -1,0 +1,87 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 10vh;
+    border: 0.1px solid black;
+    line-height: 10vh;
+    text-align: center;
+    margin: 0;
+}
+
+.input {
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    width: 50vw;
+    height: 90vh;
+    border: 0.1px solid green;
+}
+
+.intro {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 30vh;
+    border: 0.1px solid red;
+    margin: 0;
+}
+
+.selector {
+    position: absolute;
+    top: 30vh;
+    left: 0;
+    width: 50vw;
+    height: 10vh;
+    border: 0.1px solid yellow;
+}
+
+.select {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.textInput {
+    position: absolute;
+    top: 40vh;
+    left: 0;
+    width: 50vw;
+    height: 50vh;
+    border: 0.1px solid purple;
+}
+
+.textFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 46vw;
+    height: 40vh;
+    margin-left: 2vw;
+    margin-right: 2vw;
+}
+
+.button {
+    position: absolute;
+    top: 43vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.output {
+    position: absolute;
+    top: 10vh;
+    left: 50vw;
+    width: 50vw;
+    height: 90vh;
+    border: 0.1px solid red;
+    margin: 0;
+    overflow: auto;
+}
