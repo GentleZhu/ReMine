@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/server.cpp" afterPath="$PROJECT_DIR$/src/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1245">
-                  <caret line="85" column="26" lean-forward="false" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+                <state relative-caret-position="1420">
+                  <caret line="319" column="4" lean-forward="true" selection-start-line="319" selection-start-column="4" selection-end-line="319" selection-end-column="4" />
                   <folding />
                 </state>
               </provider>
@@ -103,7 +104,7 @@
       </split-first>
       <split-second>
         <leaf>
-          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/src/remine.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="1112">
@@ -123,10 +124,10 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="server.py" pinned="false" current-in-tab="false">
+          <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1780">
+                <state relative-caret-position="1528">
                   <caret line="75" column="47" lean-forward="true" selection-start-line="75" selection-start-column="47" selection-end-line="75" selection-end-column="47" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
@@ -179,8 +180,8 @@
       <find>rm_tokens</find>
       <find>fprintf</find>
       <find>&lt;&lt;</find>
-      <find>out</find>
       <find>buf</find>
+      <find>out</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -678,8 +679,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/remine_server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="672">
-          <caret line="105" column="28" lean-forward="true" selection-start-line="105" selection-start-column="28" selection-end-line="105" selection-end-column="28" />
+        <state relative-caret-position="-616">
+          <caret line="134" column="47" lean-forward="true" selection-start-line="134" selection-start-column="47" selection-end-line="134" selection-end-column="47" />
           <folding />
         </state>
       </provider>
@@ -708,16 +709,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/server.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="793">
-          <caret line="56" column="234" lean-forward="false" selection-start-line="56" selection-start-column="234" selection-end-line="56" selection-end-column="234" />
-          <folding>
-            <element signature="e#0#68#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/remine.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1112">
@@ -728,9 +719,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1245">
-          <caret line="85" column="26" lean-forward="false" selection-start-line="85" selection-start-column="26" selection-end-line="85" selection-end-column="26" />
+        <state relative-caret-position="1420">
+          <caret line="319" column="4" lean-forward="true" selection-start-line="319" selection-start-column="4" selection-end-line="319" selection-end-column="4" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/server.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1528">
+          <caret line="75" column="47" lean-forward="true" selection-start-line="75" selection-start-column="47" selection-end-line="75" selection-end-column="47" />
+          <folding>
+            <element signature="e#0#68#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
