@@ -257,9 +257,9 @@ int main()
                                 f = " ";
                                 char_cout = 1;
                             }
+                            string docC_str = std::to_string(tokens[i]);
 
-
-                            char* buf = (char*)malloc((tokens[i].length() + char_cout + 1));
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
 
                             sprintf(buf, "%s%s",tokens[i],f);
                             string tmp_out = buf;
@@ -287,8 +287,8 @@ int main()
                         else{
                             f = ' ';
                         }
-
-                        char* buf = (char*)malloc((tokens[i].length() + 2));
+                        string docC_str = std::to_string(tokens[i]);
+                        char* buf = (char*)malloc((docC_str.length() + 2));
                         sprintf(buf, "%s%s",tokens[i],f);
                         string tmp_out = buf;
                         free(buf);
