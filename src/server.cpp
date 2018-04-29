@@ -289,7 +289,7 @@ int main()
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        string f;
+                        char f;
                         if (tokens[i]%i + 1 == ems[_->first].second) {
                             f = '\n';
 
