@@ -115,6 +115,45 @@ class PreProcessor(object):
 		fdoc.close()
 		fcase.close()
 
+	def entityLinker(self,file_path,seed_path,out_path=None):
+	seeds=defaultdict(list)
+	with open(seed_path,'r') as seed:
+		for line in seed:
+			tmp=line.strip().split('\t')
+			if float(tmp[4]) > 0.8 and float(tmp[5]) < 0.001:
+				seeds[int(tmp[0])].append(tmp[1])
+			#break
+		#print seeds
+	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
+		cnt=0
+		sum_match=0
+		for line in IN:
+			
+			tmp=json.loads(line)
+			tmp['entityMentions']=[]
+			for e in seeds[cnt]:
+				window_size=e.count(' ') + 1
+				#if window_size == 1:
+				#	continue
+				
+				found=False
+				ptr = 0
+				while ptr+window_size <= len(tmp['tokens']):
+					ptr+=1
+					if ' '.join(tmp['tokens'][ptr:ptr+window_size]) == e:
+						found=True
+						break
+
+				if found:
+					tmp['entityMentions'].append([ptr,ptr+window_size,e])
+					sum_match+=1
+			tmp['entityMentions'].sort(key=operator.itemgetter(1))
+			OUT.write(json.dumps(tmp)+'\n')
+			cnt+=1
+			#break
+		#for a,b in zip(IN,seed):
+		print(sum_match)
+
 	def tokenized_train(self, docIn, posIn, depIn):
 		fdep = open('tmp_remine/deps_train.txt', 'w')
 		fpos = open('tmp_remine/pos_tags_train.txt', 'w')
@@ -373,6 +412,30 @@ class PreProcessor(object):
 						r_ptr+=1
 						c_ptr=0
 						OUT.write('\n')
+		def transfer_to_2ele_json(tokens_path,pos_path):
+			pos_lines =io.open(pos,'r',encoding = 'UTF-8').read()
+			pos_lines =pos_lines.split("\n")
+			for i in range(len(pos_lines)):
+        		pos_lines[i]=pos_lines[i].split(" ")
+
+
+			tokens_lines =io.open(tokens,'r',encoding ='UTF-8').read()
+			tokens_lines =tokens_lines.split("\n")
+			for i in range(len(tokens_lines)):
+        		tokens_lines[i]=tokens_lines[i].split(" ")
+
+
+			result=[]
+
+
+			for index in range(len(pos_lines)):
+    			result.append({'pos':pos_lines[index],'tokens':tokens_lines[index]})
+
+			file = io.open("{}.json".format(pos),"wb")
+			for index in result:
+    			file.write(json.dumps(index)+'\n')
+			file.close()     
+
 
 
 if __name__ == '__main__':
@@ -415,4 +478,10 @@ if __name__ == '__main__':
 	elif args.op == 'segment_test':
 		tmp.load_test()
 		tmp.mapBackv2(args.in1, args.out)
+
+	elif args.op == 'complete_json':
+		tmp.entityLinker(args.in1, args.in2, args.out)
+	elif args.op == '2ele_json':
+		tmp.transfer_to_2ele_json(args.in1, args.in2)
+	
 
