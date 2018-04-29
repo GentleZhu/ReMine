@@ -245,10 +245,10 @@ int main()
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-
+                            string f;
                             int char_cout = 0;
                             if (tokens[i]%i + 1 == ems[it.first].second) {
-                                f = '| ';
+                                f = "| ";
                                 char_cout = 2;
 
                             }
@@ -278,9 +278,9 @@ int main()
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-
+                        string f;
                         if (tokens[i]%i + 1 == ems[it.first].second) {
-                            f = "\n";
+                            f = '\n';
 
                         }
                         else{
