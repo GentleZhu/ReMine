@@ -260,9 +260,9 @@ int main()
                             }
                             string docC_str = std::to_string(tokens[i]);
 
-                            char* buf = (char*)malloc((docC_str.length() + char_cout + 10));
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
 
-                            sprintf(buf, "%s%s",tokens[i],f);
+                            sprintf(buf, "%d%s",tokens[i],f);
                             string tmp_out = buf;
                             free(buf);
                             out<<tmp_out;
