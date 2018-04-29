@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c3f591d2-8647-49ba-b587-5abdcb2cc2ec" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/src/server.cpp" afterPath="$PROJECT_DIR$/src/server.cpp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -18,8 +19,8 @@
           <file leaf-file-name="server.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/server.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="952">
-                  <caret line="232" column="43" lean-forward="false" selection-start-line="232" selection-start-column="43" selection-end-line="232" selection-end-column="43" />
+                <state relative-caret-position="1476">
+                  <caret line="316" column="21" lean-forward="false" selection-start-line="316" selection-start-column="21" selection-end-line="316" selection-end-column="21" />
                   <folding />
                 </state>
               </provider>
@@ -106,7 +107,7 @@
           <file leaf-file-name="remine.cpp" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/src/remine.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1040">
+                <state relative-caret-position="1376">
                   <caret line="192" column="36" lean-forward="true" selection-start-line="192" selection-start-column="36" selection-end-line="192" selection-end-column="36" />
                   <folding />
                 </state>
@@ -720,7 +721,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/remine.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1040">
+        <state relative-caret-position="1376">
           <caret line="192" column="36" lean-forward="true" selection-start-line="192" selection-start-column="36" selection-end-line="192" selection-end-column="36" />
           <folding />
         </state>
@@ -728,8 +729,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/server.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="952">
-          <caret line="232" column="43" lean-forward="false" selection-start-line="232" selection-start-column="43" selection-end-line="232" selection-end-column="43" />
+        <state relative-caret-position="1476">
+          <caret line="316" column="21" lean-forward="false" selection-start-line="316" selection-start-column="21" selection-end-line="316" selection-end-column="21" />
           <folding />
         </state>
       </provider>

@@ -80,15 +80,17 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
-        char buf[300];
-        sprintf(buf, "%s%c", ret[i].c_str(), ' ');
+        string docC_str = std::to_string(ret[i].c_str());
+        char* buf = (char*)malloc((docC_str.length() + 2));
+        sprintf(buf, "%s%s",ret[i].c_str(),' ');
         string tmp_out = buf;
-        //*out += tmp_out;
+        free(buf);
+        *out<<tmp_out;
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
         string tmp_out = "\n";
-        //*out += tmp_out;
+        *out<<tmp_out;
     }
 }
 
@@ -237,24 +239,31 @@ int main()
                         string tmp_out = buf;
                         //std::cout<<tmp_out<<"tmp\n";
                         free(buf);
-                        std::cout<<"I pass";
+                        //std::cout<<"I pass";
                         out<< tmp_out;
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-                            //char buf [250];
 
-//                            if (tokens[i]%i + 1 == ems[it.first].second) {
-//                                f = '| ';
-//
-//                            }
-//                            else{
-//                                f = " ";
-//                            }
-                            //sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? "| " : " ");
-                            //string tmp_out = buf;
-                            //out += tmp_out;
+                            int char_cout = 0;
+                            if (tokens[i]%i + 1 == ems[it.first].second) {
+                                f = '| ';
+                                char_cout = 2;
+
+                            }
+                            else{
+                                f = " ";
+                                char_cout = 1;
+                            }
+
+                            string docC_str = std::to_string(tokens[i]);
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
+
+                            sprintf(buf, "%s%s",tokens[i],f);
+                            string tmp_out = buf;
+                            free(buf);
+                            out<<tmp_out;
                         }
                         for (const auto& __ : it.second) {
                             rm_deps.push_back(deps[__ - 1]);
@@ -266,21 +275,23 @@ int main()
                         process(rm_tokens, rm_deps, tags, *segmenter, &out);
                         std::cout<<"finish process";
                         //fprintf(out, "| ");
-                        //string tmp_out_second = "| ";
-                        //out += tmp_out_second;
+                        out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
-                        //char buf[250];
-//                            if (tokens[i]%i + 1 == ems[it.first].second) {
-//                                f = "\n";
-//
-//                            }
-//                            else{
-//                                f = ' ';
-//                            }
-                        //sprintf(buf, "%s%s",tokens[i],i + 1 == ems[it.first].second ? '\n' : ' ');
-                        //string tmp_out = buf;
-                        //out += tmp_out;
+
+                        if (tokens[i]%i + 1 == ems[it.first].second) {
+                            f = "\n";
+
+                        }
+                        else{
+                            f = ' ';
+                        }
+                        string docC_str = std::to_string(tokens[i]);
+                        char* buf = (char*)malloc((docC_str.length() + 2));
+                        sprintf(buf, "%s%s",tokens[i],f);
+                        string tmp_out = buf;
+                        free(buf);
+                        out<<tmp_out;
 
 
                     }
@@ -299,11 +310,12 @@ int main()
         depTypes.clear();
         tags.clear();
 
-        //output
-        string s = out.str();
-        std::cout<<s;
+
         }
     //fclose(out);
+    //output
+    string s = out.str();
+    std::cout<<s;
 
 
         return crow::response{'f'};
