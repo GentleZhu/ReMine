@@ -90,8 +90,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     }
     if (MODE == 0) {
         //fprintf(out, "\n");
-        string tmp_out = '\n';
-        *out<<tmp_out;
+
+        *out<<"\n";
     }
 }
 
