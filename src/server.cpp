@@ -264,7 +264,7 @@ int main()
                             sprintf(buf, "%s%s",tokens[i],f);
                             string tmp_out = buf;
                             free(buf);
-                            out<<tmp_out;
+                            //out<<tmp_out;
                         }
 //                        for (const auto& __ : it.second) {
 //                            rm_deps.push_back(deps[__ - 1]);
