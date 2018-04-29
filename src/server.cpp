@@ -228,9 +228,9 @@ int main()
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
                     //std::cout<<tmp.size()<<"genpath";
-                    std::cout<<"check4";
+                    //std::cout<<"check4";
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-                        std::cout<<"check5";
+                        //std::cout<<"check5";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
                         char* buf = (char*)malloc((docC_str.length() + 2));
@@ -320,7 +320,7 @@ int main()
     std::cout<<s;
 
 
-        return crow::response{s};
+    return crow::response{s};
 
     });
 
