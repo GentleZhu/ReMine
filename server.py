@@ -78,8 +78,7 @@ if __name__=='__main__':
     #pane.send_keys('cd /shared/data/remine/CS512_Website/Remine', enter = True)
     #pane.send_keys('./bin/remine --model pre_train/segmentation.model --mode 1', enter=True)
     global NLP_client
-    print(1)
-    NLP_client = CoreNLPClient(server='http://localhost:9999',default_annotators=['tokenize', 'lemma', 'pos', 'ner'])
+    NLP_client = CoreNLPClient(server='http://localhost:9999',default_annotators=['tokenize', 'lemma', 'pos', 'ner','dep'])
 
 
     http_server = WSGIServer(('0.0.0.0', 1111), app)
