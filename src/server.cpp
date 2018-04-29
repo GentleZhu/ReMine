@@ -264,7 +264,7 @@ int main()
                             string docC_str = std::to_string(tokens[i]);
 
                             char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
-                            if(flag == 1){
+                            if(flag == 0){
                                 sprintf(buf, "%d%c",tokens[i],' ');
                             }
 
