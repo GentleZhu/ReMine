@@ -290,7 +290,7 @@ int main()
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         string f;
-                        if (tokens[i]%i + 1 == ems[it.first].second) {
+                        if (tokens[i]%i + 1 == ems[_->first].second) {
                             f = '\n';
 
                         }
@@ -299,7 +299,7 @@ int main()
                         }
                         string docC_str = std::to_string(tokens[i]);
                         char* buf = (char*)malloc((docC_str.length() + 2));
-                        sprintf(buf, "%d%s",tokens[i],f);
+                        sprintf(buf, "%d%c",tokens[i],f);
                         string tmp_out = buf;
                         free(buf);
                         out<<tmp_out;
