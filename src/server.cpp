@@ -82,8 +82,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
 
-        char* buf = (char*)malloc((ret[i].str().length() + 2));
-        sprintf(buf, "%s%s",ret[i].str(),' ');
+        char* buf = (char*)malloc((strlen(ret[i].c_str()) + 2));
+        sprintf(buf, "%s%s",ret[i].c_str(),' ');
         string tmp_out = buf;
         free(buf);
         *out<<tmp_out;
