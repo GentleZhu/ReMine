@@ -43,7 +43,7 @@ def senddata():
     token_text = ''
     pos_text = ''
     ems_text = ''
-    annotated = client.annotate(raw)
+    annotated = NLP_client.annotate(raw)
     for sentence in annotated.sentences:
         print('sentence', sentence)
         for token in sentence:
@@ -73,7 +73,8 @@ if __name__=='__main__':
     #pane = window.split_window(attach=False)
     #pane.send_keys('cd /shared/data/remine/CS512_Website/Remine', enter = True)
     #pane.send_keys('./bin/remine --model pre_train/segmentation.model --mode 1', enter=True)
-    global client = CoreNLPClient(server='http://localhost:9000',default_annotators=['tokenize', 'lemma', 'pos', 'ner'])
+    global NLP_client
+    NLP_client = CoreNLPClient(server='http://localhost:9000',default_annotators=['tokenize', 'lemma', 'pos', 'ner'])
 
 
     http_server = WSGIServer(('0.0.0.0', 1111), app)
