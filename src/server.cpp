@@ -242,7 +242,7 @@ int main()
                         free(buf);
                         //std::cout<<"I pass";
                         out<< tmp_out;
-                        std::cout<<out;
+                        std::cout<<out.str();
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
