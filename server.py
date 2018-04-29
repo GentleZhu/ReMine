@@ -32,7 +32,7 @@ def render():
 #pass information to c++ web
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
-def senddata()
+def senddata():
     json_data = request.get_json()
     raw = json_data.get('text')
     #dep_text = '0_4_det\n1_4_compound\n2_4_compound\n3_7_nsubj\n4_6_case\n5_4_nmod: without\n6_0_root\n7_19_mark\n8_10_case\n9_19_nmod: since\n10_19_punct\n11_14_advmod\n12_12_mwe\n13_16_nummod\n14_16_amod\n15_19_nsubjpass\n16_19_aux\n17_19_auxpass\n18_7_ccomp\n19_19_cc\n20_7_ccomp\n21_24_case\n22_24_compound\n23_19_nmod: at\n24_27_case\n25_27_det\n26_24_nmod: in\n27_29_case\n28_27_nmod: of\n29_29_punct\n30_29_appos\n31_7_punct\n0_3_det\n1_3_amod\n2_5_nsubj\n3_5_aux\n4_11_ccomp\n5_8_nsubj\n6_8_aux\n7_5_ccomp\n8_8_advmod\n9_11_punct\n10_0_root\n11_14_compound\n12_14_compound\n13_11_nsubj\n14_14_punct\n15_14_appos\n16_18_case\n17_16_nmod: of\n18_11_punct\n'
