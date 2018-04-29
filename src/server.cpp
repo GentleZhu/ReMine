@@ -282,9 +282,9 @@ int main()
                         }
 
                         //run process
-                        std::cout<<"start process";
+                        //std::cout<<"start process";
                         process(rm_tokens, rm_deps, tags, *segmenter, &out);
-                        std::cout<<"finish process";
+                        //std::cout<<"finish process";
                         //fprintf(out, "| ");
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
@@ -299,7 +299,7 @@ int main()
                         }
                         string docC_str = std::to_string(tokens[i]);
                         char* buf = (char*)malloc((docC_str.length() + 2));
-                        sprintf(buf, "%d%s",tokens[i],f);
+                        sprintf(buf, "%d%c",tokens[i],f);
                         string tmp_out = buf;
                         free(buf);
                         out<<tmp_out;
