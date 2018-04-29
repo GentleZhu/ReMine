@@ -259,12 +259,12 @@ int main()
                             }
                             string docC_str = std::to_string(tokens[i]);
 
-                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 3));
 
                             sprintf(buf, "%s%s",tokens[i],f);
                             string tmp_out = buf;
                             free(buf);
-                            //out<<tmp_out;
+                            out<<tmp_out;
                         }
 //                        for (const auto& __ : it.second) {
 //                            rm_deps.push_back(deps[__ - 1]);
