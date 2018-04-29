@@ -241,7 +241,7 @@ int main()
                             string f;
                             int flag = 0;
                             int char_cout = 0;
-                            if (tokens[i]%i + 1 == ems[it.first].second) {
+                            if (i + 1 == ems[it.first].second) {
                                 f = "| ";
 
                                 char_cout = 2;
