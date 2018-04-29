@@ -248,21 +248,30 @@ int main()
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             string f;
+                            int flag = 0;
                             int char_cout = 0;
                             if (tokens[i]%i + 1 == ems[it.first].second) {
                                 f = "| ";
+
                                 char_cout = 2;
 
                             }
                             else{
                                 f = " ";
                                 char_cout = 1;
+                                flag = 1;
                             }
                             string docC_str = std::to_string(tokens[i]);
 
                             char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
+                            if(flag == 1){
+                                sprintf(buf, "%d%c",tokens[i],' ');
+                            }
 
-                            sprintf(buf, "%d%s",tokens[i],f);
+                            else{
+                                sprintf(buf, "%d%c%c",tokens[i],'|',' ');
+
+                            }
                             string tmp_out = buf;
                             free(buf);
                             out<<tmp_out;
