@@ -157,9 +157,9 @@ int main()
         int docCount = 0;
 
         while(std::getline(token_sin,token_line)) {
-            std::cout<<"begin\n";
+            //std::cout<<"begin\n";
 
-            std::cout<<token_line<<'\n';
+            //std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
             // vector<TOTAL_TOKENS_TYPE> deps;
@@ -219,10 +219,10 @@ int main()
                         ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                     }
                     // remember ranges -1
-                    std::cout<<deps.size()<<"\n";
-                    std::cout<<tags.size()<<"\n";
-                    std::cout<<depTypes.size()<<"\n";
-                    std::cout<<ems.size()<<"\n";
+                    //std::cout<<deps.size()<<"\n";
+                    //std::cout<<tags.size()<<"\n";
+                    //std::cout<<depTypes.size()<<"\n";
+                    //std::cout<<ems.size()<<"\n";
 
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
@@ -290,7 +290,7 @@ int main()
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char f;
-                        if (tokens[i]%i + 1 == ems[_->first].second) {
+                        if (i + 1 == ems[_->first].second) {
                             f = '\n';
 
                         }
