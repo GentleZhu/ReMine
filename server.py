@@ -60,7 +60,7 @@ def senddata():
     #json_data = response.json()
     #print(json_data)
     with open("result.txt","w") as f:
-        f.write(response.txt)
+        f.write(response.text)
     print(response.text)
     return response.text
 
