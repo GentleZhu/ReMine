@@ -15,6 +15,7 @@ Tune the segmentation model under RM mode
 #include <cstring>
 #include <stdio.h>
 #include <deque>
+#include <string>
 typedef std::vector<string>::iterator vec_iter;
 
 using FrequentPatternMining::Pattern;
