@@ -81,8 +81,8 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
-        string docC_str = std::to_string(ret[i].c_str());
-        char* buf = (char*)malloc((docC_str.length() + 2));
+
+        char* buf = (char*)malloc((ret[i].c_str().length() + 2));
         sprintf(buf, "%s%s",ret[i].c_str(),' ');
         string tmp_out = buf;
         free(buf);
@@ -258,8 +258,8 @@ int main()
                                 char_cout = 1;
                             }
 
-                            string docC_str = std::to_string(tokens[i]);
-                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
+
+                            char* buf = (char*)malloc((token[i].length() + char_cout + 1));
 
                             sprintf(buf, "%s%s",tokens[i],f);
                             string tmp_out = buf;
@@ -287,8 +287,8 @@ int main()
                         else{
                             f = ' ';
                         }
-                        string docC_str = std::to_string(tokens[i]);
-                        char* buf = (char*)malloc((docC_str.length() + 2));
+
+                        char* buf = (char*)malloc((token[i].length() + 2));
                         sprintf(buf, "%s%s",tokens[i],f);
                         string tmp_out = buf;
                         free(buf);
