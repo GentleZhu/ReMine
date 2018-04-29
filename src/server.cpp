@@ -244,28 +244,28 @@ int main()
                         out<< tmp_out;
 
 
-//                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-//                            //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
-//                            string f;
-//                            int char_cout = 0;
-//                            if (tokens[i]%i + 1 == ems[it.first].second) {
-//                                f = "| ";
-//                                char_cout = 2;
-//
-//                            }
-//                            else{
-//                                f = " ";
-//                                char_cout = 1;
-//                            }
-//                            string docC_str = std::to_string(tokens[i]);
-//
-//                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
-//
-//                            sprintf(buf, "%s%s",tokens[i],f);
-//                            string tmp_out = buf;
-//                            free(buf);
-//                            out<<tmp_out;
-//                        }
+                        for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+                            //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
+                            string f;
+                            int char_cout = 0;
+                            if (tokens[i]%i + 1 == ems[it.first].second) {
+                                f = "| ";
+                                char_cout = 2;
+
+                            }
+                            else{
+                                f = " ";
+                                char_cout = 1;
+                            }
+                            string docC_str = std::to_string(tokens[i]);
+
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
+
+                            sprintf(buf, "%s%s",tokens[i],f);
+                            string tmp_out = buf;
+                            free(buf);
+                            out<<tmp_out;
+                        }
 //                        for (const auto& __ : it.second) {
 //                            rm_deps.push_back(deps[__ - 1]);
 //                            rm_tokens.push_back(tokens[__ - 1]);
