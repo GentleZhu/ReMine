@@ -77,7 +77,7 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
 
         i = j;
     }
-    std::cout<<"process";
+    //std::cout<<"process";
     reverse(ret.begin(), ret.end());
     for (int i = 0; i < ret.size(); ++ i) {
         //fprintf(out, "%s%c", ret[i].c_str(), ' ');
@@ -299,7 +299,7 @@ int main()
                         }
                         string docC_str = std::to_string(tokens[i]);
                         char* buf = (char*)malloc((docC_str.length() + 2));
-                        sprintf(buf, "%d%c",tokens[i],f);
+                        sprintf(buf, "%d%s",tokens[i],f);
                         string tmp_out = buf;
                         free(buf);
                         out<<tmp_out;
