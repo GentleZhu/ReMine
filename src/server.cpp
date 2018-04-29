@@ -242,6 +242,7 @@ int main()
                         free(buf);
                         //std::cout<<"I pass";
                         out<< tmp_out;
+                        std::cout<<out;
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
@@ -259,13 +260,12 @@ int main()
                             }
                             string docC_str = std::to_string(tokens[i]);
 
-                            char* buf = (char*)malloc((docC_str.length() + char_cout + 3));
+                            char* buf = (char*)malloc((docC_str.length() + char_cout + 10));
 
                             sprintf(buf, "%s%s",tokens[i],f);
                             string tmp_out = buf;
                             free(buf);
                             out<<tmp_out;
-                            out.clear();
                         }
 //                        for (const auto& __ : it.second) {
 //                            rm_deps.push_back(deps[__ - 1]);
