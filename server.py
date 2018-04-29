@@ -33,6 +33,7 @@ def render():
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
 def senddata():
+    print(request.text)
     json_data = request.get_json()
     raw = json_data.get('text')
     print(raw)
