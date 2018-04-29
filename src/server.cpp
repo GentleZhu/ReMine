@@ -23,6 +23,8 @@ using FrequentPatternMining::patterns;
 
 vector<double> f;
 vector<int> pre;
+//preload model global variable
+
 Segmentation* segmenter;
 
 void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::ostringstream* out)
@@ -107,7 +109,7 @@ int main()
     SEGMENTATION_MODEL_REMINE = "pre_train/segmentation.model";
     omp_set_num_threads(NTHREADS);
 
-    // load model
+    //load model
     Dump::loadSegmentationModel(SEGMENTATION_MODEL_REMINE);
     sort(patterns.begin(), patterns.end(), byQuality);
     constructTrie(); // update the current frequent enough patterns
@@ -118,6 +120,7 @@ int main()
     crow::SimpleApp app;
 
     //GET RESULT FROM PYTHON WEB
+
     CROW_ROUTE(app, "/pass_result")
     .methods("GET"_method)
     ([](const crow::request& req) {
@@ -157,9 +160,7 @@ int main()
         int docCount = 0;
 
         while(std::getline(token_sin,token_line)) {
-            //std::cout<<"begin\n";
 
-            //std::cout<<token_line<<'\n';
             stringstream sin(token_line);
             vector<TOTAL_TOKENS_TYPE> tokens;
             // vector<TOTAL_TOKENS_TYPE> deps;
@@ -172,9 +173,6 @@ int main()
                 // get pos tag
                 POS_ID_TYPE posTagId = -1;
                 if (ENABLE_POS_TAGGING) {
-                    //std::getline(pos_sin,pos_line);
-                    //std::getline(dep_sin,dep_line);
-                    //std::cout<<"check1";
                     myAssert(static_cast<bool>(std::getline(pos_sin,pos_line)), "POS file doesn't have enough POS tags");
                     myAssert(static_cast<bool>(std::getline(dep_sin,dep_line)), "DEP file doesn't have enough DEP tags");
 
@@ -191,7 +189,7 @@ int main()
                 stringstream sin(temp);
                 sin >> token;
                 tokens.push_back(token);
-                //std::cout<<"check2";
+
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);
                     std::strcpy(currentDep, dep_line.c_str());
@@ -204,7 +202,6 @@ int main()
                 }
             }
             if (tokens.size() > 0) {
-                //std::cout<<"check3";
                 assert(tokens.size() == deps.size());
                 assert(tokens.size() == tags.size());
                 ++ docCount;
@@ -218,31 +215,25 @@ int main()
                         assert(segs.size() == 2);
                         ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                     }
-                    // remember ranges -1
-                    //std::cout<<deps.size()<<"\n";
-                    //std::cout<<tags.size()<<"\n";
-                    //std::cout<<depTypes.size()<<"\n";
-                    //std::cout<<ems.size()<<"\n";
+
 
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
-                    //std::cout<<tmp.size()<<"genpath";
-                    //std::cout<<"check4";
+
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         //std::cout<<"check5";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
                         char* buf = (char*)malloc((docC_str.length() + 2));
                         //fprintf(out, "%d\t", docCount);
-                        //char buf [20];
                         sprintf(buf, "%d\t", docCount);
                         string tmp_out = buf;
-                        //std::cout<<tmp_out<<"tmp\n";
+
                         free(buf);
-                        //std::cout<<"I pass";
+
                         out<< tmp_out;
-                        //std::cout<<out.str();
+
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
@@ -261,8 +252,8 @@ int main()
                                 char_cout = 1;
                                 flag = 1;
                             }
-                            string docC_str = std::to_string(tokens[i]);
 
+                            string docC_str = std::to_string(tokens[i]);
                             char* buf = (char*)malloc((docC_str.length() + char_cout + 1));
                             if(flag == 0){
                                 sprintf(buf, "%d%c",tokens[i],' ');
@@ -280,11 +271,7 @@ int main()
                             rm_deps.push_back(deps[__ - 1]);
                             rm_tokens.push_back(tokens[__ - 1]);
                         }
-
-                        //run process
-                        //std::cout<<"start process";
                         process(rm_tokens, rm_deps, tags, *segmenter, &out);
-                        //std::cout<<"finish process";
                         //fprintf(out, "| ");
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
