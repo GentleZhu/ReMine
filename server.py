@@ -50,7 +50,9 @@ def senddata():
             dep_text = dep_text + '\n' + token.dep
             token_text = token_text + '\n' + token.lemma
             pos_text = pos_text + '\n' + token.pos
-
+    print(dep_text)
+    print(token_text)
+    print(pos_text)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": pos_text, "tokens": token_text, "dep": dep_text, "ent": ems_text})
 
     print(response.text)

@@ -104,8 +104,8 @@
           <file leaf-file-name="server.py" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/server.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1423">
-                  <caret line="77" column="60" lean-forward="false" selection-start-line="77" selection-start-column="60" selection-end-line="77" selection-end-column="60" />
+                <state relative-caret-position="1512">
+                  <caret line="54" column="19" lean-forward="false" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
                   <folding>
                     <element signature="e#0#68#0" expanded="true" />
                   </folding>
@@ -704,8 +704,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/server.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1423">
-          <caret line="77" column="60" lean-forward="false" selection-start-line="77" selection-start-column="60" selection-end-line="77" selection-end-column="60" />
+        <state relative-caret-position="1512">
+          <caret line="54" column="19" lean-forward="false" selection-start-line="54" selection-start-column="19" selection-end-line="54" selection-end-column="19" />
           <folding>
             <element signature="e#0#68#0" expanded="true" />
           </folding>
