@@ -12,7 +12,7 @@ from flask_cors import CORS, cross_origin
 import StringIO
 import libtmux
 import json
-from src_py.remine_online import solver
+from src_py.remine_online import Solver
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -72,7 +72,7 @@ def senddata():
     #dep_text = dep_text.getvalue()
     #token_text = token_text.getvalue()
     #pos_text = pos_text.getvalue()
-    answer = solver()
+    answer = Solver()
     answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
