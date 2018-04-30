@@ -1,6 +1,6 @@
 import sys
 import argparse
-import nltk,json,_pickle
+import nltk,json, pickle
 import StringIO
 
 class Solver(object):
@@ -203,12 +203,12 @@ class Solver(object):
 
 
     def dump_rm(self):
-        _pickle.dump(self.test_words, open('tmp_remine/rm_test_words.p', 'wb'))
-        _pickle.dump(self.test_tokens, open('tmp_remine/rm_test_tokens.p', 'wb'))
+        pickle.dump(self.test_words, open('tmp_remine/rm_test_words.p', 'wb'))
+        pickle.dump(self.test_tokens, open('tmp_remine/rm_test_tokens.p', 'wb'))
 
     def dump_test(self):
-        _pickle.dump(self.test_words, open('tmp_remine/real_test_words.p', 'wb'))
-        _pickle.dump(self.test_tokens, open('tmp_remine/real_test_tokens.p', 'wb'))
+        pickle.dump(self.test_words, open('tmp_remine/real_test_words.p', 'wb'))
+        pickle.dump(self.test_tokens, open('tmp_remine/real_test_tokens.p', 'wb'))
 
     def dump(self):
         with open('tmp_remine/tokenized_punctuations.txt','w', encoding='utf-8') as OUT:
@@ -217,22 +217,22 @@ class Solver(object):
         with open('tmp_remine/token_mapping.txt','w', encoding='utf-8') as OUT:
             for k,v in self.word_mapping.items():
                 OUT.write(str(v)+'\t'+k+'\n')
-        _pickle.dump(self.word_mapping, open('tmp_remine/token_mapping.p', 'wb'))
-        _pickle.dump(self.test_words, open('tmp_remine/test_words.p', 'wb'))
-        _pickle.dump(self.test_tokens, open('tmp_remine/test_tokens.p', 'wb'))
+        pickle.dump(self.word_mapping, open('tmp_remine/token_mapping.p', 'wb'))
+        pickle.dump(self.test_words, open('tmp_remine/test_words.p', 'wb'))
+        pickle.dump(self.test_tokens, open('tmp_remine/test_tokens.p', 'wb'))
 
     def load(self):
-        self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
+        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
 
     def load_all(self):
-        self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-        self.test_tokens = _pickle.load(open('tmp_remine/test_tokens.p', 'rb'))
-        self.test_words = _pickle.load(open('tmp_remine/test_words.p', 'rb'))
+        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
+        self.test_tokens = pickle.load(open('tmp_remine/test_tokens.p', 'rb'))
+        self.test_words = pickle.load(open('tmp_remine/test_words.p', 'rb'))
 
     def load_test(self):
-        self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-        self.test_tokens = _pickle.load(open('tmp_remine/real_test_tokens.p', 'rb'))
-        self.test_words = _pickle.load(open('tmp_remine/real_test_words.p', 'rb'))
+        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
+        self.test_tokens = pickle.load(open('tmp_remine/real_test_tokens.p', 'rb'))
+        self.test_words = pickle.load(open('tmp_remine/real_test_words.p', 'rb'))
 
     def tokenize(self, docIn, docOut):
         with open(docIn, encoding='utf-8') as doc, open(docOut,'w', encoding='utf-8') as out:
