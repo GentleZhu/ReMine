@@ -37,13 +37,12 @@ class Solver(object):
 
 	
 
-	def extract_transformat(self,test_file,json_file,pos_file):
-		e_not_found = 0
+    def extract_transformat(self, inp, json_file, pos_file):
+        e_not_found = 0
         r_not_found = 0
         cnt = 0
-
-        remine_seg = test_file.split('\n').rstrip()
-        test_lemma = json_line.split('\n').rstrip()
+        remine_seg = inp.split('\n').rstrip()
+        test_lemma = json_file.split('\n').rstrip()
         test_pos = pos_file.split('\n').rstrip()
         output = StringIO.StringIO()
         transformate_out = StringIO.StringIO()
