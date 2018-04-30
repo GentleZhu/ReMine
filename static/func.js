@@ -11,7 +11,7 @@ function submitCorpus() {
     var sendText = JSON.parse('{ "text":"" }');
     sendText.text = intext;
     console.log(sendText);
-    xhr.send(sendText);
+    xhr.send(intext);
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
