@@ -38,8 +38,7 @@ class Solver(object):
 	
 
 	def extract_transformat(self,test_file,json_file,pos_file):
-        
-        e_not_found = 0
+		e_not_found = 0
         r_not_found = 0
         cnt = 0
 
