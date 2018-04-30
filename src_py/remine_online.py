@@ -155,9 +155,7 @@ class Solver(object):
             #print("#entity not found:",e_not_found)
         self.fems = emsIO.getvalue()
 
-        def tokenized_test(self, docIn, posIn, depIn):
-
-        #with open(docIn, encoding='utf-8') as doc, open(posIn, encoding='utf-8') as pos, open(depIn, encoding='utf-8') as dep:
+    def tokenized_test(self, docIn, posIn, depIn):
         docin = docIn.split('\n').rstrip()
         posin = posIn.split('\n').rstrip()
         depin = depIn.split('\n').rstrip()
