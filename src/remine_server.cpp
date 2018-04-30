@@ -25,7 +25,8 @@ vector<double> f;
 vector<int> pre;
 //preload model global variable
 
-Segmentation* segmenter;
+Segmentation* segmenter1_mode0;
+Segmentation* segmenter1_mode1;
 
 void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>>& deps, const vector<TOTAL_TOKENS_TYPE>& tags, Segmentation& segmenter, std::ostringstream* out)
 {
@@ -105,7 +106,7 @@ inline bool byQuality(const Pattern& a, const Pattern& b)
 int main()
 {
     //HYPER PARAMETER
-    MODE = 1;
+
     SEGMENTATION_MODEL_REMINE = "pre_train/segmentation.model";
     omp_set_num_threads(NTHREADS);
 
@@ -113,7 +114,8 @@ int main()
     Dump::loadSegmentationModel(SEGMENTATION_MODEL_REMINE);
     sort(patterns.begin(), patterns.end(), byQuality);
     constructTrie(); // update the current frequent enough patterns
-    segmenter = new Segmentation(ENABLE_POS_TAGGING, MODE > 0);
+    segmenter1_mode0 = new Segmentation(ENABLE_POS_TAGGING, false);
+    segmenter1_mode1 = new Segmentation(ENABLE_POS_TAGGING, true);
 
 
     //WEB API
@@ -136,11 +138,14 @@ int main()
         string tokens_text = x["tokens"].s();
         string pos_text = x["pos"].s();
         string dep_text = x["dep"].s();
-        string ent_text = x["ent"].s();
+        int MODE = x["mode"].i();
 
-//        if (MODE == 1) {
-//        emIn = tryOpen(TEST_EMS_REMINE, "r");
-//        }
+
+
+        if (MODE == 1) {
+            string ent_text = x["ent"].s();
+
+        }
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
@@ -271,7 +276,7 @@ int main()
                             rm_deps.push_back(deps[__ - 1]);
                             rm_tokens.push_back(tokens[__ - 1]);
                         }
-                        process(rm_tokens, rm_deps, tags, *segmenter, &out);
+                        process(rm_tokens, rm_deps, tags, *segmenter1_mode1, &out);
                         //fprintf(out, "| ");
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
@@ -298,7 +303,7 @@ int main()
                 // cout << endl;
                 }
             }
-            else if (MODE == 0) process(tokens, deps, tags, *segmenter, &out);
+            else if (MODE == 0) process(tokens, deps, tags, *segmenter1_mode0, &out);
             // cout << "here\t"  << tokens.size() << endl;
         }
 

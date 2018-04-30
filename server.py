@@ -10,9 +10,10 @@ import os.path
 from gevent.wsgi import WSGIServer
 
 from flask_cors import CORS, cross_origin
-
+import StringIO
 import libtmux
 import json
+from src_py.remine_online import solver
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -45,11 +46,14 @@ def senddata():
     token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\n18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
     pos_text = 'DT\nNN\nNN\nNNS\nIN\nNNS\nVBD\nIN\nIN\nNNP\n,\nJJR\nIN\nCD\nJJ\nNNS\nVBD\nVBN\nVBN\nCC\nVBN\nIN\nNNP\nNNP\nIN\nDT\nNN\nIN\nNNP\n,\nNNP\n.\nDT\nJJ\nNNS\nMD\nVB\nWP\nVBZ\nVBG\nRB\n,\nVBD\nNNP\nNNP\nNNP\n,\nNNP\nIN\nNNP\n.'
     ems_text = '0_4 5_6 9_10 14_16 22_24 25_29 30_31\n0_3 5_8 11_14 15_18'
-    #dep_text =''
-    #token_text = ''
-    #pos_text = ''
-    #ems_text = ''
-    #annotated = NLP_client.annotate(raw)
+    # dep_text =''
+    # token_text = ''
+    # pos_text = ''
+    # ems_text = ''
+    dep_text = StringIO.StringIO()
+    token_text = StringIO.StringIO()
+    pos_text = StringIO.StringIO
+    # annotated = NLP_client.annotate(raw)
     # for sentence in annotated.sentences:
     #     print('sentence', sentence)
     #     for token in sentence:
@@ -57,7 +61,23 @@ def senddata():
     #         token_text = token_text + '\n' + token.lemma
     #         pos_text = pos_text + '\n' + token.pos
     #         dep_text = dep_text + '\n' + token.depparse
-    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": pos_text, "tokens": token_text, "dep": dep_text, "ent": ems_text})
+              dep_text.write(token.dep + '\n')
+              token_text.write(token.lemma + '\n')
+              pos_text.write(token.pos + '\n')
+    #remine-ie.sh
+    dep_text = dep_text.getvalue()
+    token_text = token_text.getvalue()
+    pos_text = pos_text.getvalue()
+    answer = solver()
+    answer.load()
+    answer.tokenized_test(token_text, pos_text, dep_text)
+    remine_segmentation = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    remine_seg_out = answer.mapBackv2(remine_segmentation)
+    answer.extract_transformat(remine_seg_out, token_text, pos_text)
+    remine_segmentation = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+
+
+
 
     print(response.text)
     # with open("result.txt","w") as f:
