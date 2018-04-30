@@ -4,9 +4,6 @@ from stanza.nlp.corenlp import CoreNLPClient
 #from corenlp_pywrap import pywrap
 import subprocess
 import sys,os
-CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(CURRENT_DIR))
-
 from subprocess import Popen, PIPE
 import os.path
 from gevent.wsgi import WSGIServer
