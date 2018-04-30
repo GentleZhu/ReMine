@@ -33,13 +33,11 @@ class Solver(object):
 				self.punc_mapping[self.word_cnt] = word
 			#self.reverse_mapping[self.word_cnt]=word
 			self.word_cnt+=1
-		return str(self.word_mapping[word])
 
-	
+        return str(self.word_mapping[word])
 
-    def extract_transformat(self, inp, json_file, pos_file):
+    def extract_transformat(self,inp,json_file,pos_file):
         e_not_found = 0
-        r_not_found = 0
         cnt = 0
         remine_seg = inp.split('\n').rstrip()
         test_lemma = json_file.split('\n').rstrip()
@@ -157,11 +155,8 @@ class Solver(object):
             #print("#entity not found:",e_not_found)
         self.fems = emsIO.getvalue()
 
-	def tokenized_test(self, docIn, posIn, depIn):
-		
-		
-
-		
+        def tokenized_test(self, docIn, posIn, depIn):
+            
 		#with open(docIn, encoding='utf-8') as doc, open(posIn, encoding='utf-8') as pos, open(depIn, encoding='utf-8') as dep:
 		docin = docIn.split('\n').rstrip()
 		posin = posIn.split('\n').rstrip()
