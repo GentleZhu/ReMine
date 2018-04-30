@@ -35,6 +35,7 @@ def render():
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
 def senddata():
+    #get input from front end
     data = request.data
     print(data)
     json_data = json.loads(data)
@@ -42,17 +43,21 @@ def senddata():
     raw = json_data["text"]
     print(raw)
 
-    dep_text = '0_4_det\n1_4_compound\n2_4_compound\n3_7_nsubj\n4_6_case\n5_4_nmod: without\n6_0_root\n7_19_mark\n8_10_case\n9_19_nmod: since\n10_19_punct\n11_14_advmod\n12_12_mwe\n13_16_nummod\n14_16_amod\n15_19_nsubjpass\n16_19_aux\n17_19_auxpass\n18_7_ccomp\n19_19_cc\n20_7_ccomp\n21_24_case\n22_24_compound\n23_19_nmod: at\n24_27_case\n25_27_det\n26_24_nmod: in\n27_29_case\n28_27_nmod: of\n29_29_punct\n30_29_appos\n31_7_punct\n0_3_det\n1_3_amod\n2_5_nsubj\n3_5_aux\n4_11_ccomp\n5_8_nsubj\n6_8_aux\n7_5_ccomp\n8_8_advmod\n9_11_punct\n10_0_root\n11_14_compound\n12_14_compound\n13_11_nsubj\n14_14_punct\n15_14_appos\n16_18_case\n17_16_nmod: of\n18_11_punct\n'
-    token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\n18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
-    pos_text = 'DT\nNN\nNN\nNNS\nIN\nNNS\nVBD\nIN\nIN\nNNP\n,\nJJR\nIN\nCD\nJJ\nNNS\nVBD\nVBN\nVBN\nCC\nVBN\nIN\nNNP\nNNP\nIN\nDT\nNN\nIN\nNNP\n,\nNNP\n.\nDT\nJJ\nNNS\nMD\nVB\nWP\nVBZ\nVBG\nRB\n,\nVBD\nNNP\nNNP\nNNP\n,\nNNP\nIN\nNNP\n.'
-    ems_text = '0_4 5_6 9_10 14_16 22_24 25_29 30_31\n0_3 5_8 11_14 15_18'
+    #dep_text = '0_4_det\n1_4_compound\n2_4_compound\n3_7_nsubj\n4_6_case\n5_4_nmod: without\n6_0_root\n7_19_mark\n8_10_case\n9_19_nmod: since\n10_19_punct\n11_14_advmod\n12_12_mwe\n13_16_nummod\n14_16_amod\n15_19_nsubjpass\n16_19_aux\n17_19_auxpass\n18_7_ccomp\n19_19_cc\n20_7_ccomp\n21_24_case\n22_24_compound\n23_19_nmod: at\n24_27_case\n25_27_det\n26_24_nmod: in\n27_29_case\n28_27_nmod: of\n29_29_punct\n30_29_appos\n31_7_punct\n0_3_det\n1_3_amod\n2_5_nsubj\n3_5_aux\n4_11_ccomp\n5_8_nsubj\n6_8_aux\n7_5_ccomp\n8_8_advmod\n9_11_punct\n10_0_root\n11_14_compound\n12_14_compound\n13_11_nsubj\n14_14_punct\n15_14_appos\n16_18_case\n17_16_nmod: of\n18_11_punct\n'
+    #token_text = '18 2632 421 1310 1895 376 427 2 1524 1219 17 147 156 19160 24653 438 216 10 4870 42 10418 28 153974 1271 26 18 468 4 24820 17 56999 60\n18 465 438 554 1018 14 10 1448 473 17 427 696 8884 1033 17 880 4 5137 60'
+    #pos_text = 'DT\nNN\nNN\nNNS\nIN\nNNS\nVBD\nIN\nIN\nNNP\n,\nJJR\nIN\nCD\nJJ\nNNS\nVBD\nVBN\nVBN\nCC\nVBN\nIN\nNNP\nNNP\nIN\nDT\nNN\nIN\nNNP\n,\nNNP\n.\nDT\nJJ\nNNS\nMD\nVB\nWP\nVBZ\nVBG\nRB\n,\nVBD\nNNP\nNNP\nNNP\n,\nNNP\nIN\nNNP\n.'
+    #ems_text = '0_4 5_6 9_10 14_16 22_24 25_29 30_31\n0_3 5_8 11_14 15_18'
+    dep_text = '4_det 4_compound 4_compound 7_nsubj 6_case 4_nmod:without 0_root 19_mark 10_case 19_nmod:since 19_punct 14_advmod 12_mwe 16_nummod 16_amod 19_nsubjpass 19_aux 19_auxpass 7_ccomp 19_cc 7_ccomp 24_case 24_compound 19_nmod:at 27_case 27_det 24_nmod:in 29_case 27_nmod:of 29_punct 29_appos 7_punct\n3_det 3_amod 5_nsubj 5_aux 11_ccomp 8_nsubj 8_aux 5_ccomp 8_advmod 11_punct 0_root 14_compound 14_compound 11_nsubj 14_punct 14_appos 18_case 16_nmod:of 11_punct'
+    token_text = 'the aid group doctor without border say that since Saturday , more than 275 wounded people have be admit and treat at Donka Hospital in the capital of Guinea , Conakry .\nthe american people can see what be happen here , say Senator Ben Nelson , Democrat of Nebraska .'
+    pos_text = 'DT NN NN NNS IN NNS VBD IN IN NNP , JJR IN CD JJ NNS VBD VBN VBN CC VBN IN NNP NNP IN DT NN IN NNP , NNP .\nDT JJ NNS MD VB WP VBZ VBG RB , VBD NNP NNP NNP , NNP IN NNP .'
+
     # dep_text =''
     # token_text = ''
     # pos_text = ''
     # ems_text = ''
-    dep_text = StringIO.StringIO()
-    token_text = StringIO.StringIO()
-    pos_text = StringIO.StringIO
+    #dep_text = StringIO.StringIO()
+    #token_text = StringIO.StringIO()
+    #pos_text = StringIO.StringIO
     # annotated = NLP_client.annotate(raw)
     # for sentence in annotated.sentences:
     #     print('sentence', sentence)
@@ -65,25 +70,27 @@ def senddata():
               token_text.write(token.lemma + '\n')
               pos_text.write(token.pos + '\n')
     #remine-ie.sh
-    dep_text = dep_text.getvalue()
-    token_text = token_text.getvalue()
-    pos_text = pos_text.getvalue()
+    #dep_text = dep_text.getvalue()
+    #token_text = token_text.getvalue()
+    #pos_text = pos_text.getvalue()
     answer = solver()
     answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
-    remine_segmentation = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    remine_segmentation = response.text
     remine_seg_out = answer.mapBackv2(remine_segmentation)
     answer.extract_transformat(remine_seg_out, token_text, pos_text)
-    remine_segmentation = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    remine_segmentation = response.text
 
 
 
 
-    print(response.text)
+    print(remine_segmentation)
     # with open("result.txt","w") as f:
     #     f.write(response.text)
 
-    return jsonify({'tuple': response.text})
+    return jsonify({'tuple': remine_segmentation})
 
 
 
