@@ -13,7 +13,7 @@ from flask_cors import CORS, cross_origin
 import StringIO
 import libtmux
 import json
-from src_py.remine_online import solver
+from ReMine.src_py.remine_online import solver
 
 app = Flask(__name__)
 cors = CORS(app)
