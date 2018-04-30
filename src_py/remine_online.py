@@ -1,5 +1,5 @@
 import sys
-import argparse, _pickle
+import argparse
 import nltk,json
 import StringIO
 
