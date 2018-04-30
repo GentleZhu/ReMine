@@ -39,9 +39,9 @@ class Solver(object):
     def extract_transformat(self,inp,json_file,pos_file):
         e_not_found = 0
         cnt = 0
-        remine_seg = inp.split('\n').rstrip()
-        test_lemma = json_file.split('\n').rstrip()
-        test_pos = pos_file.split('\n').rstrip()
+        remine_seg = inp.split('\n')
+        test_lemma = json_file.split('\n')
+        test_pos = pos_file.split('\n')
         output = StringIO.StringIO()
         transformate_out = StringIO.StringIO()
             
@@ -143,7 +143,7 @@ class Solver(object):
 
             output.write(json.dumps(tmp) + '\n')
 
-        test_output = output.getvalue().split('\n').rstrip()
+        test_output = output.getvalue().split('\n')
         emsIO = StringIO.StringIO()    
         for line in test_output:
                 tmp = json.loads(line)
@@ -156,9 +156,9 @@ class Solver(object):
         self.fems = emsIO.getvalue()
 
     def tokenized_test(self, docIn, posIn, depIn):
-        docin = docIn.split('\n').rstrip()
-        posin = posIn.split('\n').rstrip()
-        depin = depIn.split('\n').rstrip()
+        docin = docIn.split('\n')
+        posin = posIn.split('\n')
+        depin = depIn.split('\n')
 
         depIO = StringIO.StringIO()
         posIO = StringIO.StringIO()
@@ -249,7 +249,7 @@ class Solver(object):
         end=['</None>','</EP>','</RP>', '</BP>']
         start_phrase=False
         output = StringIO.StringIO()
-        list_seg_path = seg_path.split('\n').rstrip()
+        list_seg_path = seg_path.split('\n')
 
         for line in list_seg_path:
             for token in line.strip().split(' '):
