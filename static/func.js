@@ -1,5 +1,5 @@
 
-n submitCorpus() {
+function submitCorpus() {
     document.getElementById("outputImg").style.display = "none";
     let intext = document.getElementById('inText').value;
     let selection = document.getElementById('selection').value;
@@ -11,7 +11,7 @@ n submitCorpus() {
     var sendText = JSON.parse('{ "text":"" }');
     sendText.text = intext;
     console.log(sendText);
-    xhr.send(sendText);
+    xhr.send(JSON.stringify(sendText));
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
