@@ -222,7 +222,7 @@ class Solver(object):
         pickle.dump(self.test_tokens, open('tmp_remine/test_tokens.p', 'wb'))
 
     def load(self):
-        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'), protocol= 2)
+        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
 
     def load_all(self):
         self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
