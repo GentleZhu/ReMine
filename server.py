@@ -63,7 +63,7 @@ def senddata():
     # with open("result.txt","w") as f:
     #     f.write(response.text)
 
-    return response.text
+    return jsonify({'tuple': response.text})
 
 
 
