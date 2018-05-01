@@ -141,6 +141,8 @@ int main()
         MODE = x["mode"].i();
         string ent_text = x["ent"].s();
 
+        std::cout<<MODE<<'\n';
+        
 
 
 
