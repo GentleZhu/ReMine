@@ -43,6 +43,7 @@ class Solver(object):
         test_lemma = json_file.split('\n')
         test_pos = pos_file.split('\n')
         output = []
+        print(test_lemma)
         transformate_out = StringIO.StringIO()
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
@@ -145,7 +146,7 @@ class Solver(object):
 
         emsIO = StringIO.StringIO()    
         for tmp in output:
-                print(tmp)
+                print("tmp",tmp)
                 ems = ''
                 for em in tmp['entityMentions']:
                     if len(em[2]) > 0:
