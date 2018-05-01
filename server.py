@@ -63,8 +63,8 @@ def senddata():
         print('sentence', sentence)
         for token in sentence:
             print('token',token)
-            print('lemma',token.lemma)
-            print('pos',token.pos)
+            #print('lemma',token.lemma)
+            #print('pos',token.pos)
             #dep_text = dep_text + '\n' + token.dep
             # token_text = token_text + '\n' + token.lemma
             # pos_text = pos_text + '\n' + token.pos
