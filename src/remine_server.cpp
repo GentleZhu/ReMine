@@ -144,6 +144,8 @@ int main()
 
         if (MODE == 1) {
             string ent_text = x["ent"].s();
+            std::istringstream ent_sin(ent_text);
+            std::string ent_line;
 
         }
 
@@ -154,11 +156,11 @@ int main()
         std::istringstream token_sin(tokens_text);
         std::istringstream dep_sin(dep_text);
         std::istringstream pos_sin(pos_text);
-        std::istringstream ent_sin(ent_text);
+
         std::string token_line;
         std::string dep_line;
         std::string pos_line;
-        std::string ent_line;
+
 
         ostringstream out;
 
