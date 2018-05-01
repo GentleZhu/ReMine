@@ -58,9 +58,11 @@ def senddata():
     token_text = StringIO.StringIO()
     pos_text = StringIO.StringIO()
     annotated = NLP_client.annotate(raw)
-    print(annotated.sentences.depparse())
+
     for sentence in annotated.sentences:
         print('sentence', sentence)
+        print('parse', sentence.depparse())
+        
         for token in sentence:
             #print('lemma',token.lemma)
             #print('pos',token.pos)
