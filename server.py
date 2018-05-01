@@ -70,9 +70,11 @@ def senddata():
             # token_text = token_text + '\n' + token.lemma
             # pos_text = pos_text + '\n' + token.pos
             # dep_text = dep_text + '\n' + token.depparse
+            print(token.lemma)
+            print(token.pos)
             token_text.write(token.lemma + '\n')
             pos_text.write(token.pos + '\n')
-            dep_text.write(token.depparse + '\n')
+
 
     #remine-ie.sh
     dep_text = dep_text.getvalue()
