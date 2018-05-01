@@ -66,7 +66,7 @@ def senddata():
             if edge['dep'] == "root":
                 dep_list[edge['dependent']] = "0_root"
             else:
-                dep_list[edge['dependent']] = "{}_{}".format(edge['governer'],edge['dep'])
+                dep_list[edge['dependent']] = "{}_{}".format(str(edge['governer']), edge['dep'])
         dep_text.write(' '.join(dep_list[1:]) + '\n')
 
         for token in sentence:
