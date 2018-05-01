@@ -67,8 +67,9 @@ def senddata():
                 dep_list[edge['dependent']] = "0_root"
             else:
                 dep_list[edge['dependent']] = "{}_{}".format(edge['governer'], edge['dep'])
-        dep_text.write(' '.join(dep_list[1:]) + ' ' + '\n')
-
+        dep_text.write(' '.join(dep_list[1:]) + '\n')
+        token_len = len(sentence)
+        cout = 0
         for token in sentence:
             #print('parse',token.depparse())
             #print('pos',token.pos)
@@ -78,16 +79,22 @@ def senddata():
             # dep_text = dep_text + '\n' + token.depparse
             #print(token.lemma)
             #print(token.pos)
-            token_text.write(token.lemma + ' ')
-            pos_text.write(token.pos + ' ')
+            if count == token_len -1 :
+                token_text.write(token.lemma)
+                pos_text.write(token.pos)
+            else:
+                token_text.write(token.lemma + ' ')
+                pos_text.write(token.pos + ' ')
+            cout += 1
+
         token_text.write('\n')
         pos_text.write('\n')
 
 
     #remine-ie.sh
-    dep_text = dep_text.getvalue()
-    token_text = token_text.getvalue()
-    pos_text = pos_text.getvalue()
+    dep_text = dep_text.getvalue().rstrip()
+    token_text = token_text.getvalue().rstrip()
+    pos_text = pos_text.getvalue().rstrip()
     print(dep_text)
     print(token_text)
     print(pos_text)
