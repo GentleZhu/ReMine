@@ -145,7 +145,7 @@ class Solver(object):
 
         emsIO = StringIO.StringIO()    
         for tmp in output:
-                print(line)
+                print(tmp)
                 ems = ''
                 for em in tmp['entityMentions']:
                     if len(em[2]) > 0:
