@@ -300,7 +300,7 @@ int main()
 
 
                     }
-                    std::cout<<"entimenti";
+                    std::cout<<"enti";
                     rm_deps.clear();
                     rm_tokens.clear();
                 // cout << endl;
