@@ -250,9 +250,11 @@ class Solver(object):
         start_phrase=False
         output = StringIO.StringIO()
         list_seg_path = seg_path.split('\n')
-        print("seg_path",list_seg_path)
+
+        print(self.test_tokens)
 
         for line in list_seg_path:
+            print(line)
             for token in line.strip().split(' '):
                 queue.append(token)
             #print queue
