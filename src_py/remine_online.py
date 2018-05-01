@@ -146,6 +146,7 @@ class Solver(object):
         test_output = output.getvalue().split('\n')
         emsIO = StringIO.StringIO()    
         for line in test_output:
+                print(line)
                 tmp = json.loads(line)
                 ems = ''
                 for em in tmp['entityMentions']:
