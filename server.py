@@ -120,7 +120,7 @@ if __name__=='__main__':
     #pane.send_keys('cd /shared/data/remine/CS512_Website/Remine', enter = True)
     #pane.send_keys('./bin/remine --model pre_train/segmentation.model --mode 1', enter=True)
     #global NLP_client
-    NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9002',default_annotators=['depparse', 'lemma', 'pos'])
+    NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9003',default_annotators=['depparse', 'lemma', 'pos'])
    # NLP_clinet = pywrap.CoreNLP(url='http://localhost:9002', annotator_list=["lemma","ner","depparse","pos"])
 
     http_server = WSGIServer(('0.0.0.0', 1111), app)
