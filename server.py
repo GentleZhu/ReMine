@@ -100,7 +100,9 @@ def senddata():
     #print(pos_text)
     answer = Solver()
     answer.load()
-    answer.tokenized_test(token_text, pos_text, dep_text)
+    check =  answer.tokenized_test(token_text, pos_text, dep_text)
+    assert check == 1
+
     #print(answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)

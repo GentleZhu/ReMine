@@ -43,6 +43,7 @@ class Solver(object):
         test_lemma = json_file.split('\n')
         test_pos = pos_file.split('\n')
         output = []
+        print('total_remine', remine_seg)
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
             print("remine_seg",line)
@@ -153,7 +154,7 @@ class Solver(object):
                 emsIO.write(ems.strip()+'\n')
             #print("#entity not found:",e_not_found)
         self.fems = emsIO.getvalue()
-
+        return 1
     def tokenized_test(self, docIn, posIn, depIn):
         docin = docIn.split('\n')
         posin = posIn.split('\n')
