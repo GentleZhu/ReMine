@@ -56,7 +56,7 @@ def senddata():
     #ems_text = ''
     dep_text = StringIO.StringIO()
     token_text = StringIO.StringIO()
-    pos_text = StringIO.StringIO
+    pos_text = StringIO.StringIO()
     annotated = NLP_client.annotate(raw)
     for sentence in annotated.sentences:
         print('sentence', sentence)
