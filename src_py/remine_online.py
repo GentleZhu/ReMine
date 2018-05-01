@@ -250,6 +250,7 @@ class Solver(object):
         start_phrase=False
         output = StringIO.StringIO()
         list_seg_path = seg_path.split('\n')
+        print("seg_path",list_seg_path)
 
         for line in list_seg_path:
             for token in line.strip().split(' '):
