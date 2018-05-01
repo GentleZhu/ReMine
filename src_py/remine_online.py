@@ -278,7 +278,7 @@ class Solver(object):
                             elif 'EP' in queue[0]:
                                 output.write(':EP]_[')
                             elif 'RP' in queue[0]:
-                                ouput.write(':RP]_[')
+                                output.write(':RP]_[')
                             elif 'BP' in queue[0]:
                                 output.write(':BP]_[')
                         queue.pop(0)
