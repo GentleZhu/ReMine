@@ -61,13 +61,13 @@ def senddata():
 
     for sentence in annotated.sentences:
         edges = sentence.depparse().to_json()
-        dep_list = [None] * len(edges)
+        dep_list = [None] * len(edges)+1
         for edge in edges:
             if edge['dep'] == "root":
                 dep_list[edge['dependent']] = "0_root"
             else:
                 dep_list[edge['dependent']] = "{}_{}".format(edge['governer'],edge['dep'])
-        dep_text.write(' '.join(dep_list) + '\n')
+        dep_text.write(' '.join(dep_list[1:]) + '\n')
 
         for token in sentence:
             #print('parse',token.depparse())
