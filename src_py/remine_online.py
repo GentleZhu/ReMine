@@ -356,7 +356,37 @@ class Solver(object):
 
 
 
-
+    def translate(self, line):
+        lines = line.split("\n")
+        for i in range(len(lines)):
+            temp = lines[i].replace('\t', '|')
+            temp = temp.split("|")
+            temp[2] = temp[2].split(",")[:-1]
+            temp[3] = temp[3][1:]
+            lines[i] = temp
+        for i in range(len(lines)):
+            # ob
+            lines[i][1] = " ".join([self.word_mapping[t] for t in lines[i][1].split(" ")])
+            # relation
+            line_temp = []
+            for word in lines[i][2]:
+                temp = word[1:-1].split(" ")
+                temp = [self.word_mapping[t] for t in temp]
+                str_temp = " "
+                for t in temp:
+                    str_temp = str_temp + t + " "
+                line_temp.append(str_temp)
+            lines[i][2] = ",".join(line_temp) + ", "
+            # sb
+            lines[i][3] = " " + " ".join([self.word_mapping[t] for t in lines[i][3].split(" ")])
+            lines[i] = list("|".join(lines[i]))
+            for t in range(len(lines[i])):
+                if lines[i][t] == "|":
+                    lines[i][t] = "\t"
+                    break
+            lines[i] = "".join(lines[i])
+        lines = "\n".join(lines)
+        return lines
 
 
 
