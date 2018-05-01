@@ -45,7 +45,7 @@ class Solver(object):
         output = []
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
-            print(line)
+            print("remine_seg",line)
             cnt += 1
             pred=[]
             pred_rm = []
@@ -141,11 +141,11 @@ class Solver(object):
 
 
             output.append(tmp)
-            print(output)
+            print('output',output)
 
         emsIO = StringIO.StringIO()    
         for tmp in output:
-                print("tmp",tmp)
+                #print("tmp",tmp)
                 ems = ''
                 for em in tmp['entityMentions']:
                     if len(em[2]) > 0:
