@@ -61,7 +61,7 @@ def senddata():
 
     for sentence in annotated.sentences:
         edges = sentence.depparse().to_json()
-        dep_list = [None] * edges.len()
+        dep_list = [None] * len(edges)
         for edge in edges:
             if edge['dep'] == "root":
                 dep_list[edge['dependent']] = "0_root"
