@@ -142,11 +142,10 @@ class Solver(object):
 
 
             output.append(tmp)
-            print('output',output)
 
         emsIO = StringIO.StringIO()    
         for tmp in output:
-                #print("tmp",tmp)
+                print("tmp",tmp)
                 ems = ''
                 for em in tmp['entityMentions']:
                     if len(em[2]) > 0:
@@ -251,19 +250,13 @@ class Solver(object):
         output = StringIO.StringIO()
         list_seg_path = seg_path.split('\n')
 
-
-        for i in self.test_tokens:
-            print(i,'\n')
-
         for line in list_seg_path[:len(list_seg_path)-1]:
-            print(line)
             for token in line.strip().split(' '):
                 queue.append(token)
             #print queue
             while (len(queue)>0):
                 #print c_ptr,r_ptr
                 if queue[0] in start or queue[0] in end:
-                    print(queue[0])
                     #if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
                     if queue[0] in start and c_ptr == len(self.test_tokens[r_ptr]):
                         #OUT.write('\n'+queue.pop(0)+' ')
