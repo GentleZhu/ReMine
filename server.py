@@ -60,8 +60,11 @@ def senddata():
     annotated = NLP_client.annotate(raw)
 
     for sentence in annotated.sentences:
-        print('sentence', sentence)
-        print('parse', sentence.depparse().graph.items())
+        for gov, dependents in sentence.depparse().graph.items():
+            print(gov,dependents)
+            for dependent, dep in dependents:
+                print(dependent,dep)
+            
 
         for token in sentence:
             #print('parse',token.depparse())
