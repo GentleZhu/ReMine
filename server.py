@@ -116,7 +116,7 @@ def senddata():
 
 
 
-    print(remine_segmentation)
+    #print(remine_segmentation)
     # with open("result.txt","w") as f:
     #     f.write(response.text)
 
