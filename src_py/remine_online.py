@@ -43,7 +43,7 @@ class Solver(object):
         test_lemma = json_file.split('\n')
         test_pos = pos_file.split('\n')
         output = []
-        print(test_lemma)
+        print('lemma',test_lemma)
         transformate_out = StringIO.StringIO()
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):

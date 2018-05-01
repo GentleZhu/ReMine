@@ -229,7 +229,7 @@ int main()
                     vector<TOKEN_ID_TYPE> rm_tokens;
 
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-                        //std::cout<<"check5";
+                        std::cout<<"check5";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
                         char* buf = (char*)malloc((docC_str.length() + 2));
@@ -282,6 +282,7 @@ int main()
                         //fprintf(out, "| ");
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
+                        std::cout<<"enti";
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char f;
                         if (i + 1 == ems[_->first].second) {
@@ -300,7 +301,7 @@ int main()
 
 
                     }
-                    std::cout<<"enti";
+
                     rm_deps.clear();
                     rm_tokens.clear();
                 // cout << endl;
