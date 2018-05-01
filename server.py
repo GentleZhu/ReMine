@@ -119,7 +119,7 @@ def senddata():
 
     result = answer.translate(remine_segmentation)
 
-
+    print(result)
     #print(remine_segmentation)
     with open("result.txt","w") as f:
         f.write(result)
