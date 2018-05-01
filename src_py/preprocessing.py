@@ -212,7 +212,7 @@ class PreProcessor(object):
         _pickle.dump(self.test_tokens, open('tmp_remine/test_tokens.p', 'wb'))
 
     def load(self):
-        self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
+        self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb',protocol = 2))
 
     def load_all(self):
         self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
