@@ -96,7 +96,7 @@ def senddata():
     token_text = token_text.getvalue().rstrip()
     pos_text = pos_text.getvalue().rstrip()
     #print(dep_text)
-    #print(token_text)
+    print(token_text)
     #print(pos_text)
     answer = Solver()
     answer.load()
