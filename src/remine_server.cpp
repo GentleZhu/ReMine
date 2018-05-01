@@ -282,7 +282,7 @@ int main()
                         //fprintf(out, "| ");
                         out<<"| ";
                     for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
-                      
+
                         //fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');
                         char f;
                         if (i + 1 == ems[_->first].second) {

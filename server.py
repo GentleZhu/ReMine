@@ -121,7 +121,7 @@ def senddata():
 
     #print(result)
     #print(remine_segmentation)
-    with open("result.txt","w") as f:
+    #with open("result.txt","w") as f:
         #f.write(result)
 
     return jsonify({'tuple': remine_segmentation})
