@@ -294,7 +294,7 @@ class Solver(object):
                     r_ptr+=1
                     c_ptr=0
                     output.write('\n')
-            return output.getvalue()
+        return output.getvalue()
 
     def map(self,seg_path,outpath):
         queue=[]
