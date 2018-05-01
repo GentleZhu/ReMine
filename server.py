@@ -61,7 +61,7 @@ def senddata():
 
     for sentence in annotated.sentences:
         print('sentence', sentence)
-        print('parse', sentence.depparse().parse_graph().items())
+        print('parse', sentence.depparse().graph.items())
 
         for token in sentence:
             #print('parse',token.depparse())
