@@ -67,11 +67,9 @@ def senddata():
                 dep_list[edge['dependent']] = "0_root"
             else:
                 dep_list[edge['dependent']] = "{}_{}".format(edge['governer'], edge['dep'])
-        dep_text.write(' '.join(dep_list[1:]) + '\n')
-        token_text.write(sentence.lemma + '\n')
-        pos_text.write(sentence.pos + '\n')
+        dep_text.write(' '.join(dep_list[1:]) + ' ' + '\n')
 
-        #for token in sentence:
+        for token in sentence:
             #print('parse',token.depparse())
             #print('pos',token.pos)
             #dep_text = dep_text + '\n' + token.dep
@@ -80,8 +78,10 @@ def senddata():
             # dep_text = dep_text + '\n' + token.depparse
             #print(token.lemma)
             #print(token.pos)
-            #token_text.write(token.lemma + '\n')
-            #pos_text.write(token.pos + '\n')
+            token_text.write(token.lemma + ' ')
+            pos_text.write(token.pos + ' ')
+        token_text.write('\n')
+        pos_text.write('\n')
 
 
     #remine-ie.sh
