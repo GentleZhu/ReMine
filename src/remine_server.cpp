@@ -212,7 +212,7 @@ int main()
                 assert(tokens.size() == tags.size());
                 ++ docCount;
                 if (MODE == 1 && std::getline(ent_sin,ent_line)) {
-                    std::cout<<"entimenti";
+                    std::cout<<"entimenti\n";
                     stringstream sin(ent_line);
                     vector<pair<int ,int>> ems;
                     unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> tmp;
@@ -223,13 +223,13 @@ int main()
                         ems.push_back(make_pair(stoi(segs[0]), stoi(segs[1])));
                     }
 
-
+                    std::cout<<"check1\n";
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
 
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
-
+                        std::cout<<"check2\n";
                         const auto& it = _->second;
                         string docC_str = std::to_string(docCount);
                         char* buf = (char*)malloc((docC_str.length() + 2));
@@ -244,6 +244,7 @@ int main()
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
+                            std::cout<<"check3\n";
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             string f;
                             int flag = 0;
