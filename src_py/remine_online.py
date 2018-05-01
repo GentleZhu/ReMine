@@ -263,7 +263,7 @@ class Solver(object):
                     if queue[0] in start and c_ptr == len(self.test_tokens[r_ptr]):
                         #OUT.write('\n'+queue.pop(0)+' ')
                         start_phrase=True
-                        output = output.write('\n')
+                        output.write('\n')
                         r_ptr+=1
                         c_ptr=0
                         queue.pop(0)
