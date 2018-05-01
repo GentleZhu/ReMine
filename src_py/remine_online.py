@@ -251,7 +251,9 @@ class Solver(object):
         output = StringIO.StringIO()
         list_seg_path = seg_path.split('\n')
 
-        print(self.test_tokens)
+
+        for i in self.test_tokens:
+            print(i,'\n')
 
         for line in list_seg_path:
             print(line)
@@ -259,7 +261,7 @@ class Solver(object):
                 queue.append(token)
             #print queue
             while (len(queue)>0):
-                #print c_ptr,r_ptr
+                print c_ptr,r_ptr
                 if queue[0] in start or queue[0] in end:
                     #if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
                     if queue[0] in start and c_ptr == len(self.test_tokens[r_ptr]):
@@ -285,6 +287,7 @@ class Solver(object):
                             elif 'BP' in queue[0]:
                                 output.write(':BP]_[')
                         queue.pop(0)
+
                 elif c_ptr < len(self.test_tokens[r_ptr]) and queue[0] == self.test_tokens[r_ptr][c_ptr]:
                     if start_phrase:
                         output.write(self.test_words[r_ptr][c_ptr] + ' ')
