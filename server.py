@@ -58,6 +58,7 @@ def senddata():
     token_text = StringIO.StringIO()
     pos_text = StringIO.StringIO()
     annotated = NLP_client.annotate(raw)
+    print(annotated)
     for sentence in annotated.sentences:
         print('sentence', sentence)
         for token in sentence:
@@ -67,7 +68,7 @@ def senddata():
             # dep_text = dep_text + '\n' + token.depparse
             token_text.write(token.lemma + '\n')
             pos_text.write(token.pos + '\n')
-            dep_text.write(token.parse + '\n')
+            dep_text.write(token.depparse + '\n')
 
     #remine-ie.sh
     dep_text = dep_text.getvalue()
