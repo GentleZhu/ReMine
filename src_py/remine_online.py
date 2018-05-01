@@ -144,9 +144,8 @@ class Solver(object):
             output.append(tmp)
 
         emsIO = StringIO.StringIO()    
-        for line in test_output:
+        for tmp in output:
                 print(line)
-                tmp = json.loads(line)
                 ems = ''
                 for em in tmp['entityMentions']:
                     if len(em[2]) > 0:
