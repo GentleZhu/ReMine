@@ -42,7 +42,7 @@ class Solver(object):
         remine_seg = inp.split('\n')
         test_lemma = json_file.split('\n')
         test_pos = pos_file.split('\n')
-        output = StringIO.StringIO()
+        output = []
         transformate_out = StringIO.StringIO()
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
@@ -141,9 +141,8 @@ class Solver(object):
             tmp['entityMentions'] = new
 
 
-            output.write(json.dumps(tmp) + '\n')
+            output.append(tmp)
 
-        test_output = output.getvalue().split('\n')
         emsIO = StringIO.StringIO()    
         for line in test_output:
                 print(line)
