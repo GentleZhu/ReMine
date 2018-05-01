@@ -255,7 +255,7 @@ class Solver(object):
         for i in self.test_tokens:
             print(i,'\n')
 
-        for line in list_seg_path:
+        for line in list_seg_path[:len(list_seg_path)-1]:
             print(line)
             for token in line.strip().split(' '):
                 queue.append(token)
