@@ -138,16 +138,11 @@ int main()
         string tokens_text = x["tokens"].s();
         string pos_text = x["pos"].s();
         string dep_text = x["dep"].s();
-        int MODE = x["mode"].i();
+        MODE = x["mode"].i();
+        string ent_text = x["ent"].s();
+        std::istringstream ent_sin(ent_text);
+        std::string ent_line;
 
-
-
-        if (MODE == 1) {
-            string ent_text = x["ent"].s();
-            std::istringstream ent_sin(ent_text);
-            std::string ent_line;
-
-        }
 
         //FILE* out = tryOpen("tmp_remine/remine_tokenized_segmented_sentences.txt", "w");
 
