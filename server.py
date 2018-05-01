@@ -60,11 +60,14 @@ def senddata():
     annotated = NLP_client.annotate(raw)
 
     for sentence in annotated.sentences:
-        for gov, dependents in sentence.depparse().graph.items():
-            print(gov,dependents)
-            for dependent, dep in dependents:
-                print(dependent,dep)
-            
+        edges = sentence.depparse().to_json()
+        dep_list = []
+        for edge in edeges:
+            if edge['dep'] == "root":
+                dep_list[dependent] = "0_root"
+            else:
+                dep_list[dependent] = "{}_{}".format(edge['governer'],edge['dep'])
+        dep_text.write(' '.join(dep_list) + '\n')
 
         for token in sentence:
             #print('parse',token.depparse())
