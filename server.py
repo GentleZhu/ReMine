@@ -62,18 +62,24 @@ def senddata():
     for sentence in annotated.sentences:
         print('sentence', sentence)
         for token in sentence:
+            print('token',toekn)
+            print('lemma',token.lemma)
+            print('pos',token.pos)
             #dep_text = dep_text + '\n' + token.dep
             # token_text = token_text + '\n' + token.lemma
             # pos_text = pos_text + '\n' + token.pos
             # dep_text = dep_text + '\n' + token.depparse
             token_text.write(token.lemma + '\n')
             pos_text.write(token.pos + '\n')
-            dep_text.write(token.depparse + '\n')
+            #dep_text.write(token.depparse() + '\n')
 
     #remine-ie.sh
     dep_text = dep_text.getvalue()
     token_text = token_text.getvalue()
     pos_text = pos_text.getvalue()
+    print(dep_text)
+    print(token_text)
+    print(pos_text)
     answer = Solver()
     answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
