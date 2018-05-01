@@ -46,7 +46,7 @@ class Solver(object):
         print('total_remine', remine_seg)
             
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
-            print("remine_seg",line)
+            #print("remine_seg",line)
             cnt += 1
             pred=[]
             pred_rm = []
