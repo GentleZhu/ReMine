@@ -261,8 +261,9 @@ class Solver(object):
                 queue.append(token)
             #print queue
             while (len(queue)>0):
-                print c_ptr,r_ptr
+                #print c_ptr,r_ptr
                 if queue[0] in start or queue[0] in end:
+                    print(queue[0])
                     #if queue[0] == '</phrase>' or c_ptr < len(self.test_token[r_ptr]):
                     if queue[0] in start and c_ptr == len(self.test_tokens[r_ptr]):
                         #OUT.write('\n'+queue.pop(0)+' ')
