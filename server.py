@@ -84,7 +84,7 @@ def senddata():
     print(remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
     answer.extract_transformat(remine_seg_out, token_text, pos_text)
-    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
 
 
