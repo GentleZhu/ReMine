@@ -79,7 +79,7 @@ def senddata():
             # dep_text = dep_text + '\n' + token.depparse
             #print(token.lemma)
             #print(token.pos)
-            if count == token_len -1 :
+            if cout == token_len -1 :
                 token_text.write(token.lemma)
                 pos_text.write(token.pos)
             else:
