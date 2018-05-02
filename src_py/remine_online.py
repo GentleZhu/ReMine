@@ -351,11 +351,10 @@ class Solver(object):
 
     def translate(self, line):
         lines = line.split("\n")
-        for i in range(len(lines)):
+        for i in range(len(lines)-1):
             temp = lines[i].replace('\t', '|')
 
             temp = temp.split("|")
-            print(len(temp))
             temp[2] = temp[2].split(",")[:-1]
             temp[3] = temp[3][1:]
             lines[i] = temp
