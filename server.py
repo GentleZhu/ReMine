@@ -102,8 +102,9 @@ def senddata():
     remine_segmentation = response.text
     #print("remine_segement",remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
-    print(remine_seg_out)
-    # check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
+    #print(remine_seg_out)
+    check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
+    print(answer.fems)
     # assert check == 1
     # #print('ems:\n', answer.fems)
     # print(answer.fdoc)
