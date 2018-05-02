@@ -246,7 +246,7 @@ int main()
 
 
                         for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                            std::cout<<"check3\n";
+                            //std::cout<<"check3\n";
                             //fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? "| " : " ");
                             string f;
                             int flag = 0;
