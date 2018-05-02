@@ -113,7 +113,7 @@ def senddata():
     #print(remine_segmentation)
 
     result = answer.translate(remine_segmentation)
-    result_list = result.split('\n')
+    result_list = result.split('\n')[:-2]
     for i in result_list:
         print(i)
     #print(result)
