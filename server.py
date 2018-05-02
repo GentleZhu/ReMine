@@ -114,6 +114,8 @@ def senddata():
 
     result = answer.translate(remine_segmentation)
     result_list = result.split('\n')
+    for i in result_list:
+        print(i)
     #print(result)
 
 
