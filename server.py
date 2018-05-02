@@ -71,45 +71,36 @@ def senddata():
         token_len = len(sentence)
         cout = 0
         for token in sentence:
-            #print('parse',token.depparse())
-            #print('pos',token.pos)
-            #dep_text = dep_text + '\n' + token.dep
-            # token_text = token_text + '\n' + token.lemma
-            # pos_text = pos_text + '\n' + token.pos
-            # dep_text = dep_text + '\n' + token.depparse
-            #print(token.lemma)
-            #print(token.pos)
+
             if cout == token_len -1 :
-                token_text.write(token.lemma)
-                pos_text.write(token.pos)
+                token_text.write(token.lemma + '\n')
+                pos_text.write(token.pos + '\n')
             else:
                 token_text.write(token.lemma + ' ')
                 pos_text.write(token.pos + ' ')
             cout += 1
 
-        token_text.write('\n')
-        pos_text.write('\n')
 
 
     #remine-ie.sh
     dep_text = dep_text.getvalue().rstrip()
     token_text = token_text.getvalue().rstrip()
     pos_text = pos_text.getvalue().rstrip()
-    #print(dep_text)
-    #print(token_text)
-    #print(pos_text)
+    print(dep_text)
+    print(token_text)
+    print(pos_text)
     answer = Solver()
     answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
 
 
-    print(answer.fdoc)
-    print(answer.fpos)
-    print(answer.fdep)
+    #print(answer.fdoc)
+    #print(answer.fpos)
+    #print(answer.fdep)
 
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
     remine_segmentation = response.text
-    print("remine_segement",remine_segmentation)
+    #print("remine_segement",remine_segmentation)
     # remine_seg_out = answer.mapBackv2(remine_segmentation)
     # check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
     # assert check == 1
