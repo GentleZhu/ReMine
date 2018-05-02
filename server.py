@@ -117,7 +117,7 @@ def senddata():
     #print(result)
 
 
-    return jsonify({'tuple': result})
+    return jsonify({'tuple': result_list})
 
 
 
