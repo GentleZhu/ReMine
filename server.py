@@ -111,10 +111,10 @@ def senddata():
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
     print(remine_segmentation)
-    #
-    # #result = answer.translate(remine_segmentation)
-    #
-    # #print(result)
+
+    result = answer.translate(remine_segmentation)
+
+    print(result)
     # #print(remine_segmentation)
     # #with open("result.txt","w") as f:
     #     #f.write(result)
