@@ -94,13 +94,13 @@ def senddata():
     answer.tokenized_test(token_text, pos_text, dep_text)
 
 
-    print(answer.fdoc)
-    print(answer.fpos)
-    print(answer.fdep)
+    #print(answer.fdoc)
+    #print(answer.fpos)
+    #print(answer.fdep)
 
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
     remine_segmentation = response.text
-    #print("remine_segement",remine_segmentation)
+    print("remine_segement",remine_segmentation)
     # remine_seg_out = answer.mapBackv2(remine_segmentation)
     # check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
     # assert check == 1
