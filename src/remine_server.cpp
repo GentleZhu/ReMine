@@ -325,7 +325,7 @@ int main()
     //fclose(out);
     //output
     string s = out.str();
-    std::cout<<s;
+    //std::cout<<s;
 
 
     return crow::response{s};
