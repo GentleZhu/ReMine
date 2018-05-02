@@ -22,7 +22,11 @@ function submitCorpus() {
                   item.appendChild(document.createTextNode(data[i]));
                   list.appendChild(item);
               }
-              document.getElementById("outText").appendChild(list);
+              if (document.getElementById("outText").childNodes.length > 0) {
+                  document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[0]);
+              } else {
+                  document.getElementById("outText").appendChild(list);
+              }
               xhr.abort();
             } else {
               console.error(xhr.statusText);
