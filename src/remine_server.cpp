@@ -227,7 +227,7 @@ int main()
                     tmp = GenPath::genSepath(deps, tags, depTypes, ems);
                     vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
                     vector<TOKEN_ID_TYPE> rm_tokens;
-
+                    std::cout<<"tmpsize"<<tmp.size();
                     for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                         std::cout<<"check2\n";
                         const auto& it = _->second;
