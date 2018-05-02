@@ -9,6 +9,7 @@ class PreProcessor(object):
     def __init__(self):
         self.word_cnt = 1
         self.word_mapping = dict()
+        self.map_word = dict()
         self.punc_mapping = dict()
         self.punc = {'.', ',', '"', "'", '?', ':', ';', '-', '!', '-lrb-', '-rrb-', '``', "''", ''}
 
