@@ -105,7 +105,7 @@ def senddata():
     #print(remine_seg_out)
     check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
     #print(answer.fems)
-     assert check == 1
+    assert check == 1
     #print('ems:\n', answer.fems)
 
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
