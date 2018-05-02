@@ -353,7 +353,9 @@ class Solver(object):
         lines = line.split("\n")
         for i in range(len(lines)):
             temp = lines[i].replace('\t', '|')
+
             temp = temp.split("|")
+            print(len(temp))
             temp[2] = temp[2].split(",")[:-1]
             temp[3] = temp[3][1:]
             lines[i] = temp
