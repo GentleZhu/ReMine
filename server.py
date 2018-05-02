@@ -94,7 +94,7 @@ def senddata():
     answer.tokenized_test(token_text, pos_text, dep_text)
 
 
-    print(answer.fdoc)
+    #print(answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)
 
@@ -110,16 +110,14 @@ def senddata():
 
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
-    print(remine_segmentation)
+    #print(remine_segmentation)
 
     result = answer.translate(remine_segmentation)
+    result_list = result.split('\n')
+    #print(result)
 
-    print(result)
-    # #print(remine_segmentation)
-    # #with open("result.txt","w") as f:
-    #     #f.write(result)
-    #
-    # return jsonify({'tuple': remine_segmentation})
+
+    return jsonify({'tuple': result})
 
 
 
