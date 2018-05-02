@@ -364,19 +364,19 @@ class Solver(object):
             lines[i] = temp
         for i in range(len(lines)-1):
             # ob
-            lines[i][1] = " ".join([map_word[t] for t in lines[i][1].split(" ")])
+            lines[i][1] = " ".join([map_word[int(t)] for t in lines[i][1].split(" ")])
             # relation
             line_temp = []
             for word in lines[i][2]:
                 temp = word[1:-1].split(" ")
-                temp = [map_word[t] for t in temp]
+                temp = [map_word[int(t)] for t in temp]
                 str_temp = " "
                 for t in temp:
                     str_temp = str_temp + t + " "
                 line_temp.append(str_temp)
             lines[i][2] = ",".join(line_temp) + ", "
             # sb
-            lines[i][3] = " " + " ".join([map_word[t] for t in lines[i][3].split(" ")])
+            lines[i][3] = " " + " ".join([map_word[int(t)] for t in lines[i][3].split(" ")])
             lines[i] = list("|".join(lines[i]))
             for t in range(len(lines[i])):
                 if lines[i][t] == "|":
