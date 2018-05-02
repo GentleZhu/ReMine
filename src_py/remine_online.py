@@ -362,7 +362,7 @@ class Solver(object):
             temp[2] = temp[2].split(",")[:-1]
             temp[3] = temp[3][1:]
             lines[i] = temp
-        for i in range(len(lines)):
+        for i in range(len(lines)-1):
             # ob
             lines[i][1] = " ".join([map_word[t] for t in lines[i][1].split(" ")])
             # relation
@@ -383,6 +383,7 @@ class Solver(object):
                     lines[i][t] = "\t"
                     break
             lines[i] = "".join(lines[i])
+
         lines = "\n".join(lines)
         return lines
 
