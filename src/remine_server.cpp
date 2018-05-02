@@ -168,6 +168,7 @@ int main()
         while(std::getline(token_sin,token_line)) {
 
             stringstream sin(token_line);
+            std::cout<<"tokenline"<<token_line;
             vector<TOTAL_TOKENS_TYPE> tokens;
             // vector<TOTAL_TOKENS_TYPE> deps;
             vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
@@ -195,6 +196,7 @@ int main()
                 stringstream sin(temp);
                 sin >> token;
                 tokens.push_back(token);
+
 
                 if (ENABLE_POS_TAGGING) {
                     tags.push_back(posTagId);

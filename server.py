@@ -94,7 +94,7 @@ def senddata():
     answer.tokenized_test(token_text, pos_text, dep_text)
 
 
-    #print(answer.fdoc)
+    print(answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)
 
