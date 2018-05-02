@@ -1,6 +1,6 @@
 import sys
 import argparse
-import nltk,json, pickle
+import json, pickle
 import StringIO,operator
 
 class Solver(object):
