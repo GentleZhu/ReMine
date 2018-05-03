@@ -90,7 +90,8 @@ def senddata():
 
     result = answer.translate(remine_segmentation)
     result_list = result.split('\n')[:-2]
-    #print(result)
+    for i in result_list:
+        print(i)
 
 
     return jsonify({'tuple': result_list})
