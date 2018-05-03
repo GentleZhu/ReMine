@@ -31,6 +31,7 @@ def render():
 def cof():
     resource = request.form['origin'].split('\n')
     data = request.form['result'].split('\n')
+    print(data)
     # read the result to dictionary
     d = {}
     for i in range(len(data)):

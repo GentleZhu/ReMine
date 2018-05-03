@@ -1,9 +1,6 @@
 var data;
 var intext;
 
-data = ["1	she| like , eat , | shit"];
-intext = "My sister's name is Linda, she likes eat shit.";
-
 function submitCorpus() {
     intext = document.getElementById('inText').value;
     document.getElementById("outputImg").style.display = "none";
@@ -46,6 +43,7 @@ function submitCorpus() {
                 pass_reslut = pass_reslut + data[i] + "\n";
             }
         }
+        console.log(pass_reslut);
         $.ajax({
             type: "POST",
             url: "/cof",
