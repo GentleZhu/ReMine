@@ -1,0 +1,161 @@
+html, body {
+    margin: 0;
+    padding: 0;
+}
+
+.title {
+    position: absolute;
+    top: 0;
+    width: 100vw;
+    height: 10vh;
+    margin: 0;
+    display: flex;
+    justify-content: left;
+}
+
+.buttons {
+    position: relative;
+    height: 10vh;
+    width: 30vw;
+    line-height: 10vh;
+    text-align: center;
+    overflow: auto;
+    font-family: 'Gaegu', cursive;
+    font-size: 5vmin;
+    border-bottom: 0.1px solid #D9D9D9;
+}
+
+.remine {
+    position: relative;
+    height: 10vh;
+    width: 10vw;
+    line-height: 10vh;
+    text-align: center;
+    overflow: auto;
+    font-family: 'Poiret One', cursive;
+    font-size: 5vmin;
+    border-bottom: 0.1px solid #D9D9D9;
+    color: #0084FF;
+}
+
+.input {
+    position: absolute;
+    top: 10vh;
+    left: 0;
+    width: 50vw;
+    height: 90vh;
+    border-right: 0.1px solid #D9D9D9;
+}
+
+.intro {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50vw;
+    height: 50vh;
+    margin: 0;
+}
+
+.intro_title {
+    position: absolute;
+    top: 0;
+    left: 3vw;
+    width: 47vw;
+    height: 15vh;
+    line-height: 15vh;
+    margin: 0;
+    overflow: auto;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 6vmin;
+}
+
+.intro_para {
+    position: absolute;
+    padding: 0 3vw;
+    margin: 0;
+    top: 15vh;
+    left: 0;
+    width: 44vw;
+    height: 30vh;
+    overflow: auto;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+.selector {
+    position: absolute;
+    top: 45vh;
+    left: 0;
+    width: 50vw;
+    height: 10vh;
+}
+
+.select {
+    position: relative;
+    height: 5vh;
+    top: 2vh;
+    left: 3vw;
+    width: 20vw;
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+.textInput {
+    position: absolute;
+    top: 55vh;
+    left: 0;
+    width: 50vw;
+    height: 35vh;
+}
+
+.textFrame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 44vw;
+    height: 25vh;
+    margin-left: 3vw;
+    margin-right: 3vw;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+.button {
+    position: absolute;
+    top: 27vh;
+    left: 3vw;
+    height: 5vh;
+    line-height: 5vh;
+    text-align: center;
+    width: 15vw;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+    background-color: #F2F2F2;
+    overflow: auto;
+}
+
+.output {
+    position: absolute;
+    top: 10vh;
+    left: 50vw;
+    width: 50vw;
+    height: 90vh;
+    margin: 0;
+    overflow: auto;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+img {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 20vmin;
+}
+
+a:hover {
+    cursor: pointer;
+}
