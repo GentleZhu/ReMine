@@ -110,9 +110,9 @@ def senddata():
     dep_text = dep_text.getvalue().rstrip()
     token_text = token_text.getvalue().rstrip()
     pos_text = pos_text.getvalue().rstrip()
-    # print(dep_text)
+     print(dep_text)
     # print(token_text)
-    # print(pos_text)
+     print(pos_text)
 
     # begin remine-ie.sh
     answer = Solver()
