@@ -27,6 +27,22 @@ def render():
 
 #todo generate an api to set model.
 
+@app.route('/vi', methods =['POST'])
+@cross_origin(origin='*')
+def vi():
+    data = request.form['result'].split('\n')
+    data.pop()
+    for i in range(len(data)):
+        temp = data[i].replace('\t', '|')
+        temp = temp.split("|")
+        temp[2] = temp[2].split(",")[:-1]
+        for j in range(len(temp[2])):
+            temp[2][j] = temp[2][j][1:-1]
+        temp[3] = temp[3][1:]
+        data[i] = temp
+    return jsonify({'tuple': data})
+
+
 @app.route('/cof', methods =['POST'])
 @cross_origin(origin='*')
 def cof():

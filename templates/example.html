@@ -3,6 +3,7 @@
 
     <head>
         <title>Remine Demo</title>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
         <link rel = "stylesheet" type = "text/css" href = "{{ url_for('static', filename='style.css') }}"/>
         <script src="{{ url_for('static', filename='func.js') }}"></script>
         <script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
@@ -14,31 +15,31 @@
         <div class = "title">
             <a id = "b1" class = "buttons">Remine</a>
             <a id = "b2" class = "buttons">Remine & Coreference</a>
-            <a id = "b3" class = "buttons">Under Develop</a>
+            <a id = "b3" class = "buttons">Kiss me baby</a>
             <b class = "remine">Remine</b>
         </div>
 
-        <div class = "input">
+        <div id = "input" class = "input">
+            <div id = "input_">
+                <div class = "intro">
+                    <p id = "intro_title" class = "intro_title"></p>
+                    <p class = "intro_para">This is a demo of novel open IE system—ReMine. It integrates local context signal and global structural signal in a unified framework with distant supervision. The input is corpus. The outputs will return relation tuples. Experiments on two real-world corpora of different domains demonstrate that ReMine system achieves superior precision when outputting same number of extractions, compared with several state-of-the-art open IE systems.</p>
+                </div>
 
-            <div class = "intro">
-                <p id = "intro_title" class = "intro_title"></p>
-                <p class = "intro_para">This is a demo of novel open IE system—ReMine. It integrates local context signal and global structural signal in a unified framework with distant supervision. The input is corpus. The outputs will return relation tuples. Experiments on two real-world corpora of different domains demonstrate that ReMine system achieves superior precision when outputting same number of extractions, compared with several state-of-the-art open IE systems.</p>
+                <div class = "selector">
+                    <a class = "select">Pick a sample here!</a>
+                    <select id = "selection" class = "select">
+                        <option value = "s1">sample 1</option>
+                        <option value = "s2">sample 2</option>
+                        <option value = "s3">sample 3</option>
+                    </select>
+                </div>
+
+                <div class = "textInput">
+                    <textarea id = "inText" type = "text" name = "corpus" class = "textFrame"></textarea>
+                    <a class = "button" onclick="submitCorpus()">Run the Model</a>
+                </div>
             </div>
-
-            <div class = "selector">
-                <a class = "select">Pick a pre-train model</a>
-                <select id = "selection" class = "select">
-                    <option value = "s1">model 1</option>
-                    <option value = "s2">model 2</option>
-                    <option value = "s3">model 3</option>
-                </select>
-            </div>
-
-            <div class = "textInput">
-                <textarea id = "inText" type = "text" name = "corpus" class = "textFrame"></textarea>
-                <a class = "button" onclick="submitCorpus()">Run the Model</a>
-            </div>
-
         </div>
 
         <div id = "outText" class = "output">
