@@ -1,24 +1,26 @@
+var data;
+var intext;
+
+data = ["1	she| like , eat , | shit"];
+intext = "My sister's name is Linda, she likes eat shit.";
 
 function submitCorpus() {
+    intext = document.getElementById('inText').value;
     document.getElementById("outputImg").style.display = "none";
-    let intext = document.getElementById('inText').value;
     let selection = document.getElementById('selection').value;
-    console.log(intext);
-    console.log(selection);
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "http://dmserv4.cs.illinois.edu:1111/remine", true);
     xhr.setRequestHeader('Content-Type', 'application/json')
     var sendText = JSON.parse('{ "text":"" }');
     sendText.text = intext;
-    console.log(sendText);
     xhr.send(JSON.stringify(sendText));
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              let data = JSON.parse(xhr.responseText).tuple;
-              var list = document.createElement('ul');
-              for(var i = 0; i < data.length; i++) {
-                  var item = document.createElement('li');
+              data = JSON.parse(xhr.responseText).tuple;
+              let list = document.createElement('ul');
+              for(let i = 0; i < data.length; i++) {
+                  let item = document.createElement('li');
                   item.appendChild(document.createTextNode(data[i]));
                   list.appendChild(item);
               }
@@ -34,7 +36,38 @@ function submitCorpus() {
             }
         }
     };
+
+    if (button_state === 1) {
+        pass_reslut = "";
+        for (let i = 0; i < data.length; i++) {
+            if (i === data.length - 1) {
+                pass_reslut = pass_reslut + data[i];
+            } else {
+                pass_reslut = pass_reslut + data[i] + "\n";
+            }
+        }
+        $.ajax({
+            type: "POST",
+            url: "/cof",
+            data: { origin: intext, result: pass_reslut }
+        }).done(function(e) {
+            e = e.tuple;
+            let list = document.createElement('ul');
+            for(let i = 0; i < e.length; i++) {
+                let item = document.createElement('li');
+                item.appendChild(document.createTextNode(e[i]));
+                list.appendChild(item);
+            }
+            if (document.getElementById("outText").childNodes.length > 0) {
+                document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[0]);
+            } else {
+                document.getElementById("outText").appendChild(list);
+            }
+        });
+    }
 }
+
+
 
 
 // button
@@ -67,4 +100,3 @@ function change_state() {
         }
     }
 }
-

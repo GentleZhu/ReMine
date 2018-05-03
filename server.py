@@ -2,12 +2,13 @@ from flask import Flask, request, render_template, jsonify, Response,json
 import requests
 from stanza.nlp.corenlp import CoreNLPClient
 #from corenlp_pywrap import pywrap
+from nltk import word_tokenize
+#from neuralcoref import Coref
 import subprocess
 import sys,os
 from subprocess import Popen, PIPE
 import os.path
 from gevent.wsgi import WSGIServer
-
 from flask_cors import CORS, cross_origin
 import StringIO
 import libtmux
@@ -25,7 +26,50 @@ def render():
 
 #todo generate an api to set model.
 
+@app.route('/cof', methods =['POST'])
+@cross_origin(origin='*')
+def cof():
+    resource = request.form['origin'].split('\n')
+    data = request.form['result'].split('\n')
+    # read the result to dictionary
+    d = {}
+    for i in range(len(data)):
+        temp = data[i].replace('\t', '|')
+        temp = temp.split("|")
+        temp[2] = temp[2].split(",")[:-1]
+        if temp[0] not in d:
+            d[temp[0]] = [temp[1:]]
+        else:
+            d[temp[0]].append(temp[1:])
+    modi = {}
+    for key in d:
+        for tup in d[key]:
+            ob = nltk.pos_tag(word_tokenize(tup[0]))
+            for word in ob:
+                if word[1] == "PRP":
+                    coref = Coref()
+                    clusters = coref.one_shot_coref(utterances=resource[int(key) - 1])
+                    mentions = coref.get_mentions()
+                    for index in clusters[0]:
+                        if len(clusters[0][index]) == 2:
+                            syn = [str(mentions[i]) for i in clusters[0][index]]
+                            if word[0] in syn:
+                                modi[key] = [word[0], syn]
 
+    for key in modi:
+        for i in range(len(d[key])):
+            if modi[key][0] in d[key][i][0]:
+                d[key][i][0] = modi[key][1][1]
+    res = []
+    for key in d:
+        for tup in d[key]:
+            rela = ""
+            for word in tup[1]:
+                rela = rela + word[:-1] + ","
+            temp = str(key) + "\t" + tup[0] + "|" + rela + "|" + tup[2]
+            res.append(temp)
+
+    return jsonify({'tuple': res})
 #pass information to c++ web
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
