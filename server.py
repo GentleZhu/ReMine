@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify, Response,json
 import requests
 from stanza.nlp.corenlp import CoreNLPClient
 #from corenlp_pywrap import pywrap
+import nltk
 from nltk import word_tokenize
 #from neuralcoref import Coref
 import subprocess
