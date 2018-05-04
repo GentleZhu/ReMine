@@ -4,7 +4,7 @@ from stanza.nlp.corenlp import CoreNLPClient
 #from corenlp_pywrap import pywrap
 import nltk
 from nltk import word_tokenize
-#from neuralcoref import Coref
+from neuralcoref import Coref
 import subprocess
 import sys,os
 from subprocess import Popen, PIPE
