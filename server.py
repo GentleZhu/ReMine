@@ -46,6 +46,7 @@ def vi():
 @app.route('/cof', methods =['POST'])
 @cross_origin(origin='*')
 def cof():
+    coref = Coref()
     resource = request.form['origin'].split('\n')
     data = request.form['result'].split('\n')
     print(data)
@@ -65,7 +66,7 @@ def cof():
             ob = nltk.pos_tag(word_tokenize(tup[0]))
             for word in ob:
                 if word[1] == "PRP":
-                    coref = Coref()
+
                     clusters = coref.one_shot_coref(utterances=resource[int(key) - 1])
                     mentions = coref.get_mentions()
                     for index in clusters[0]:
@@ -86,7 +87,6 @@ def cof():
                 rela = rela + word[:-1] + ","
             temp = str(key) + "\t" + tup[0] + "|" + rela + "|" + tup[2]
             res.append(temp)
-
     return jsonify({'tuple': res})
 #pass information to c++ web
 @app.route('/remine', methods =['POST'])
