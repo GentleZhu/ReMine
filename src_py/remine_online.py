@@ -14,13 +14,13 @@ class Model(object):
             self.reverse_mapping[v] = k
 
 
-class Solver(Model):
+class Solver(object):
     """docstring for PreProcessor"""
     def __init__(self, Model):
         #self.punc_mapping = dict()
         self.word_mapping = Model.word_mapping
         self.reverse_mapping = Model.reverse_mapping
-        
+        self.word_cnt = Model.word_cnt
         self.punc = {'.',',','"',"'",'?',':',';','-','!','-lrb-','-rrb-','``',"''", ''}
         self.fdep = ''
         self.fpos = ''
