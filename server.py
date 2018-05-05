@@ -133,8 +133,8 @@ def senddata():
     # begin remine-ie.sh
     answer = Solver(model1)
     answer.tokenized_test(token_text, pos_text, dep_text)
-    print("token_int"answer.fdoc)
-    print("fems::"answer.fems)
+    print("token_int",answer.fdoc)
+    print("fems::",answer.fems)
     #print(answer.fpos)
     #print(answer.fdep)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
