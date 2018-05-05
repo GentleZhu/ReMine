@@ -333,5 +333,5 @@ int main()
     });
 
 
-    app.port(10086).run();
+    app.port(10086).multithreaded().run();
 }
