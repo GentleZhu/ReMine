@@ -79,7 +79,9 @@ def cof():
             if modi[key][0] in d[key][i][0]:
                 d[key][i][0] = modi[key][1][1]
     res = []
+    print(res)
     for key in d:
+        print(key)
         for tup in d[key]:
             rela = ""
             for word in tup[1]:
