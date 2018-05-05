@@ -134,7 +134,7 @@ def senddata():
     answer = Solver(model1)
     answer.tokenized_test(token_text, pos_text, dep_text)
     print("token_int",answer.fdoc)
-    print("fems::",answer.fems)
+
     #print(answer.fpos)
     #print(answer.fdep)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
@@ -143,7 +143,7 @@ def senddata():
     remine_seg_out = answer.mapBackv2(remine_segmentation)
     print("map_out",remine_seg_out)
     check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
-    #print(answer.fems)
+    print("fems::", answer.fems)
     assert check == 1
     #print('ems:\n', answer.fems)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
