@@ -1,26 +1,47 @@
+// var data=["1	three man | have die , | medical error",
+// "1	three man | have die , in , | the previous month",
+// "10	Nev. | will , be ask , they , | question",
+// "10	Nev. | sponsor , | municipal employee",
+// "10	Nev. | sponsor , | County",
+// "11	here on Thursday | between , | the United States",
+// "11	Europe -- | and , | Iran and Syria",
+// "11	here on Thursday | of , | proxy war",
+// "11	here on Thursday | | a snapshot"];
 var data;
 var intext;
 
+// Process
 function submitCorpus() {
     intext = document.getElementById('inText').value;
+    if (intext.length === 0) {
+        alert("You need to type something here to submit 凸😤凸")
+        return;
+    }
     document.getElementById("outputImg").style.display = "none";
     let selection = document.getElementById('selection').value;
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "http://dmserv4.cs.illinois.edu:1111/remine", true);
     xhr.setRequestHeader('Content-Type', 'application/json')
-    var sendText = JSON.parse('{ "text":"" }');
+    let sendText = JSON.parse('{ "text":"" }');
     sendText.text = intext;
+    let list = document.getElementsByTagName("ul"), index;
+    for (index = list.length - 1; index >= 0; index--) {
+        list[index].parentNode.removeChild(list[index]);
+    }
+    document.getElementById("loader").style.display = "block";
     xhr.send(JSON.stringify(sendText));
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
+              document.getElementById("loader").style.display = "none";
               data = JSON.parse(xhr.responseText).tuple;
               if (button_state == 0) {
                   let list = document.createElement('ul');
                   let index = "1";
                   for(let i = 0; i < data.length; i++) {
                       let temp = index;
-                      if (data[i][0] !== index) {
+                      let tup_index = get_index(data[i]);
+                      if (tup_index !== index) {
                           let button = document.createElement('a');
                           button.innerHTML = 'click me';
                           button.style.cssText = "margin-left: 40vw; color: #0084FF";
@@ -28,21 +49,23 @@ function submitCorpus() {
                               call_vi(temp);
                           });
                           list.appendChild(button);
-                          index = data[i][0];
+                          index = tup_index;
                       }
                       let item = document.createElement('li');
                       item.appendChild(document.createTextNode(data[i]));
                       list.appendChild(item);
                   }
-                  let button = document.createElement('a');
-                  button.innerHTML = 'click me';
-                  button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                  button.addEventListener('click', function(){
-                      call_vi(index);
-                  });
-                  list.appendChild(button);
-                  if (document.getElementById("outText").childNodes.length > 0) {
-                      document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[0]);
+                  if (list.childNodes.length > 0) {
+                      let button = document.createElement('a');
+                      button.innerHTML = 'click me';
+                      button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                      button.addEventListener('click', function(){
+                          call_vi(index);
+                      });
+                      list.appendChild(button);
+                  }
+                  if (document.getElementById("outText").childNodes.length > 4) {
+                      document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
                   } else {
                       document.getElementById("outText").appendChild(list);
                   }
@@ -69,12 +92,13 @@ function submitCorpus() {
             url: "/cof",
             data: { origin: intext, result: pass_reslut }
         }).done(function(e) {
-            e = e.tuple;
+            data = e.tuple;
             let list = document.createElement('ul');
             let index = "1";
-            for(let i = 0; i < e.length; i++) {
+            for(let i = 0; i < data.length; i++) {
+                let tup_index = get_index(data[i]);
                 let temp = index;
-                if (data[i][0] !== index) {
+                if (tup_index !== index) {
                     let button = document.createElement('a');
                     button.innerHTML = 'click me';
                     button.style.cssText = "margin-left: 40vw; color: #0084FF";
@@ -82,21 +106,23 @@ function submitCorpus() {
                         call_vi(temp);
                     });
                     list.appendChild(button);
-                    index = data[i][0];
+                    index = tup_index;
                 }
                 let item = document.createElement('li');
-                item.appendChild(document.createTextNode(e[i]));
+                item.appendChild(document.createTextNode(data[i]));
                 list.appendChild(item);
             }
-            let button = document.createElement('a');
-            button.innerHTML = 'click me';
-            button.style.cssText = "margin-left: 40vw; color: #0084FF";
-            button.addEventListener('click', function(){
-                call_vi(index);
-            });
-            list.appendChild(button);
-            if (document.getElementById("outText").childNodes.length > 0) {
-                document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[0]);
+            if (list.childNodes.length > 0) {
+                let button = document.createElement('a');
+                button.innerHTML = 'click me';
+                button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                button.addEventListener('click', function(){
+                    call_vi(index);
+                });
+                list.appendChild(button);
+            }
+            if (document.getElementById("outText").childNodes.length > 4) {
+                document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
             } else {
                 document.getElementById("outText").appendChild(list);
             }
@@ -104,10 +130,32 @@ function submitCorpus() {
     }
 }
 
+function get_index(e) {
+    let res = "";
+    let start = 0;
+    while (e[start] !== "\t") {
+        res = res + e[start];
+        start += 1;
+    }
+    return res;
+}
+
+function reset() {
+    let list = document.getElementsByTagName("ul"), index;
+    for (index = list.length - 1; index >= 0; index--) {
+        list[index].parentNode.removeChild(list[index]);
+    }
+    document.getElementById("outputImg").style.display = "block";
+    document.getElementById("input_").style.display = "block";
+    d3.select("svg").remove();
+    while (document.getElementById("input").childNodes.length > 3) {
+        let node = document.getElementById("input");
+        document.getElementById("input").removeChild(node.lastChild);
+    }
+}
 
 
-
-// button
+// Feature button
 var button_state = 0;
 window.onload = function () {
     change_state();
@@ -122,6 +170,9 @@ window.onload = function () {
     document.getElementById("b3").addEventListener("click", function() {
         button_state = 2;
         change_state();
+    });
+    document.getElementById("home").addEventListener('click', function(){
+        reset();
     });
 
 };
@@ -143,16 +194,20 @@ function call_vi(index) {
     document.getElementById("input_").style.display = "none";
     let clear = document.createElement('a');
     clear.innerHTML = 'Go Back';
-    clear.style.cssText = "position: absolute; top: 2vmin; left: 5vmin; font-family: 'Open Sans', sans-serif; font-size: 3vmin;";
+    clear.style.cssText = "position: absolute; top: 2vmin; left: 5vmin; font-family: 'Open Sans', sans-serif; font-size: 3vmin; color: #0084FF;";
     document.getElementById("input").appendChild(clear);
     clear.addEventListener('click', function(){
         document.getElementById("input_").style.display = "block";
-        document.getElementById("input").removeChild(clear);
         d3.select("svg").remove();
+        while (document.getElementById("input").childNodes.length > 3) {
+            let node = document.getElementById("input");
+            document.getElementById("input").removeChild(node.lastChild);
+        }
     });
     let pass_reslut = "";
     for (let i = 0; i < data.length; i++) {
-        if (data[i][0] === index) {
+        let tup_index = get_index(data[i]);
+        if (tup_index === index) {
             pass_reslut = pass_reslut + data[i] + "\n";
         }
     }

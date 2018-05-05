@@ -46,9 +46,9 @@ def vi():
 @app.route('/cof', methods =['POST'])
 @cross_origin(origin='*')
 def cof():
-    resource = request.form['origin'].split('\n')
+    resource = request.form['origin']
+    resource = resource.replace('\n', '. ').split('. ')
     data = request.form['result'].split('\n')
-    print(data)
     # read the result to dictionary
     d = {}
     for i in range(len(data)):

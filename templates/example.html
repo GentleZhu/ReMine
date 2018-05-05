@@ -15,8 +15,8 @@
         <div class = "title">
             <a id = "b1" class = "buttons">Remine</a>
             <a id = "b2" class = "buttons">Remine & Coreference</a>
-            <a id = "b3" class = "buttons">Kiss me baby</a>
-            <b class = "remine">Remine</b>
+            <a id = "b3" class = "buttons"></a>
+            <a id = "home" class = "remine">Remine</a>
         </div>
 
         <div id = "input" class = "input">
@@ -27,11 +27,11 @@
                 </div>
 
                 <div class = "selector">
-                    <a class = "select">Pick a sample here!</a>
+                    <a class = "selectText">Pick a model here!</a>
                     <select id = "selection" class = "select">
-                        <option value = "s1">sample 1</option>
-                        <option value = "s2">sample 2</option>
-                        <option value = "s3">sample 3</option>
+                        <option value = "s1">model 1</option>
+                        <option value = "s2">model 2</option>
+                        <option value = "s3">model 3</option>
                     </select>
                 </div>
 
@@ -43,6 +43,10 @@
         </div>
 
         <div id = "outText" class = "output">
+            <div id = "loader" class="loader">
+                <div id="largeBox"></div>
+                <div id="smallBox"></div>
+            </div>
             <img id = "outputImg" src="https://cdn2.iconfinder.com/data/icons/screens-part-2/68/time_waiting_tv_screen_media_computer-512.png">
         </div>
 
