@@ -8,8 +8,8 @@ class Model(object):
     def __init__(self, model_path):
         self.reverse_mapping = dict()
         self.word_mapping = dict()
-        self.word_mapping = pickle.load(open(model_path, 'rb'))
-        self.word_cnt = len(self.word_mapping) +1
+        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
+        self.word_cnt = len(self.word_mapping) + 1
         for k, v in self.word_mapping.items():
             self.reverse_mapping[v] = k
 
