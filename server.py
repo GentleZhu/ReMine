@@ -158,7 +158,7 @@ def senddata():
         print(i)
 
 
-    return jsonify({'tuple': result_list})
+    return jsonify({'tuple': result_list , 'lemma' : answer.fdoc })
 
 
 
