@@ -131,7 +131,6 @@ def senddata():
 
     # begin remine-ie.sh
     answer = Solver(model1)
-    answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
     #print(answer.fdoc)
     #print(answer.fpos)
