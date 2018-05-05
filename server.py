@@ -65,7 +65,6 @@ def cof():
             ob = nltk.pos_tag(word_tokenize(tup[0]))
             for word in ob:
                 if word[1] == "PRP":
-                    coref = Coref()
                     clusters = coref.one_shot_coref(utterances=resource[int(key) - 1])
                     mentions = coref.get_mentions()
                     for index in clusters[0]:
@@ -169,7 +168,7 @@ if __name__=='__main__':
 
     #create the tmux server to preload the model
 
-
+    coref = Coref()
     model1 = Model('tmp_remine/token_mapping.p')
 
     NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
