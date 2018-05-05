@@ -9,7 +9,8 @@
 // "11	here on Thursday | | a snapshot"];
 var data;
 var intext;
-
+var remine_list;
+var remine_cor_list;
 // Process
 function submitCorpus() {
     intext = document.getElementById('inText').value;
@@ -33,101 +34,105 @@ function submitCorpus() {
     xhr.onload = function (e) {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
-              document.getElementById("loader").style.display = "none";
-              data = JSON.parse(xhr.responseText).tuple;
-              if (button_state == 0) {
-                  let list = document.createElement('ul');
-                  let index = "1";
-                  for(let i = 0; i < data.length; i++) {
-                      let temp = index;
-                      let tup_index = get_index(data[i]);
-                      if (tup_index !== index) {
-                          let button = document.createElement('a');
-                          button.innerHTML = 'click me';
-                          button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                          button.addEventListener('click', function(){
-                              call_vi(temp);
-                          });
-                          list.appendChild(button);
-                          index = tup_index;
-                      }
-                      let item = document.createElement('li');
-                      item.appendChild(document.createTextNode(data[i]));
-                      list.appendChild(item);
-                  }
-                  if (list.childNodes.length > 0) {
-                      let button = document.createElement('a');
-                      button.innerHTML = 'click me';
-                      button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                      button.addEventListener('click', function(){
-                          call_vi(index);
-                      });
-                      list.appendChild(button);
-                  }
-                  if (document.getElementById("outText").childNodes.length > 4) {
-                      document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
-                  } else {
-                      document.getElementById("outText").appendChild(list);
-                  }
-              }
-              xhr.abort();
+                data = JSON.parse(xhr.responseText).tuple;
+                if (button_state == 0) {
+                    document.getElementById("loader").style.display = "none";
+                    let list = document.createElement('ul');
+                    let index = "1";
+                    for(let i = 0; i < data.length; i++) {
+                        let temp = index;
+                        let tup_index = get_index(data[i]);
+                        if (tup_index !== index) {
+                            let button = document.createElement('a');
+                            button.innerHTML = 'click me';
+                            button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                            button.addEventListener('click', function(){
+                                call_vi(temp);
+                            });
+                            list.appendChild(button);
+                            index = tup_index;
+                        }
+                        let item = document.createElement('li');
+                        item.appendChild(document.createTextNode(data[i]));
+                        list.appendChild(item);
+                    }
+                    if (list.childNodes.length > 0) {
+                        let button = document.createElement('a');
+                        button.innerHTML = 'click me';
+                        button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                        button.addEventListener('click', function(){
+                            call_vi(index);
+                        });
+                        list.appendChild(button);
+                    }
+                    remine_list = list;
+                    if (document.getElementById("outText").childNodes.length > 4) {
+                        document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
+                    } else {
+                        document.getElementById("outText").appendChild(list);
+                    }
+                }
+                if (button_state === 1) {
+                    let pass_reslut = "";
+                    for (let i = 0; i < data.length; i++) {
+                        if (i === data.length - 1) {
+                            pass_reslut = pass_reslut + data[i];
+                        } else {
+                            pass_reslut = pass_reslut + data[i] + "\n";
+                        }
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/cof",
+                        data: { origin: intext, result: pass_reslut }
+                    }).done(function(e) {
+                        document.getElementById("loader").style.display = "none";
+                        data = e.tuple;
+                        let list = document.createElement('ul');
+                        let index = "1";
+                        for(let i = 0; i < data.length; i++) {
+                            let tup_index = get_index(data[i]);
+                            let temp = index;
+                            if (tup_index !== index) {
+                                let button = document.createElement('a');
+                                button.innerHTML = 'click me';
+                                button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                                button.addEventListener('click', function(){
+                                    call_vi(temp);
+                                });
+                                list.appendChild(button);
+                                index = tup_index;
+                            }
+                            let item = document.createElement('li');
+                            item.appendChild(document.createTextNode(data[i]));
+                            list.appendChild(item);
+                        }
+                        if (list.childNodes.length > 0) {
+                            let button = document.createElement('a');
+                            button.innerHTML = 'click me';
+                            button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                            button.addEventListener('click', function(){
+                                call_vi(index);
+                            });
+                            list.appendChild(button);
+                        }
+                        remine_cor_list = list;
+                        if (document.getElementById("outText").childNodes.length > 4) {
+                            document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
+                        } else {
+                            document.getElementById("outText").appendChild(list);
+                        }
+                    });
+                }
+                xhr.abort();
             } else {
-              console.error(xhr.statusText);
-              xhr.abort();
+                console.error(xhr.statusText);
+                xhr.abort();
             }
         }
     };
 
-    if (button_state === 1) {
-        let pass_reslut = "";
-        for (let i = 0; i < data.length; i++) {
-            if (i === data.length - 1) {
-                pass_reslut = pass_reslut + data[i];
-            } else {
-                pass_reslut = pass_reslut + data[i] + "\n";
-            }
-        }
-        $.ajax({
-            type: "POST",
-            url: "/cof",
-            data: { origin: intext, result: pass_reslut }
-        }).done(function(e) {
-            data = e.tuple;
-            let list = document.createElement('ul');
-            let index = "1";
-            for(let i = 0; i < data.length; i++) {
-                let tup_index = get_index(data[i]);
-                let temp = index;
-                if (tup_index !== index) {
-                    let button = document.createElement('a');
-                    button.innerHTML = 'click me';
-                    button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                    button.addEventListener('click', function(){
-                        call_vi(temp);
-                    });
-                    list.appendChild(button);
-                    index = tup_index;
-                }
-                let item = document.createElement('li');
-                item.appendChild(document.createTextNode(data[i]));
-                list.appendChild(item);
-            }
-            if (list.childNodes.length > 0) {
-                let button = document.createElement('a');
-                button.innerHTML = 'click me';
-                button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                button.addEventListener('click', function(){
-                    call_vi(index);
-                });
-                list.appendChild(button);
-            }
-            if (document.getElementById("outText").childNodes.length > 4) {
-                document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
-            } else {
-                document.getElementById("outText").appendChild(list);
-            }
-        });
-    }
+
 }
 
 function get_index(e) {
@@ -154,6 +159,24 @@ function reset() {
     }
 }
 
+function save_list(e) {
+    let list = document.getElementsByTagName("ul"), index;
+    for (index = list.length - 1; index >= 0; index--) {
+        list[index].parentNode.removeChild(list[index]);
+    }
+    if (document.getElementById("outText").childNodes.length > 4) {
+        document.getElementById("outText").replaceChild(e, document.getElementById("outText").childNodes[4]);
+    } else {
+        document.getElementById("outText").appendChild(e);
+    }
+    document.getElementById("input_").style.display = "block";
+    d3.select("svg").remove();
+    while (document.getElementById("input").childNodes.length > 3) {
+        let node = document.getElementById("input");
+        document.getElementById("input").removeChild(node.lastChild);
+    }
+}
+
 
 // Feature button
 var button_state = 0;
@@ -162,10 +185,12 @@ window.onload = function () {
     document.getElementById("b1").addEventListener("click", function() {
         button_state = 0;
         change_state();
+        save_list(remine_list);
     });
     document.getElementById("b2").addEventListener("click", function() {
         button_state = 1;
         change_state();
+        save_list(remine_cor_list);
     });
     document.getElementById("b3").addEventListener("click", function() {
         button_state = 2;

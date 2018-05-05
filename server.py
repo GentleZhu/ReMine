@@ -83,7 +83,8 @@ def cof():
         for tup in d[key]:
             rela = ""
             for word in tup[1]:
-                rela = rela + word[:-1] + ","
+                rela = rela + word[:-1] + " ,"
+            rela = rela + " "
             temp = str(key) + "\t" + tup[0] + "|" + rela + "|" + tup[2]
             res.append(temp)
     return jsonify({'tuple': res})
