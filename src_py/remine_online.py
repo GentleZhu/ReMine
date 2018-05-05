@@ -9,6 +9,7 @@ class Model(object):
         self.reverse_mapping = dict()
         self.word_mapping = dict()
         self.word_mapping = pickle.load(open(model_path, 'rb'))
+        print("load model")
         self.word_cnt = len(self.word_mapping) +1
         for k, v in self.word_mapping.items():
             self.reverse_mapping[v] = k
