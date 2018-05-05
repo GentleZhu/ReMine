@@ -165,7 +165,7 @@ if __name__=='__main__':
 
     #create the tmux server to preload the model
 
-    coref = Coref()
+    #coref = Coref()
     NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
 
     http_server = WSGIServer(('0.0.0.0', 1111), app)
