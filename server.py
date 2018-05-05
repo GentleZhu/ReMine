@@ -80,8 +80,9 @@ def cof():
                 d[key][i][0] = modi[key][1][1]
     res = []
     keylist = d.keys()
-    keylist = sorted(keylist)
+    keylist = sorted(int(keylist))
     for key in keylist:
+        key = str(key)
         for tup in d[key]:
             rela = ""
             for word in tup[1]:
