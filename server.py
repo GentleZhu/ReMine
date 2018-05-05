@@ -14,7 +14,7 @@ from flask_cors import CORS, cross_origin
 import StringIO
 import libtmux
 import json
-from src_py.remine_online import Solver
+from src_py.remine_online import Solver,Model
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -130,7 +130,7 @@ def senddata():
     print(pos_text)
 
     # begin remine-ie.sh
-    answer = Solver()
+    answer = Solver(model1)
     answer.load()
     answer.tokenized_test(token_text, pos_text, dep_text)
     #print(answer.fdoc)
@@ -165,7 +165,9 @@ if __name__=='__main__':
 
     #create the tmux server to preload the model
 
-    #coref = Coref()
+    coref = Coref()
+    model1 = Model('tmp_remine/token_mapping.p')
+
     NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
 
     http_server = WSGIServer(('0.0.0.0', 1111), app)
