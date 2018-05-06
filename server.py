@@ -15,7 +15,6 @@ import StringIO
 import libtmux
 import json
 from src_py.remine_online import Solver, Model
-from multiprocessing import Process
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -159,21 +158,18 @@ def senddata():
     return jsonify({'tuple': result_list , 'lemma' : token_text })
 
 
-def server_forever():
-    WSGIServer(('0.0.0.0', 1111), app).serve_forever()
 
 if __name__=='__main__':
     #app.run(debug = True, host = '0.0.0.0',port=1111)
     # app.run(debug = True, host = 'localhost', port=5000)
 
     #create the tmux server to preload the model
-    numeber_of_process = 3
+
     coref = Coref()
     model1 = Model('tmp_remine/token_mapping.p')
 
     NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
 
-    for i in range(numeber_of_process):
-        Process(target = server_forever, args = ()).start()
+    http_server = WSGIServer(('0.0.0.0', 1111), app)
 
-    server_forever()
+    http_server.serve_forever()
