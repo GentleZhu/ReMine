@@ -21,7 +21,7 @@ html, body {
     text-align: center;
     overflow: auto;
     font-family: 'Varela Round', sans-serif;
-    font-size: 5vmin;
+    font-size: 4vmin;
     border-bottom: 0.1px solid #D9D9D9;
 }
 
@@ -44,6 +44,7 @@ html, body {
     left: 0;
     width: 50vw;
     height: 90vh;
+    border-right: 0.1px solid #D9D9D9;
 }
 
 .intro {
@@ -94,7 +95,6 @@ html, body {
     height: 5vh;
     top: 2vh;
     left: 3vw;
-    width: 20vw;
     margin: 0;
     padding: 0;
     line-height: 5vh;
@@ -107,8 +107,7 @@ html, body {
     position: absolute;
     height: 5vh;
     top: 2vh;
-    left: 15vw;
-    width: 15vw;
+    left: 30vmin;
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
@@ -160,7 +159,16 @@ html, body {
     overflow: auto;
     font-family: 'Open Sans', sans-serif;
     font-size: 2.5vmin;
-    border-left: 0.1px solid #D9D9D9;
+}
+
+.outText {
+    position: absolute;
+    width: 50vw;
+    height: 90vh;
+    margin: 0;
+    overflow: auto;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
 }
 
 img {

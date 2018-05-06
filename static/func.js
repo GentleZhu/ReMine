@@ -8,12 +8,13 @@
 // "11	here on Thursday | of , | proxy war",
 // "11	here on Thursday | | a snapshot"];
 var data;
-var intext;
+var origin;
 var remine_list;
 var remine_cor_list;
 // Process
 function submitCorpus() {
-    intext = document.getElementById('inText').value;
+    clear_vi();
+    var intext = document.getElementById('inText').value;
     if (intext.length === 0) {
         alert("You need to type something here to submit 凸😤凸")
         return;
@@ -35,10 +36,11 @@ function submitCorpus() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 data = JSON.parse(xhr.responseText).tuple;
+                origin = JSON.parse(xhr.responseText).lemma;
                 if (button_state == 0) {
                     document.getElementById("loader").style.display = "none";
                     let list = document.createElement('ul');
-                    let index = "1";
+                    let index = get_index(data[0]);
                     for(let i = 0; i < data.length; i++) {
                         let temp = index;
                         let tup_index = get_index(data[i]);
@@ -84,12 +86,12 @@ function submitCorpus() {
                     $.ajax({
                         type: "POST",
                         url: "/cof",
-                        data: { origin: intext, result: pass_reslut }
+                        data: { origin: origin, result: pass_reslut }
                     }).done(function(e) {
                         document.getElementById("loader").style.display = "none";
                         data = e.tuple;
                         let list = document.createElement('ul');
-                        let index = "1";
+                        let index = get_index(data[0]);
                         for(let i = 0; i < data.length; i++) {
                             let tup_index = get_index(data[i]);
                             let temp = index;
@@ -146,34 +148,42 @@ function get_index(e) {
 }
 
 function reset() {
+    button_state = 0;
+    change_state();
+    remine_list = null;
+    remine_cor_list = null;
     let list = document.getElementsByTagName("ul"), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
     }
     document.getElementById("outputImg").style.display = "block";
-    document.getElementById("input_").style.display = "block";
-    d3.select("svg").remove();
-    while (document.getElementById("input").childNodes.length > 3) {
-        let node = document.getElementById("input");
-        document.getElementById("input").removeChild(node.lastChild);
-    }
+    clear_vi();
 }
 
 function save_list(e) {
+    document.getElementById("outputImg").style.display = "block";
     let list = document.getElementsByTagName("ul"), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
     }
-    if (document.getElementById("outText").childNodes.length > 4) {
-        document.getElementById("outText").replaceChild(e, document.getElementById("outText").childNodes[4]);
-    } else {
-        document.getElementById("outText").appendChild(e);
+    if (e) {
+        document.getElementById("outputImg").style.display = "none";
+        if (document.getElementById("outText").childNodes.length > 4) {
+            document.getElementById("outText").replaceChild(e, document.getElementById("outText").childNodes[4]);
+        } else {
+            document.getElementById("outText").appendChild(e);
+        }
     }
-    document.getElementById("input_").style.display = "block";
+    clear_vi();
+}
+
+function clear_vi() {
+    document.getElementById("outText").style.height = "90vh";
     d3.select("svg").remove();
-    while (document.getElementById("input").childNodes.length > 3) {
-        let node = document.getElementById("input");
-        document.getElementById("input").removeChild(node.lastChild);
+    console.log(document.getElementById("output").childNodes);
+    while (document.getElementById("output").childNodes.length > 3) {
+        let node = document.getElementById("output");
+        document.getElementById("output").removeChild(node.lastChild);
     }
 }
 
@@ -216,18 +226,13 @@ function change_state() {
 
 // data vi
 function call_vi(index) {
-    document.getElementById("input_").style.display = "none";
+    document.getElementById("outText").style.height = "30vh";
     let clear = document.createElement('a');
-    clear.innerHTML = 'Go Back';
-    clear.style.cssText = "position: absolute; top: 2vmin; left: 5vmin; font-family: 'Open Sans', sans-serif; font-size: 3vmin; color: #0084FF;";
-    document.getElementById("input").appendChild(clear);
+    clear.innerHTML = 'Clear';
+    clear.style.cssText = "position: absolute; z-index: 100; top: 32vh; left: 5vmin; font-family: 'Open Sans', sans-serif; font-size: 3vmin; color: #0084FF;";
+    document.getElementById("output").appendChild(clear);
     clear.addEventListener('click', function(){
-        document.getElementById("input_").style.display = "block";
-        d3.select("svg").remove();
-        while (document.getElementById("input").childNodes.length > 3) {
-            let node = document.getElementById("input");
-            document.getElementById("input").removeChild(node.lastChild);
-        }
+        clear_vi();
     });
     let pass_reslut = "";
     for (let i = 0; i < data.length; i++) {
@@ -283,13 +288,14 @@ function call_vi(index) {
 
 function vi(dataset) {
     var w = window.innerWidth * 0.5;
-    var h = window.innerHeight * 0.9;
-    var linkDistance=300;
+    var h = window.innerHeight * 0.6;
+    var rate = window.innerWidth;
+    var linkDistance= rate * 0.14;
 
     var colors = d3.scale.category10();
 
     d3.select("svg").remove();
-    var svg = d3.select('[id="input"]').append("svg").attr({"width":w,"height":h});
+    var svg = d3.select('[id="output"]').append("svg").attr({"width":w,"height":h, "style": "position:absolute; border-top:0.1px solid #D9D9D9; top:30vh"});
 
     var force = d3.layout.force()
         .nodes(dataset.nodes)
@@ -316,7 +322,7 @@ function vi(dataset) {
       .data(dataset.nodes)
       .enter()
       .append("circle")
-      .attr({"r":20})
+      .attr({"r":rate * 0.01})
       .style("fill",function(d,i){return colors(i);})
       .call(force.drag)
 
@@ -329,7 +335,7 @@ function vi(dataset) {
               "y":function(d){return d.y;},
               "class":"nodelabel",
               "stroke":"black",
-              'font-size':25})
+              'font-size':rate * 0.015})
        .text(function(d){return d.name;});
 
     var edgepaths = svg.selectAll(".edgepath")
@@ -352,9 +358,10 @@ function vi(dataset) {
         .style("pointer-events", "none")
         .attr({'class':'edgelabel',
                'id':function(d,i){return 'edgelabel'+i},
-               'dx':120,
+               'dx':function(d,i){return (linkDistance - rate * 0.005 * dataset.label[i].length) / 2},
                'dy':0,
-               'font-size':18,
+               "stroke": "grey",
+               'font-size':rate * 0.01,
                'fill':'#aaa'});
 
     edgelabels.append('textPath')

@@ -19,13 +19,20 @@ app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
-@app.route('/')
+@app.route('/preload')
 @cross_origin(origin='*')
-def render():
+def preload():
     global coref
     coref = Coref()
     global model1
     model1 = Model('tmp_remine/token_mapping.p')
+
+
+
+@app.route('/')
+@cross_origin(origin='*')
+def render():
+
     return render_template('example.html')
 
 #todo generate an api to set model.
@@ -49,8 +56,7 @@ def vi():
 @app.route('/cof', methods =['POST'])
 @cross_origin(origin='*')
 def cof():
-    resource = request.form['origin']
-    resource = resource.replace('\n', '. ').split('. ')
+    resource = request.form['origin'].split('\n')
     data = request.form['result'].split('\n')
     # read the result to dictionary
     d = {}
@@ -171,7 +177,7 @@ if __name__=='__main__':
     #create the tmux server to preload the model
 
 
-    app.run()
+    app.run(debug = True)
     # http_server = WSGIServer(('0.0.0.0', 1111), app)
     #
     # http_server.serve_forever()
