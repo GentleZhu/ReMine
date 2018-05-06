@@ -161,7 +161,12 @@ def senddata():
 
     return jsonify({'tuple': result_list , 'lemma' : token_text })
 
-
+def preload():
+    global coref
+    coref = Coref()
+    global model1
+    model1 = Model('tmp_remine/token_mapping.p')
+    app.run(debug=True)
 
 if __name__=='__main__':
     #app.run(debug = True, host = '0.0.0.0',port=1111)
@@ -169,11 +174,6 @@ if __name__=='__main__':
 
     #create the tmux server to preload the model
 
-    global coref
-    coref = Coref()
-    global model1
-    model1 = Model('tmp_remine/token_mapping.p')
-    app.run(debug = True)
     # http_server = WSGIServer(('0.0.0.0', 1111), app)
     #
     # http_server.serve_forever()
