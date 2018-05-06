@@ -23,6 +23,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 @app.route('/preload')
 @cross_origin(origin='*')
+def preload():
     global coref
     coref = Coref()
     global model1
