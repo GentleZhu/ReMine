@@ -166,7 +166,6 @@ class Solver(object):
                 emsIO.write(ems.strip()+'\n')
             #print("#entity not found:",e_not_found)
         self.fems = emsIO.getvalue()
-        return 1
     def tokenized_test(self, docIn, posIn, depIn):
         docin = docIn.split('\n')
         posin = posIn.split('\n')

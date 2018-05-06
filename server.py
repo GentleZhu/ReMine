@@ -15,6 +15,7 @@ import StringIO
 import libtmux
 import json
 from src_py.remine_online import Solver, Model
+from multiprocessing import Process
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -135,44 +136,44 @@ def senddata():
     # begin remine-ie.sh
     answer = Solver(model1)
     answer.tokenized_test(token_text, pos_text, dep_text)
-    print("token_int",answer.fdoc)
-
+    #print("token_int", answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
     remine_segmentation = response.text
-    print("remine_0 output",remine_segmentation)
+    #print("remine_0 output", remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
-    print("map_out",remine_seg_out)
-    check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
-    print("fems::", answer.fems)
-    assert check == 1
-    #print('ems:\n', answer.fems)
+    #print("map_out",remine_seg_out)
+    answer.extract_transformat(remine_seg_out, token_text, pos_text)
+    #print("fems::", answer.fems)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
-    print("remine_1 output",remine_segmentation)
-
+    #print("remine_1 output",remine_segmentation)
     result = answer.translate(remine_segmentation)
     result_list = result.split('\n')[:-2]
-    for i in result_list:
-        print(i)
+
+    # for i in result_list:
+    #     print(i)
 
 
     return jsonify({'tuple': result_list , 'lemma' : token_text })
 
 
+def server_forever():
+    WSGIServer(('0.0.0.0', 1111), app).serve_forever()
 
 if __name__=='__main__':
     #app.run(debug = True, host = '0.0.0.0',port=1111)
     # app.run(debug = True, host = 'localhost', port=5000)
 
     #create the tmux server to preload the model
-
+    numeber_of_process = 3
     coref = Coref()
     model1 = Model('tmp_remine/token_mapping.p')
 
     NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
 
-    http_server = WSGIServer(('0.0.0.0', 1111), app)
+    for i in range(numeber_of_process):
+        Process(target = server_forever, args = ()).start()
 
-    http_server.serve_forever()
+    server_forever()
