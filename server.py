@@ -143,9 +143,9 @@ def senddata():
     remine_segmentation = response.text
     print("remine_0 output",remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
-    #print("map_out",remine_seg_out)
+    print("map_out",remine_seg_out)
     check = answer.extract_transformat(remine_seg_out, token_text, pos_text)
-    #print("fems::", answer.fems)
+    print("fems::", answer.fems)
     assert check == 1
     #print('ems:\n', answer.fems)
     response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
