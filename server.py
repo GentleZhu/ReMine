@@ -22,6 +22,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 @cross_origin(origin='*')
 def render():
+    global coref
+    coref = Coref()
+    global model1
+    model1 = Model('tmp_remine/token_mapping.p')
     return render_template('example.html')
 
 #todo generate an api to set model.
@@ -93,6 +97,8 @@ def cof():
 @app.route('/remine', methods =['POST'])
 @cross_origin(origin='*')
 def senddata():
+    NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',
+                               default_annotators=['depparse', 'lemma', 'pos'])
     #get input from front end
     data = request.data
     json_data = json.loads(data)
@@ -163,11 +169,8 @@ if __name__=='__main__':
     # app.run(debug = True, host = 'localhost', port=5000)
 
     #create the tmux server to preload the model
-    global coref
-    coref = Coref()
-    model1 = Model('tmp_remine/token_mapping.p')
-    global NLP_client
-    NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
+
+
     app.run()
     # http_server = WSGIServer(('0.0.0.0', 1111), app)
     #
