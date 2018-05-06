@@ -1,7 +1,6 @@
 from flask import Flask, request, render_template, jsonify, Response,json
 import requests
 from stanza.nlp.corenlp import CoreNLPClient
-#from corenlp_pywrap import pywrap
 import nltk
 from nltk import word_tokenize
 from neuralcoref import Coref
@@ -164,11 +163,11 @@ if __name__=='__main__':
     # app.run(debug = True, host = 'localhost', port=5000)
 
     #create the tmux server to preload the model
-
-    global coref = Coref()
+    global coref
+    coref = Coref()
     model1 = Model('tmp_remine/token_mapping.p')
-
-    global NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
+    global NLP_client
+    NLP_client = CoreNLPClient(server='http://dmserv4.cs.illinois.edu:9000',default_annotators=['depparse', 'lemma', 'pos'])
     app.run()
     # http_server = WSGIServer(('0.0.0.0', 1111), app)
     #
