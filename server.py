@@ -18,21 +18,19 @@ from src_py.remine_online import Solver, Model
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-
-@app.route('/preload')
-@cross_origin(origin='*')
-def preload():
-    global coref
-    coref = Coref()
-    global model1
-    model1 = Model('tmp_remine/token_mapping.p')
+preload_flag = 0
 
 
 
 @app.route('/')
 @cross_origin(origin='*')
 def render():
-
+    if preload_flag == 0:
+        global coref
+        coref = Coref()
+        global model1
+        model1 = Model('tmp_remine/token_mapping.p')
+        preload_flag = 1
     return render_template('example.html')
 
 #todo generate an api to set model.
