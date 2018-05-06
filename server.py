@@ -18,14 +18,15 @@ from src_py.remine_online import Solver, Model
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
-global preload_flag
-preload_flag = 0
+
 
 
 
 @app.route('/')
 @cross_origin(origin='*')
 def render():
+    global preload_flag
+    preload_flag = 0
     if preload_flag == 0:
         global coref
         coref = Coref()
