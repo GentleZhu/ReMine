@@ -22,17 +22,10 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 
 
 
+
 @app.route('/')
 @cross_origin(origin='*')
 def render():
-    global preload_flag
-    preload_flag = 0
-    if preload_flag == 0:
-        global coref
-        coref = Coref()
-        global model1
-        model1 = Model('tmp_remine/token_mapping.p')
-        preload_flag = 1
     return render_template('example.html')
 
 #todo generate an api to set model.
@@ -176,7 +169,10 @@ if __name__=='__main__':
 
     #create the tmux server to preload the model
 
-
+    global coref
+    coref = Coref()
+    global model1
+    model1 = Model('tmp_remine/token_mapping.p')
     app.run(debug = True)
     # http_server = WSGIServer(('0.0.0.0', 1111), app)
     #
