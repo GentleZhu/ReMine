@@ -1,1 +1,1 @@
-while [ 1 ]; do ./server && break; done
+while [ 1 ]; do ./bin/server && break; done
