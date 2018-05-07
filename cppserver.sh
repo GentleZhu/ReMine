@@ -1,1 +1,1 @@
-while [ 1 ]; do ./remine_server && break; done
+while [ 1 ]; do ./server && break; done
