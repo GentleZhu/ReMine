@@ -17,6 +17,12 @@ from src_py.remine_online import Solver, Model
 
 
 app = Flask(__name__)
+global coref
+coref = Coref()
+global model1
+model1 = Model('tmp_remine/token_mapping.p')
+print('load finish ')
+
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
@@ -24,11 +30,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/preload')
 @cross_origin(origin='*')
 def preload():
-    global coref
-    coref = Coref()
-    global model1
-    model1 = Model('tmp_remine/token_mapping.p')
-    return "load finish"
+
 
 
 @app.route('/')
