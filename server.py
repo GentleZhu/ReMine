@@ -162,19 +162,19 @@ def senddata():
     #print(pos_text)
 
     # begin remine-ie.sh
-    answer = Solver(model_dict[model_choice[0]])
+    answer = Solver(model_dict[model_choice][0])
     answer.tokenized_test(token_text, pos_text, dep_text)
     #print("token_int", answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)
-    response = requests.get(model_dict[model_choice[1]], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    response = requests.get(model_dict[model_choice][1], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
     remine_segmentation = response.text
     #print("remine_0 output", remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
     #print("map_out",remine_seg_out)
     answer.extract_transformat(remine_seg_out, token_text, pos_text)
     #print("fems::", answer.fems)
-    response = requests.get(model_dict[model_choice[1]], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
+    response = requests.get(model_dict[model_choice][1], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
     #print("remine_1 output",remine_segmentation)
     result = answer.translate(remine_segmentation)
