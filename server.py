@@ -27,11 +27,11 @@ cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
 
 
-@app.route('/preload')
-@cross_origin(origin='*')
-def preload():
-
-
+# @app.route('/preload')
+# @cross_origin(origin='*')
+# def preload():
+#
+#
 
 @app.route('/')
 @cross_origin(origin='*')
