@@ -21,7 +21,20 @@ app = Flask(__name__)
 global coref
 coref = Coref()
 global model1
+global model2
+global model3
 model1 = Model('tmp_remine/token_mapping.p')
+model2 = Model('tmp_remine/token_mapping_wiki.p')
+model3 = Model('tmp_remine/token_mapping_bio.p')
+global model_dict
+model_dict = {}
+
+model_dict["s1"] = (model1, 'http://dmserv4.cs.illinois.edu:10086/pass_result')
+model_dict["s2"] = (model2, 'http://dmserv4.cs.illinois.edu:10087/pass_result')
+model_dict["s3"] = (model3, 'http://dmserv4.cs.illinois.edu:10088/pass_result')
+
+
+
 print('load finish ')
 
 cors = CORS(app)
@@ -113,6 +126,7 @@ def senddata():
     data = request.data
     json_data = json.loads(data)
     raw = json_data["text"]
+    model_choice = json_data["model"]
     dep_text = StringIO.StringIO()
     token_text = StringIO.StringIO()
     pos_text = StringIO.StringIO()
@@ -148,19 +162,19 @@ def senddata():
     #print(pos_text)
 
     # begin remine-ie.sh
-    answer = Solver(model1)
+    answer = Solver(model_dict[model_choice[0]])
     answer.tokenized_test(token_text, pos_text, dep_text)
     #print("token_int", answer.fdoc)
     #print(answer.fpos)
     #print(answer.fdep)
-    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
+    response = requests.get(model_dict[model_choice[1]], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 0})
     remine_segmentation = response.text
     #print("remine_0 output", remine_segmentation)
     remine_seg_out = answer.mapBackv2(remine_segmentation)
     #print("map_out",remine_seg_out)
     answer.extract_transformat(remine_seg_out, token_text, pos_text)
     #print("fems::", answer.fems)
-    response = requests.get('http://dmserv4.cs.illinois.edu:10086/pass_result', json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
+    response = requests.get(model_dict[model_choice[1]], json ={"pos": answer.fpos, "tokens": answer.fdoc, "dep": answer.fdep, "ent": answer.fems, "mode": 1})
     remine_segmentation = response.text
     #print("remine_1 output",remine_segmentation)
     result = answer.translate(remine_segmentation)
