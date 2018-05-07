@@ -25,13 +25,13 @@ global model2
 global model3
 model1 = Model('tmp_remine/token_mapping.p')
 model2 = Model('tmp_remine/token_mapping_wiki.p')
-model3 = Model('tmp_remine/token_mapping_bio.p')
+# model3 = Model('tmp_remine/token_mapping_bio.p')
 global model_dict
 model_dict = {}
 
 model_dict["s1"] = (model1, 'http://dmserv4.cs.illinois.edu:10086/pass_result')
 model_dict["s2"] = (model2, 'http://dmserv4.cs.illinois.edu:10087/pass_result')
-model_dict["s3"] = (model3, 'http://dmserv4.cs.illinois.edu:10088/pass_result')
+# model_dict["s3"] = (model3, 'http://dmserv4.cs.illinois.edu:10088/pass_result')
 
 
 
