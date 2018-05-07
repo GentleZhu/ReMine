@@ -17,6 +17,7 @@ from src_py.remine_online import Solver, Model
 
 
 app = Flask(__name__)
+#preload model for multithread
 global coref
 coref = Coref()
 global model1
