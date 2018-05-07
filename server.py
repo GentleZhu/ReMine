@@ -25,7 +25,7 @@ global model2
 global model3
 model1 = Model('tmp_remine/token_mapping.p')
 model2 = Model('tmp_remine/token_mapping_wiki.p')
-# model3 = Model('tmp_remine/token_mapping_bio.p')
+model3 = Model('tmp_remine/token_mapping_bio.p')
 global model_dict
 model_dict = {}
 
