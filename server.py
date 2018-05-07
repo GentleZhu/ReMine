@@ -74,8 +74,10 @@ def vi():
 @cross_origin(origin='*')
 def cof():
     resource = request.form['origin'].split('\n')
-    data = request.form['result'].split('\n')
-    # read the result to dictionary
+    data = request.form['result']
+    if data == "":
+        return jsonify({'tuple': []})
+    data = data.split('\n')
     d = {}
     for i in range(len(data)):
         temp = data[i].replace('\t', '|')
@@ -91,10 +93,15 @@ def cof():
             ob = nltk.pos_tag(word_tokenize(tup[0]))
             for word in ob:
                 if word[1] == "PRP":
-                    clusters = coref.one_shot_coref(utterances=resource[int(key) - 1])
+                    txt = ""
+                    if int(key) > 1:
+                        txt = resource[int(key) - 2][:-2] + ". " + resource[int(key) - 1][:-2] + ". "
+                    else:
+                        txt = resource[int(key) - 1]
+                    clusters = coref.one_shot_coref(utterances=txt)
                     mentions = coref.get_mentions()
                     for index in clusters[0]:
-                        if len(clusters[0][index]) == 2:
+                        if len(clusters[0][index]) >= 2:
                             syn = [str(mentions[i]) for i in clusters[0][index]]
                             if word[0] in syn:
                                 modi[key] = [word[0], syn]
@@ -102,7 +109,7 @@ def cof():
     for key in modi:
         for i in range(len(d[key])):
             if modi[key][0] in d[key][i][0]:
-                d[key][i][0] = modi[key][1][1]
+                d[key][i][0] = modi[key][1][len(modi[key][1]) - 1]
     res = []
     keylist = d.keys()
     keylist = sorted(list(map(int, keylist)))

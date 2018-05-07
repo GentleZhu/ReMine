@@ -7,12 +7,16 @@
 // "11	Europe -- | and , | Iran and Syria",
 // "11	here on Thursday | of , | proxy war",
 // "11	here on Thursday | | a snapshot"];
-var data;
+var data_re;
+var data_cor;
 var origin;
 var remine_list;
 var remine_cor_list;
 // Process
 function submitCorpus() {
+    let timer = setTimeout(function(){
+        alert("Your document maybe too long. Please refresh and try again! 🙂🙂🙂🙂🙂🙂🙂");
+    },150000);
     clear_vi();
     var intext = document.getElementById('inText').value;
     if (intext.length === 0) {
@@ -24,8 +28,9 @@ function submitCorpus() {
     let xhr = new XMLHttpRequest();
     xhr.open("POST", "http://dmserv4.cs.illinois.edu:1111/remine", true);
     xhr.setRequestHeader('Content-Type', 'application/json')
-    let sendText = JSON.parse('{ "text":"" }');
+    let sendText = JSON.parse('{ "text":"", "model":"" }');
     sendText.text = intext;
+    sendText.model = selection;
     let list = document.getElementsByTagName("ul"), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
@@ -38,12 +43,14 @@ function submitCorpus() {
                 data = JSON.parse(xhr.responseText).tuple;
                 origin = JSON.parse(xhr.responseText).lemma;
                 if (button_state == 0) {
+                    clearTimeout(timer);
+                    data_re = data;
                     document.getElementById("loader").style.display = "none";
                     let list = document.createElement('ul');
-                    let index = get_index(data[0]);
-                    for(let i = 0; i < data.length; i++) {
+                    let index = get_index(data_re[0]);
+                    for(let i = 0; i < data_re.length; i++) {
                         let temp = index;
-                        let tup_index = get_index(data[i]);
+                        let tup_index = get_index(data_re[i]);
                         if (tup_index !== index) {
                             let button = document.createElement('a');
                             button.innerHTML = 'click me';
@@ -55,7 +62,7 @@ function submitCorpus() {
                             index = tup_index;
                         }
                         let item = document.createElement('li');
-                        item.appendChild(document.createTextNode(data[i]));
+                        item.appendChild(document.createTextNode(data_re[i]));
                         list.appendChild(item);
                     }
                     if (list.childNodes.length > 0) {
@@ -88,12 +95,13 @@ function submitCorpus() {
                         url: "/cof",
                         data: { origin: origin, result: pass_reslut }
                     }).done(function(e) {
+                        clearTimeout(timer);
                         document.getElementById("loader").style.display = "none";
-                        data = e.tuple;
+                        data_cor = e.tuple;
                         let list = document.createElement('ul');
-                        let index = get_index(data[0]);
-                        for(let i = 0; i < data.length; i++) {
-                            let tup_index = get_index(data[i]);
+                        let index = get_index(data_cor[0]);
+                        for(let i = 0; i < data_cor.length; i++) {
+                            let tup_index = get_index(data_cor[i]);
                             let temp = index;
                             if (tup_index !== index) {
                                 let button = document.createElement('a');
@@ -106,7 +114,7 @@ function submitCorpus() {
                                 index = tup_index;
                             }
                             let item = document.createElement('li');
-                            item.appendChild(document.createTextNode(data[i]));
+                            item.appendChild(document.createTextNode(data_cor[i]));
                             list.appendChild(item);
                         }
                         if (list.childNodes.length > 0) {
@@ -158,6 +166,7 @@ function reset() {
     }
     document.getElementById("outputImg").style.display = "block";
     clear_vi();
+    document.getElementById('inText').value = "";
 }
 
 function save_list(e) {
@@ -235,10 +244,14 @@ function call_vi(index) {
         clear_vi();
     });
     let pass_reslut = "";
-    for (let i = 0; i < data.length; i++) {
-        let tup_index = get_index(data[i]);
+    let data_vi = data_re;
+    if (button_state == 1) {
+        data_vi = data_cor;
+    }
+    for (let i = 0; i < data_vi.length; i++) {
+        let tup_index = get_index(data_vi[i]);
         if (tup_index === index) {
-            pass_reslut = pass_reslut + data[i] + "\n";
+            pass_reslut = pass_reslut + data_vi[i] + "\n";
         }
     }
     $.ajax({
