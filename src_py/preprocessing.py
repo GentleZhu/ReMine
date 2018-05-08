@@ -214,9 +214,6 @@ class PreProcessor(object):
 
     def load(self):
         self.word_mapping = _pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-        word_mapping = {}
-        word_mapping = _pickle.load(open('token_mapping_bio.p', 'rb'))
-        _pickle.dump(word_mapping, open('token_mapping_bio.p', 'wb'), protocol = 2)
 
 
     def load_all(self):

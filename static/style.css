@@ -16,7 +16,7 @@ html, body {
 .buttons {
     position: relative;
     height: 10vh;
-    width: 30vw;
+    width: 28vw;
     line-height: 10vh;
     text-align: center;
     overflow: auto;
@@ -28,7 +28,7 @@ html, body {
 .remine {
     position: relative;
     height: 10vh;
-    width: 10vw;
+    width: 16vw;
     line-height: 10vh;
     text-align: center;
     overflow: auto;
@@ -226,4 +226,27 @@ a:hover {
   100% {
     transform: rotate(90deg);
   }
+}
+
+table {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    width: 12.5vw;
+    padding: 8px;
+}
+
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    width: 12.5vw;
+    padding: 8px;
+    color: white;
+    background-color: #6db8ff;
 }

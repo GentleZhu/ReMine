@@ -12,9 +12,11 @@ var data_cor;
 var origin;
 var remine_list;
 var remine_cor_list;
+var timer;
 // Process
 function submitCorpus() {
-    let timer = setTimeout(function(){
+    clearTimeout(timer);
+    timer = setTimeout(function(){
         alert("Your document maybe too long. Please refresh and try again! 🙂🙂🙂🙂🙂🙂🙂");
     },150000);
     clear_vi();
@@ -31,7 +33,7 @@ function submitCorpus() {
     let sendText = JSON.parse('{ "text":"", "model":"" }');
     sendText.text = intext;
     sendText.model = selection;
-    let list = document.getElementsByTagName("ul"), index;
+    let list = document.getElementsByTagName('b'), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
     }
@@ -41,97 +43,135 @@ function submitCorpus() {
         if (xhr.readyState === 4) {
             if (xhr.status === 200) {
                 data = JSON.parse(xhr.responseText).tuple;
+                if (data.length === 0) {
+                    alert("No result. Please try another corpus! 🙂🙂🙂🙂🙂🙂🙂")
+                }
                 origin = JSON.parse(xhr.responseText).lemma;
                 if (button_state == 0) {
                     clearTimeout(timer);
                     data_re = data;
                     document.getElementById("loader").style.display = "none";
-                    let list = document.createElement('ul');
-                    let index = get_index(data_re[0]);
-                    for(let i = 0; i < data_re.length; i++) {
-                        let temp = index;
-                        let tup_index = get_index(data_re[i]);
-                        if (tup_index !== index) {
-                            let button = document.createElement('a');
-                            button.innerHTML = 'click me';
-                            button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                            button.addEventListener('click', function(){
-                                call_vi(temp);
-                            });
-                            list.appendChild(button);
-                            index = tup_index;
-                        }
-                        let item = document.createElement('li');
-                        item.appendChild(document.createTextNode(data_re[i]));
-                        list.appendChild(item);
-                    }
-                    if (list.childNodes.length > 0) {
-                        let button = document.createElement('a');
-                        button.innerHTML = 'click me';
-                        button.style.cssText = "margin-left: 40vw; color: #0084FF";
-                        button.addEventListener('click', function(){
-                            call_vi(index);
-                        });
-                        list.appendChild(button);
-                    }
-                    remine_list = list;
-                    if (document.getElementById("outText").childNodes.length > 4) {
-                        document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
-                    } else {
-                        document.getElementById("outText").appendChild(list);
-                    }
-                }
-                if (button_state === 1) {
                     let pass_reslut = "";
-                    for (let i = 0; i < data.length; i++) {
-                        if (i === data.length - 1) {
-                            pass_reslut = pass_reslut + data[i];
-                        } else {
-                            pass_reslut = pass_reslut + data[i] + "\n";
-                        }
+                    let re;
+                    for (let i = 0; i < data_re.length; i++) {
+                        pass_reslut = pass_reslut + data_re[i] + "\n";
                     }
                     $.ajax({
                         type: "POST",
-                        url: "/cof",
-                        data: { origin: origin, result: pass_reslut }
+                        url: "/vi",
+                        data: { result: pass_reslut }
                     }).done(function(e) {
-                        clearTimeout(timer);
-                        document.getElementById("loader").style.display = "none";
-                        data_cor = e.tuple;
-                        let list = document.createElement('ul');
-                        let index = get_index(data_cor[0]);
-                        for(let i = 0; i < data_cor.length; i++) {
-                            let tup_index = get_index(data_cor[i]);
+                        console.log(e);
+                        let list = document.createElement('b');
+                        let index = get_index(data_re[0]);
+                        let data_t = [];
+                        for(let i = 0; i < data_re.length; i++) {
                             let temp = index;
+                            let tup_index = get_index(data_re[i]);
                             if (tup_index !== index) {
+                                let item = document.createElement('div');
+                                item.appendChild(format_table(data_t));
+                                list.appendChild(item);
                                 let button = document.createElement('a');
-                                button.innerHTML = 'click me';
-                                button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                                button.innerHTML = 'Get data visualization';
+                                button.style.cssText = "margin-left: 35vw; color: #0084FF; height: 5vh; line-height: 5vh;";
                                 button.addEventListener('click', function(){
                                     call_vi(temp);
                                 });
                                 list.appendChild(button);
                                 index = tup_index;
+                                data_t = [];
                             }
-                            let item = document.createElement('li');
-                            item.appendChild(document.createTextNode(data_cor[i]));
-                            list.appendChild(item);
+                            data_t.push(e.tuple[i]);
                         }
-                        if (list.childNodes.length > 0) {
+                        if (data_re.length > 0) {
+                            let item = document.createElement('div');
+                            item.appendChild(format_table(data_t));
+                            list.appendChild(item);
                             let button = document.createElement('a');
-                            button.innerHTML = 'click me';
-                            button.style.cssText = "margin-left: 40vw; color: #0084FF";
+                            button.innerHTML = 'Get data visualization';
+                            button.style.cssText = "margin-left: 35vw; color: #0084FF; height: 5vh; line-height: 5vh;";
                             button.addEventListener('click', function(){
                                 call_vi(index);
                             });
                             list.appendChild(button);
                         }
-                        remine_cor_list = list;
+                        remine_list = list;
                         if (document.getElementById("outText").childNodes.length > 4) {
                             document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
                         } else {
                             document.getElementById("outText").appendChild(list);
                         }
+                    });
+                }
+                if (button_state === 1) {
+                    let pass_reslut_ = "";
+                    for (let i = 0; i < data.length; i++) {
+                        if (i === data.length - 1) {
+                            pass_reslut_ = pass_reslut_ + data[i];
+                        } else {
+                            pass_reslut_ = pass_reslut_ + data[i] + "\n";
+                        }
+                    }
+                    $.ajax({
+                        type: "POST",
+                        url: "/cof",
+                        data: { origin: origin, result: pass_reslut_ }
+                    }).done(function(e) {
+                        clearTimeout(timer);
+                        document.getElementById("loader").style.display = "none";
+                        data_cor = e.tuple;
+                        let pass_reslut = "";
+                        let re;
+                        for (let i = 0; i < data_cor.length; i++) {
+                            pass_reslut = pass_reslut + data_cor[i] + "\n";
+                        }
+                        $.ajax({
+                            type: "POST",
+                            url: "/vi",
+                            data: { result: pass_reslut }
+                        }).done(function(e) {
+                            let list = document.createElement('b');
+                            let index = get_index(data_cor[0]);
+                            let data_t = [];
+                            for(let i = 0; i < data_cor.length; i++) {
+                                let temp = index;
+                                let tup_index = get_index(data_cor[i]);
+                                if (tup_index !== index) {
+                                    let item = document.createElement('div');
+                                    item.appendChild(format_table(data_t));
+                                    list.appendChild(item);
+                                    let button = document.createElement('a');
+                                    button.innerHTML = 'Get data visualization';
+                                    button.style.cssText = "margin-left: 35vw; color: #0084FF; height: 5vh; line-height: 5vh;";
+                                    button.addEventListener('click', function(){
+                                        call_vi(temp);
+                                    });
+                                    list.appendChild(button);
+                                    index = tup_index;
+                                    data_t = [];
+                                }
+                                data_t.push(e.tuple[i]);
+                            }
+                            if (data_cor.length > 0) {
+                                let item = document.createElement('div');
+                                item.appendChild(format_table(data_t));
+                                list.appendChild(item);
+                                let button = document.createElement('a');
+                                button.innerHTML = 'Get data visualization';
+                                button.style.cssText = "margin-left: 35vw; color: #0084FF; height: 5vh; line-height: 5vh;";
+                                button.addEventListener('click', function(){
+                                    call_vi(index);
+                                });
+                                list.appendChild(button);
+                            }
+                            remine_cor_list = list;
+                            if (document.getElementById("outText").childNodes.length > 4) {
+                                document.getElementById("outText").replaceChild(list, document.getElementById("outText").childNodes[4]);
+                            } else {
+                                document.getElementById("outText").appendChild(list);
+                            }
+                        });
                     });
                 }
                 xhr.abort();
@@ -143,6 +183,28 @@ function submitCorpus() {
     };
 
 
+}
+
+function format_table(data_t) {
+    let table = document.createElement('table');
+    let head = document.createElement('tr');
+    let head_name = ["Sentence", "Object", "Relation", "Subject"];
+    for (let i = 0; i < 4; i++) {
+        let head_ = document.createElement('th');
+        head_.appendChild(document.createTextNode(head_name[i]));
+        head.appendChild(head_);
+    }
+    table.appendChild(head);
+    for (let i = 0; i < data_t.length; i++) {
+        let tuple = document.createElement('tr');
+        for (let j = 0; j < 4; j++) {
+            let tuple_ = document.createElement('td');
+            tuple_.appendChild(document.createTextNode(data_t[i][j]));
+            tuple.appendChild(tuple_);
+        }
+        table.appendChild(tuple);
+    }
+    return table;
 }
 
 function get_index(e) {
@@ -160,7 +222,7 @@ function reset() {
     change_state();
     remine_list = null;
     remine_cor_list = null;
-    let list = document.getElementsByTagName("ul"), index;
+    let list = document.getElementsByTagName('b'), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
     }
@@ -171,7 +233,7 @@ function reset() {
 
 function save_list(e) {
     document.getElementById("outputImg").style.display = "block";
-    let list = document.getElementsByTagName("ul"), index;
+    let list = document.getElementsByTagName('b'), index;
     for (index = list.length - 1; index >= 0; index--) {
         list[index].parentNode.removeChild(list[index]);
     }
@@ -189,13 +251,11 @@ function save_list(e) {
 function clear_vi() {
     document.getElementById("outText").style.height = "90vh";
     d3.select("svg").remove();
-    console.log(document.getElementById("output").childNodes);
     while (document.getElementById("output").childNodes.length > 3) {
         let node = document.getElementById("output");
         document.getElementById("output").removeChild(node.lastChild);
     }
 }
-
 
 // Feature button
 var button_state = 0;
