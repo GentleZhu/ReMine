@@ -94,10 +94,7 @@ def cof():
             for word in ob:
                 if word[1] == "PRP":
                     txt = ""
-                    if int(key) > 1:
-                        txt = resource[int(key) - 2][:-2] + ". " + resource[int(key) - 1][:-2] + ". "
-                    else:
-                        txt = resource[int(key) - 1]
+                    txt = resource[int(key) - 1]
                     clusters = coref.one_shot_coref(utterances=txt)
                     mentions = coref.get_mentions()
                     for index in clusters[0]:
