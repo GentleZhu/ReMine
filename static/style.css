@@ -16,19 +16,19 @@ html, body {
 .buttons {
     position: relative;
     height: 10vh;
-    width: 30vw;
+    width: 28vw;
     line-height: 10vh;
     text-align: center;
     overflow: auto;
-    font-family: 'Gaegu', cursive;
-    font-size: 5vmin;
+    font-family: 'Varela Round', sans-serif;
+    font-size: 4vmin;
     border-bottom: 0.1px solid #D9D9D9;
 }
 
 .remine {
     position: relative;
     height: 10vh;
-    width: 10vw;
+    width: 16vw;
     line-height: 10vh;
     text-align: center;
     overflow: auto;
@@ -90,12 +90,24 @@ html, body {
     height: 10vh;
 }
 
-.select {
-    position: relative;
+.selectText {
+    position: absolute;
     height: 5vh;
     top: 2vh;
     left: 3vw;
-    width: 20vw;
+    margin: 0;
+    padding: 0;
+    line-height: 5vh;
+    color: #0084FF;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+.select {
+    position: absolute;
+    height: 5vh;
+    top: 2vh;
+    left: 30vmin;
     margin: 0;
     padding: 0;
     font-family: 'Open Sans', sans-serif;
@@ -132,6 +144,7 @@ html, body {
     width: 15vw;
     font-family: 'Open Sans', sans-serif;
     font-size: 2.5vmin;
+    color: #0084FF;
     background-color: #F2F2F2;
     overflow: auto;
 }
@@ -140,6 +153,16 @@ html, body {
     position: absolute;
     top: 10vh;
     left: 50vw;
+    width: 50vw;
+    height: 90vh;
+    margin: 0;
+    overflow: auto;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+}
+
+.outText {
+    position: absolute;
     width: 50vw;
     height: 90vh;
     margin: 0;
@@ -158,4 +181,72 @@ img {
 
 a:hover {
     cursor: pointer;
+}
+
+
+.loader {
+  display: none;
+  position: absolute;
+  left: 22vw;
+  top: 37vh;
+  width: 6vw;
+  height: 6vw;
+  animation: loaderAnim 1.25s infinite ease-in-out;
+  outline: 1px solid transparent;
+}
+.loader #largeBox {
+  height: 6vw;
+  width: 6vw;
+  background-color: #F2F2F2;
+  outline: 1px solid transparent;
+  position: fixed;
+}
+.loader #smallBox {
+  height: 6vw;
+  width: 6vw;
+  background-color: #0084FF;
+  position: fixed;
+  z-index: 1;
+  outline: 1px solid transparent;
+  animation: smallBoxAnim 1.25s alternate infinite ease-in-out;
+}
+
+@keyframes smallBoxAnim {
+  0% {
+    transform: scale(0.2);
+  }
+  100% {
+    transform: scale(0.75);
+  }
+}
+@keyframes loaderAnim {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(90deg);
+  }
+}
+
+table {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2.5vmin;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    width: 12.5vw;
+    padding: 8px;
+}
+
+th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    width: 12.5vw;
+    padding: 8px;
+    color: white;
+    background-color: #6db8ff;
 }

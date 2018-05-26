@@ -3,12 +3,25 @@ import argparse
 import json, pickle
 import StringIO,operator
 
+class Model(object):
+
+    def __init__(self, model_path):
+        self.reverse_mapping = dict()
+        self.word_mapping = dict()
+        self.word_mapping = pickle.load(open(model_path, 'rb'))
+        print("load model")
+        self.word_cnt = len(self.word_mapping) +1
+        for k, v in self.word_mapping.items():
+            self.reverse_mapping[v] = k
+
+
 class Solver(object):
     """docstring for PreProcessor"""
-    def __init__(self):
-        self.word_cnt = 1
-        self.word_mapping = dict()
-        self.punc_mapping = dict()
+    def __init__(self, Model):
+        #self.punc_mapping = dict()
+        self.word_mapping = Model.word_mapping
+        self.reverse_mapping = Model.reverse_mapping
+        self.word_cnt = Model.word_cnt
         self.punc = {'.',',','"',"'",'?',':',';','-','!','-lrb-','-rrb-','``',"''", ''}
         self.fdep = ''
         self.fpos = ''
@@ -29,8 +42,8 @@ class Solver(object):
     def inWordmapping(self,word):
         if word not in self.word_mapping:
             self.word_mapping[word]=self.word_cnt
-            if word in self.punc:
-                self.punc_mapping[self.word_cnt] = word
+            # if word in self.punc:
+            #     self.punc_mapping[self.word_cnt] = word
             #self.reverse_mapping[self.word_cnt]=word
             self.word_cnt+=1
 
@@ -44,7 +57,7 @@ class Solver(object):
         test_pos = pos_file.split('\n')
         output = []
         #print('total_remine', remine_seg)
-            
+
         for line, json_line, pos_line in zip(remine_seg, test_lemma, test_pos):
             #print("remine_seg",line)
             cnt += 1
@@ -57,7 +70,7 @@ class Solver(object):
                     pred.append(item.rstrip(' :BP').strip().replace('(','-lrb-').replace(')','-rrb-'))
             tmp = {}
             tmp['tokens'] = json_line.strip().split(' ')
-            #tmp['lemmas'] = 
+            #tmp['lemmas'] =
             tmp['pos'] = pos_line.strip().split(' ')
             #exists = set()
             cur_max = dict()
@@ -65,7 +78,7 @@ class Solver(object):
             ptr = 0
             for e in pred:
                 window_size=e.count(' ') + 1
-            
+
                 found=False
                 #ptr = 0
                 while ptr+window_size <= len(tmp['tokens']):
@@ -75,7 +88,7 @@ class Solver(object):
                     ptr+=1
                 #if found and (ptr, ptr+window_size) not in exists:
                 if not found:
-                    ptr = 0 
+                    ptr = 0
                     #print(e+"not found")
                     e_not_found += 1
                 if found:
@@ -91,11 +104,11 @@ class Solver(object):
                     ptr = cur_max[ptr]
                 else:
                     ptr -= 1
-                
+
             #tmp['entityMentions'] = list(exists)
             tmp['entityMentions'].sort(key=operator.itemgetter(1))
-            
-            
+
+
             new = []
             for i in range(len(tmp['entityMentions'])-1):
                 if tmp['entityMentions'][i][1] == tmp['entityMentions'][i+1][0] and (tmp['entityMentions'][i+1][2][0:2] == 'of' or tmp['entityMentions'][i][2][-2:] == 'of' or tmp['entityMentions'][i+1][2][0:2] == "'s" or tmp['entityMentions'][i][2][-2:] == "'s"):
@@ -143,7 +156,7 @@ class Solver(object):
 
             output.append(tmp)
 
-        emsIO = StringIO.StringIO()    
+        emsIO = StringIO.StringIO()
         for tmp in output:
                 #print("tmp",tmp)
                 ems = ''
@@ -153,7 +166,6 @@ class Solver(object):
                 emsIO.write(ems.strip()+'\n')
             #print("#entity not found:",e_not_found)
         self.fems = emsIO.getvalue()
-        return 1
     def tokenized_test(self, docIn, posIn, depIn):
         docin = docIn.split('\n')
         posin = posIn.split('\n')
@@ -199,39 +211,10 @@ class Solver(object):
 
 
 
-
-
-    def dump_rm(self):
-        pickle.dump(self.test_words, open('tmp_remine/rm_test_words.p', 'wb'))
-        pickle.dump(self.test_tokens, open('tmp_remine/rm_test_tokens.p', 'wb'))
-
-    def dump_test(self):
-        pickle.dump(self.test_words, open('tmp_remine/real_test_words.p', 'wb'))
-        pickle.dump(self.test_tokens, open('tmp_remine/real_test_tokens.p', 'wb'))
-
-    def dump(self):
-        with open('tmp_remine/tokenized_punctuations.txt','w', encoding='utf-8') as OUT:
-            for k,v in self.punc_mapping.items():
-                OUT.write(str(k)+'\t'+v+'\n')
-        with open('tmp_remine/token_mapping.txt','w', encoding='utf-8') as OUT:
-            for k,v in self.word_mapping.items():
-                OUT.write(str(v)+'\t'+k+'\n')
-        pickle.dump(self.word_mapping, open('tmp_remine/token_mapping.p', 'wb'))
-        pickle.dump(self.test_words, open('tmp_remine/test_words.p', 'wb'))
-        pickle.dump(self.test_tokens, open('tmp_remine/test_tokens.p', 'wb'))
-
     def load(self):
         self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
 
-    def load_all(self):
-        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-        self.test_tokens = pickle.load(open('tmp_remine/test_tokens.p', 'rb'))
-        self.test_words = pickle.load(open('tmp_remine/test_words.p', 'rb'))
 
-    def load_test(self):
-        self.word_mapping = pickle.load(open('tmp_remine/token_mapping.p', 'rb'))
-        self.test_tokens = pickle.load(open('tmp_remine/real_test_tokens.p', 'rb'))
-        self.test_words = pickle.load(open('tmp_remine/real_test_words.p', 'rb'))
 
     def tokenize(self, docIn, docOut):
         with open(docIn, encoding='utf-8') as doc, open(docOut,'w', encoding='utf-8') as out:
@@ -351,9 +334,6 @@ class Solver(object):
 
     def translate(self, line):
         lines = line.split("\n")
-        map_word = {}
-        for k,v in self.word_mapping.items():
-            map_word[v] = k
 
         for i in range(len(lines)-1):
             temp = lines[i].replace('\t', '|')
@@ -364,19 +344,19 @@ class Solver(object):
             lines[i] = temp
         for i in range(len(lines)-1):
             # ob
-            lines[i][1] = " ".join([map_word[int(t)] for t in lines[i][1].split(" ")])
+            lines[i][1] = " ".join([self.reverse_mapping[int(t)] for t in lines[i][1].split(" ")])
             # relation
             line_temp = []
             for word in lines[i][2]:
                 temp = word[1:-1].split(" ")
-                temp = [map_word[int(t)] for t in temp]
+                temp = [self.reverse_mapping[int(t)] for t in temp]
                 str_temp = " "
                 for t in temp:
                     str_temp = str_temp + t + " "
                 line_temp.append(str_temp)
             lines[i][2] = ",".join(line_temp) + ", "
             # sb
-            lines[i][3] = " " + " ".join([map_word[int(t)] for t in lines[i][3].split(" ")])
+            lines[i][3] = " " + " ".join([self.reverse_mapping[int(t)] for t in lines[i][3].split(" ")])
             lines[i] = list("|".join(lines[i]))
             for t in range(len(lines[i])):
                 if lines[i][t] == "|":

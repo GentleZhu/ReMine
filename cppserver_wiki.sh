@@ -1,0 +1,1 @@
+while [ 1 ]; do ./bin/server_wiki && break; done
