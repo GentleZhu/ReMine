@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
     // FrequentPatternMining::mine_pos(MIN_SUP, MAX_LEN);
     cerr << "Extracting features..." << endl;
-    Features::loadPosgroup("tmp_remine/pos_tag.map");
+    Features::loadPosgroup("tmp/pos_tag.map");
 
     vector<string> featureNamesPhrase;
     vector<vector<double>> featuresPhrase = Features::extract(featureNamesPhrase);
