@@ -8,7 +8,7 @@ class PreProcessor(object):
 		self.word_cnt = 1
 		self.word_mapping = dict()
 		self.punc_mapping = dict()
-		self.punc = {'.',',','"',"'",'?',':',';','-','!','-lrb-','-rrb-','``',"''", ''}
+		self.punc = {'.',',','"',"'",'?',':',';','-','!','(',')','``',"''", '', '--'}
 
 	def case(self, w):
 		if w.isupper() or w in self.punc:
@@ -117,6 +117,7 @@ class PreProcessor(object):
 
 	def tokenized_train(self, docIn, posIn, depIn):
 		fdep = open('tmp_remine/deps_train.txt', 'w')
+		fdep_type = open('tmp_remine/deps_train_type.txt', 'w')
 		fpos = open('tmp_remine/pos_tags_train.txt', 'w')
 		fdoc = open('tmp_remine/tokenized_train.txt', 'w')
 		fcase = open('tmp_remine/case_tokenized_train.txt', 'w')
@@ -133,17 +134,15 @@ class PreProcessor(object):
 				for i,d in enumerate(deps):
 					dd=d.split('_')
 					tmp.append(str(i)+'_'+dd[0])
+					fdep_type.write(str(i)+'_'+d+'\n')
 				assert(len(tokens) == len(postags) == len(deps))
 				for i,w in enumerate(tokens):
 					if i != len(tokens) - 1:
 						fdoc.write(self.inWordmapping(w)+' ')
 						_token.append(self.inWordmapping(w))
 					else:
-						if w not in self.punc:
-							fdoc.write(self.inWordmapping(w)+'\n')
-							_token.append(self.inWordmapping(w))
-						else:
-							fdoc.write(w+'\n')
+						fdoc.write(self.inWordmapping(w)+'\n')
+						_token.append(self.inWordmapping(w))
 					_word.append(w)
 					fcase.write(self.case(w))
 				self.test_tokens.append(_token)
@@ -155,6 +154,7 @@ class PreProcessor(object):
 		fpos.close()
 		fdoc.close()
 		fcase.close()
+		fdep_type.close()
 
 	def tokenized_train_rm(self, docIn):
 		fpos = open('tmp_remine/rm_pos_tags_train.txt', 'w')

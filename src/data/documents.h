@@ -238,36 +238,6 @@ namespace Documents
 
                 // get capital info
                 int capitalInfo = line[capitalPtr ++];
-                
-                if (!flag || (punctuations.count(token) && ENABLE_POS_TAGGING)) {
-                    string punc = flag ? punctuations[token] : temp;
-                    if (!separatePunc.count(punc)) {
-                        cerr << "Exceptions: " << punc << endl;
-                    }
-                    if (ptr > 0) {
-                        if (punc == "-") {
-                            wordTokenInfo[ptr - 1].turnOn(DASH_AFTER);
-                        }
-                        if (punc == "\"" || punc == "\'\'" || lastPunc == "``") {
-                            // cerr << "turn on" << endl;
-                            wordTokenInfo[ptr - 1].turnOn(QUOTE_AFTER);
-                        }
-                        if (punc == "-rrb-" && ptr > 0) {
-                            //cerr << "turn on ) " << endl;
-                            wordTokenInfo[ptr - 1].turnOn(PARENTHESIS_AFTER);
-                        }
-                        if (separatePunc.count(punc)) {
-                            wordTokenInfo[ptr - 1].turnOn(SEPARATOR_AFTER);
-                        }
-                    }
-                    /*
-                    if (!flag) {
-                        ++ err_lines;
-                        cerr << "this case happens" << endl;
-                        lastPunc = punc;
-                    }
-                    */
-                } 
 
                 if (flag) {
                     assert(token > 0);
@@ -283,7 +253,7 @@ namespace Documents
                     if (!punctuations.count(token)) {
                         if (lastPunc == "\"" || lastPunc == "\'\'" || lastPunc == "``") {
                             wordTokenInfo[ptr].turnOn(QUOTE_BEFORE);
-                        } else if (lastPunc == "-lrb-") {
+                        } else if (lastPunc == "(") {
                             wordTokenInfo[ptr].turnOn(PARENTHESIS_BEFORE);
                             //cerr << "turn on ( " << endl;
                         }
@@ -298,13 +268,31 @@ namespace Documents
                             isDigital[token] = true;
                         }
                     }
-
-                    if (punctuations.count(token) && ENABLE_POS_TAGGING) {
-                        lastPunc = punctuations[token];
+                    else {
+                        string punc = flag ? punctuations[token] : temp;
+                        if (!separatePunc.count(punc)) {
+                            cerr << "Exceptions: " << punc << endl;
+                        }
+                        if (ptr > 0) {
+                            if (punc == "-") {
+                                wordTokenInfo[ptr - 1].turnOn(DASH_AFTER);
+                            }
+                            if (punc == "\"" || punc == "\'\'" || lastPunc == "``") {
+                                // cerr << "turn on" << endl;
+                                wordTokenInfo[ptr - 1].turnOn(QUOTE_AFTER);
+                            }
+                            if (punc == ")" && ptr > 0) {
+                                //cerr << "turn on ) " << endl;
+                                wordTokenInfo[ptr - 1].turnOn(PARENTHESIS_AFTER);
+                            }
+                            if (separatePunc.count(punc)) {
+                                wordTokenInfo[ptr - 1].turnOn(SEPARATOR_AFTER);
+                            }
+                        }
+                        lastPunc = punc;
                     }
                     ++ ptr;
                 }
-
             }
 
             docEnds.insert(ptr - 1);
@@ -315,7 +303,7 @@ namespace Documents
             }
         }
         fclose(in);
-        cerr << "xxxx Error Lines xxxx" << err_lines << endl;
+
         for (TOKEN_ID_TYPE i = 0; i <= maxTokenID; ++ i) {
             idf[i] = log(docs / idf[i] + EPS);
         }
@@ -331,7 +319,7 @@ namespace Documents
         sentences.clear();
         TOTAL_TOKENS_TYPE st = 0;
 
-        if (!ORIGINAL_PUNC) {
+        if (true) {
             for (TOTAL_TOKENS_TYPE i = 0; i < totalWordTokens; ++ i) {
                 if (isEndOfSentence(i)) {
                     sentences.push_back(make_pair(st, i));

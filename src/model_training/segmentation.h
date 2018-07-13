@@ -45,17 +45,44 @@ void constructTrie() {
         const vector<TOTAL_TOKENS_TYPE>& tokens = patterns[i].tokens;
         if (tokens.size() == 0 || tokens.size() > 1 && patterns[i].currentFreq == 0) {
             continue;
+        }        
+        
+        size_t u = 0;
+
+        for (const TOTAL_TOKENS_TYPE& token : tokens) {
+            if (!trie[u].children.count(token)) {
+                trie[u].children[token] = trie.size();
+                trie.push_back(TrieNode());
+            }
+            u = trie[u].children[token];
+        }
+        trie[u].id = i;
+        trie[u].indicator = patterns[i].indicator;
+
+        //cerr<<patterns[i].postagquality<<endl;
+    }
+    cerr << "# of trie nodes = " << trie.size() << endl;
+}
+
+void constructTrie_filter() {
+    trie.clear();
+    trie.push_back(TrieNode());
+    for (int i = 0; i < patterns.size(); ++ i) {
+        const vector<TOTAL_TOKENS_TYPE>& tokens = patterns[i].tokens;
+        if (tokens.size() == 0 || tokens.size() > 1 && patterns[i].currentFreq == 0) {
+            continue;
         }
         bool quality = true;
         
-        /*
+        
         quality &= ( //patterns[i].indicator == "EP"
                     // patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator == "BP" && patterns[trie[u].id].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
-                    patterns[i].size() > 1 && patterns[i].indicator == "BP" && patterns[i].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD  ||
-                    patterns[i].size() > 1 && patterns[i].indicator != "BP" && patterns[i].quality >= SEGMENT_MULTI_PHRASE_QUALITY_THRESHOLD  ||
+                    patterns[i].size() > 1 && patterns[i].indicator == "RP" && patterns[i].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
+                    patterns[i].size() > 1 && patterns[i].indicator == "EP" && patterns[i].quality >= SEGMENT_MULTI_PHRASE_QUALITY_THRESHOLD ||
+                    patterns[i].size() > 1 &&  patterns[i].indicator == "BP" && patterns[i].quality < 0.6 ||
                     patterns[i].size() == 1 && patterns[i].quality >= SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD
         );
-        */
+        
         
         size_t u = 0;
         if (quality) {
@@ -72,27 +99,6 @@ void constructTrie() {
         //cerr<<patterns[i].postagquality<<endl;
     }
     cerr << "# of trie nodes = " << trie.size() << endl;
-}
-
-void constructTrie_pos() {
-    trie_pos.clear();
-    trie_pos.push_back(TrieNode());
-    for (int i = 0; i < patterns_tag.size(); ++ i) {
-        const vector<TOTAL_TOKENS_TYPE>& tokens = patterns_tag[i].tokens;
-        if (tokens.size() == 0 || tokens.size() > 1 && patterns_tag[i].currentFreq == 0) {
-            continue;
-        }
-        size_t u = 0;
-        for (const TOTAL_TOKENS_TYPE& token : tokens) {
-            if (!trie_pos[u].children.count(token)) {
-                trie_pos[u].children[token] = trie_pos.size();
-                trie_pos.push_back(TrieNode());
-            }
-            u = trie_pos[u].children[token];
-        }
-        trie_pos[u].id = i;
-    }
-    cerr << "# of pos tag trie nodes = " << trie_pos.size() << endl;
 }
 
 class Segmentation
@@ -524,6 +530,7 @@ public:
             bool impossible = true;
             for (size_t j = i, u = 0; j < tokens.size(); ++ j) {
                 if (!trie[u].children.count(tokens[j])) {
+
                     break;
                 }
                 u = trie[u].children[tokens[j]];
@@ -613,6 +620,7 @@ public:
             double cost = 0;
             bool impossible = true;
             for (size_t j = i, u = 0; j < tokens.size(); ++ j) {
+
                 if (!trie[u].children.count(tokens[j])) {
                     break;
                 }
@@ -623,6 +631,7 @@ public:
                         impossible = false;
                         PATTERN_ID_TYPE id = trie[u].id;
                         double p = cost + prob[id];
+                        //cerr << f[i] << "\t" << p <<"\t"<< f[j + 1] <<endl;
                         // double depCost = istree(deps, i, j) ? 0 : -INF;
                         double multiConstraints = 0.0;
                         
@@ -632,10 +641,6 @@ public:
                             int index = GetSubtreeID(deps, i, j+1);
                             multiConstraints += deps_prob[index];
                         }
-                        
-
-                        // TODO(branzhu): add punc cost 
-                        
                         
                         if (j > i) {
                             multiConstraints += GetPuncCost(tokens, tags, i, j);
