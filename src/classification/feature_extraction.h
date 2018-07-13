@@ -122,8 +122,8 @@ namespace Features
 
     void extractPosRatio(const Pattern& pattern, vector<double>& feature) {
         const vector<TOTAL_TOKENS_TYPE> &tags = pattern.postags;
-        map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, {"PRP$", 0}, 
-        {"ADJ", 0}, {"NP", 0}, {"PRP", 0}, {"ADV", 0}, {"VB", 0}, {"WH", 0}, {"NA", 0}};
+        map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, {"PART", 0}, 
+        {"ADJ", 0}, {"NP", 0}, {"PRP", 0}, {"ADV", 0}, {"VB", 0}, {"NA", 0}};
         for (int i = 0; i < pattern.size(); ++i) {
             if (pos_group.count(posid2Tag[tags[i]]) > 0)
                 ++featureMaps[pos_group[posid2Tag[tags[i]]]];
@@ -375,8 +375,8 @@ namespace Features
                         "stopwords_1st", "stopwords_last", "stopwords_ratio", "avg_idf",
                         
                         "complete_sub", "complete_super",
-                        "CC", "CD", "DT", "IN", "PRP$", "ADJ", "NP",
-                        "PRP", "ADV", "VB", "WH", "NA",
+                        "CC", "CD", "DT", "IN", "PART", "ADJ", "NP",
+                        "PRP", "ADV", "VB", "NA",
                         };
 
         // compute features for each pattern
@@ -501,7 +501,8 @@ namespace Features
         featureNames = {"log_frequency", "independent_ratio",
                         "stopwords", "idf",
                         "punc_quote", "punc_parenthesis", "first_capitalized", "all_capitalized",
-                        "complete_super", "extrabit_noun", "extrabit_verb", "extrabit_prp", 
+                        "complete_super", "CC", "CD", "DT", "IN", "PART", "ADJ", "NP",
+                        "PRP", "ADV", "VB", "NA", 
                         };
 
         // compute features for each pattern
@@ -520,7 +521,7 @@ namespace Features
 
                 extractPunctuationUnigram(i, features[i]);
                 extractCompletenessUnigram(patterns[i], features[i]);
-                extractExtracbitUnigram(patterns[i], features[i]);
+                extractPosRatio(patterns[i], features[i]);
 
                 features[i].shrink_to_fit();
                 if (features[i].size() == 0) cerr << "wrong" << endl;

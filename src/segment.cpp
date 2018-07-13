@@ -37,13 +37,15 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
             u = trie[u].children[tokens[k]];
         }
         
-        
+/*
         quality &= trie[u].id >= 0 && (
-                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator == "BP" && patterns[trie[u].id].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
-                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator != "BP" && patterns[trie[u].id].quality >= SEGMENT_MULTI_PHRASE_QUALITY_THRESHOLD ||
+                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator == "RP" && patterns[trie[u].id].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
+                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator == "EP" && patterns[trie[u].id].quality >= SEGMENT_MULTI_PHRASE_QUALITY_THRESHOLD ||
+                    patterns[trie[u].id].size() > 1 && patterns[trie[u].id].indicator == "BP" && patterns[trie[u].id].quality < 0.6 ||
                     patterns[trie[u].id].size() == 1 && patterns[trie[u].id].quality >= SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD
                    );
-                   
+*/
+
 
         if (quality) {
                 ret.push_back("</"+trie[u].indicator+">");
@@ -100,7 +102,7 @@ int main(int argc, char* argv[])
     cerr << "unigram_cnt:" << unigram_cnt << " multigram_cnt:" << multigram_cnt <<endl;
     //    cerr<<"check:"<<patterns[i].postagquality<<endl;
 
-    constructTrie(); // update the current frequent enough patterns
+    constructTrie_filter(); // update the current frequent enough patterns
 
     Segmentation* segmenter;
     if (ENABLE_POS_TAGGING) {
