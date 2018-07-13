@@ -143,9 +143,10 @@ int main(int argc, char* argv[])
 
     FILE* out = tryOpen("tmp_remine/rm_tokenized_segmented_sentences.txt", "w");
 
-
+    int sent_id = 0;
     while (getLine(in)) {
         stringstream sin(line);
+        ++ sent_id;
         vector<TOTAL_TOKENS_TYPE> tokens;
         // vector<TOTAL_TOKENS_TYPE> deps;
         vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
@@ -207,7 +208,7 @@ int main(int argc, char* argv[])
             for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                 const auto& it = _->second;
                 for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                    fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? ", " : " ");
+                    fprintf(out, "%d\t%d%s", sent_id, tokens[i], i + 1 == ems[it.first].second ? ", " : " ");
                 }
                 for (const auto& __ : it.second) {
                     rm_deps.push_back(deps[__ - 1]);

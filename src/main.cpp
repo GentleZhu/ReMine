@@ -124,7 +124,9 @@ int main(int argc, char* argv[])
     // SegPhrase, +, ++, +++, ...
     for (int iteration = 0; iteration < ITERATIONS; ++ iteration) {
         predictQuality(patterns, featuresPhrase, featureNamesPhrase);
+        cerr << "predict quality done" << endl;
         predictQualityUnigram(patterns, featuresUnigram, featureNamesUnigram);
+        cerr << "predict unigram done" << endl;
         
         /*
         if (POSTAG_SCORE == 1){

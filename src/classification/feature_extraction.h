@@ -239,6 +239,7 @@ namespace Features
                 ++ parenthesis;
             }
         }
+        assert(id2ends[id].size() > 0);
         feature.push_back((double)quote / id2ends[id].size());
         feature.push_back((double)dash / id2ends[id].size());
         feature.push_back((double)parenthesis / id2ends[id].size());
@@ -368,9 +369,11 @@ namespace Features
 
         // cerr << "Pass extract prob!" << endl;
         featureNames = {"stat_f1", "stat_f2", "stat_f4", "stat_outside",
+                        
                         "punc_quote", "punc_dash", "punc_parenthesis", "first_capitalized",
                         // "all_capitalized",
                         "stopwords_1st", "stopwords_last", "stopwords_ratio", "avg_idf",
+                        
                         "complete_sub", "complete_super",
                         "CC", "CD", "DT", "IN", "PRP$", "ADJ", "NP",
                         "PRP", "ADV", "VB", "WH", "NA",
@@ -379,7 +382,7 @@ namespace Features
         // compute features for each pattern
         // cerr << "Qi look here: " << patterns.size() << endl;
         vector<vector<double>> features(patterns.size(), vector<double>());
-        
+        cerr << "start extracting ..." << endl;
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
             //changes here
@@ -387,6 +390,7 @@ namespace Features
                 extractStatistical(i, features[i]);
                 extractPunctuation(i, features[i]);
                 extractStopwords(patterns[i], features[i]);
+                
                 if (i < id2ends.size()) {
                     extractCompleteness(patterns[i], features[i]);
                 }
@@ -398,6 +402,7 @@ namespace Features
                 features[i].shrink_to_fit();
             }
         }
+        cerr << "stop extracting ..." << endl;
         features.shrink_to_fit();
         return features;
     }
