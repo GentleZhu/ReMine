@@ -117,7 +117,8 @@ void predictQualityUnigram(vector<Pattern> &patterns, vector<vector<double>> &fe
     for (int i = 0; i < order.size(); ++ i) {
         cerr << order[i].first << "\t" << order[i].second << endl;
     }
-    set<string> entity_tag = {"NN", "NNS", "NNP", "NNPS", "PRP"};
+    set<string> verb_tags = {"VB", "BES", "HVS", "VBD", "VBG", "VBN", "VBP", "VBZ"};
+    set<string> attach_tags = {"IN", "TO", "RP"};
     fprintf(stderr, "[Unigram] Start Quality Prediction\n");
     for (int i = 0; i < features.size(); ++ i) {
         if (patterns[i].size() == 1) {
@@ -143,6 +144,13 @@ void predictQualityUnigram(vector<Pattern> &patterns, vector<vector<double>> &fe
                 if (Documents::posid2Tag[patterns[i].postags[0]] == "PRP") {
                     patterns[i].quality = 1.0;
                     patterns[i].indicator = "EP";
+                }
+                if (verb_tags.count(Documents::posid2Tag[patterns[i].postags[0]])) {
+                     patterns[i].indicator = "RP";
+                }
+                if (attach_tags.count(Documents::posid2Tag[patterns[i].postags[0]])) {
+                     patterns[i].indicator = "RP";
+                     patterns[i].quality = 1.0;
                 }
             }
         }
