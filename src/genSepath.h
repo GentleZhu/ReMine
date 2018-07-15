@@ -60,20 +60,26 @@ namespace GenPath
 
         assert(deps.size() == types.size());
         if (debug) cerr << deps.size() << endl;
+        int num_root = 0;
         for (int i = 0; i < deps.size(); ++ i) {
             int a = i + 1, b = deps[i].second;
             if (debug) cerr << i << " " << b << endl;
             if (b == 0) {
             	children[a].push_back(a);
+                num_root += 1;
+            }
+
+            if (num_root > 1 || b > deps.size()) {
+                return paths;
             }
             // means b is parent
             parents[b].push_back(a);
-            int multi_root = 0;
+            int back_step = 0;
             while (b != 0) {
-                ++ multi_root;
+                ++ back_step;
                 if (debug) cerr << b << "," << endl;
                 // wrong passing then quit
-                if (b > deps.size() || multi_root > deps.size()) {
+                if (b > deps.size() || back_step > deps.size()) {
                     return paths;
                 }
             	children[a].push_back(b);
