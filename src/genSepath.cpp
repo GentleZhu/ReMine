@@ -35,8 +35,9 @@ namespace GenPath
         
 
             //bgs.insert(parent[index][i]);
-        
-        if (!special && !noun_tags.count(tags[index - 1])) {
+
+        //&&!noun_tags.count(tags[index - 1])
+        if (!special) {
             bgs.insert(index);
         }
         if (special && attach_tags.count(tags[index - 1]))

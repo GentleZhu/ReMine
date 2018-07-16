@@ -3,5 +3,5 @@
 archive/
 .DS_Store
 .idea/
-data/
 lib/
+bin/

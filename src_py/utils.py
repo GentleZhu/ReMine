@@ -169,7 +169,7 @@ def entityLinker(file_path,seed_path,out_path=None):
 		for line in seed:
 			tmp=line.strip().split('\t')
 			if float(tmp[4]) > 0.8 and float(tmp[5]) < 0.001:
-				seeds[int(tmp[0])].append(tmp[1])
+				seeds[int(tmp[1])].append(tmp[2])
 			#break
 		#print seeds
 	with open(file_path,'r') as IN, open(out_path,'w') as OUT:
