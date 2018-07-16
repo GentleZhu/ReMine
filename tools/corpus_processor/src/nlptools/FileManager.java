@@ -42,6 +42,6 @@ class FileManager {
             res.append((char) c);
         }
         isr.close();
-        return res.toString().replace('�', '\'');
+        return res.toString();
     }
 }

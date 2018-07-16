@@ -44,10 +44,13 @@ void process(const vector<TOTAL_TOKENS_TYPE>& tokens, const vector<pair<TOTAL_TO
             }
             u = trie[u].children[tokens[k]];
         }
-        quality &= trie[u].id >= 0 && trie[u].indicator == "RP" && (
+        
+        quality &= trie[u].id >= 0 && trie[u].indicator == "RP";
+        /* && (
                     patterns[trie[u].id].size() > 1 && patterns[trie[u].id].quality >= SEGMENT_MULTI_WORD_QUALITY_THRESHOLD ||
                     patterns[trie[u].id].size() == 1 && patterns[trie[u].id].quality >= SEGMENT_SINGLE_WORD_QUALITY_THRESHOLD
                    );
+        */
 
         if (quality) {
             //if (RELATION_MODE && patterns[i].indicator == "RELATION" || !RELATION_MODE && patterns[i].indicator == "ENTITY")
@@ -118,7 +121,7 @@ int main(int argc, char* argv[])
 
     //    cerr<<"check:"<<patterns[i].postagquality<<endl;
 
-    constructTrie(); // update the current frequent enough patterns
+    constructTrie_filter(); // update the current frequent enough patterns
 
     Segmentation* segmenter;
     if (ENABLE_POS_TAGGING) {
@@ -143,9 +146,11 @@ int main(int argc, char* argv[])
 
     FILE* out = tryOpen("tmp_remine/rm_tokenized_segmented_sentences.txt", "w");
 
-
+    int sent_id = 0;
     while (getLine(in)) {
+
         stringstream sin(line);
+        ++ sent_id;
         vector<TOTAL_TOKENS_TYPE> tokens;
         // vector<TOTAL_TOKENS_TYPE> deps;
         vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> deps;
@@ -200,19 +205,23 @@ int main(int argc, char* argv[])
             // remember ranges -1
             assert(tokens.size() == deps.size());
             assert(tokens.size() == tags.size());
-            // cout << "EM size:" << ems.size() << endl;
+            //cout << "EM size:" << ems.size() << endl;
+            //if (doc == 236145) cerr << "start" << endl;
             tmp = GenPath::genSepath(deps, tags, depTypes, ems);
+            //if (doc == 236145) cerr << "end" << endl;
             vector<pair<TOTAL_TOKENS_TYPE, TOTAL_TOKENS_TYPE>> rm_deps;
             vector<TOKEN_ID_TYPE> rm_tokens;
             for (auto _ = tmp.begin(); _ != tmp.end(); ++_) {
                 const auto& it = _->second;
                 for (int i = ems[it.first].first; i < ems[it.first].second; ++ i) {
-                    fprintf(out, "%d%s", tokens[i], i + 1 == ems[it.first].second ? ", " : " ");
+                    fprintf(out, "%d\t%d%s", sent_id, tokens[i], i + 1 == ems[it.first].second ? ", " : " ");
                 }
                 for (const auto& __ : it.second) {
                     rm_deps.push_back(deps[__ - 1]);
                     rm_tokens.push_back(tokens[__ - 1]);
+                    //cerr << "index:" << __ -1 << " ";
                 }
+                //cerr << endl;
                 process(rm_tokens, rm_deps, tags, *segmenter, out);
                 for (int i = ems[_->first].first; i < ems[_->first].second; ++ i) {
                     fprintf(out, "%d%c", tokens[i], i + 1 == ems[_->first].second ? '\n' : ' ');

@@ -1,3 +1,5 @@
+// need some documentation for this code
+
 #include "utils/parameters.h"
 #include "utils/utils.h"
 #include "data/documents.h"
@@ -5,7 +7,7 @@
 namespace GenPath
 {
     int MIN_DIS;
-    set<string> verb_tags = {"VB", "VBD", "VBG", "VBN", "VBP", "VBZ"};
+    set<string> verb_tags = {"VB", "BES", "HVS", "VBD", "VBG", "VBN", "VBP", "VBZ"};
     set<string> noun_tags = {"NN", "NNS", "NNP", "NNPS"};
     set<string> attach_tags = {"IN", "TO", "RP"};
     void split(const string &s, char delim, vector<string>& result) {
@@ -49,30 +51,45 @@ namespace GenPath
         
     }
 
-    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> genSepath(const vector<pair<int, TOTAL_TOKENS_TYPE> >& deps, const vector<int>& tags, const vector<string>& types, const vector<pair<int, int>>& entityMentions) {
+    unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> genSepath(const vector<pair<int, TOTAL_TOKENS_TYPE> >& deps, const vector<int>& tags, 
+        const vector<string>& types, const vector<pair<int, int>>& entityMentions, bool debug = false) {
     	vector<vector<int>> children(deps.size() + 1);
         vector<vector<int>> parents(deps.size() + 1);
         unordered_map<int, pair<int, set<TOTAL_TOKENS_TYPE>>> paths;
         int root;
 
         assert(deps.size() == types.size());
+        if (debug) cerr << deps.size() << endl;
+        int num_root = 0;
         for (int i = 0; i < deps.size(); ++ i) {
             int a = i + 1, b = deps[i].second;
+            if (debug) cerr << i << " " << b << endl;
             if (b == 0) {
             	children[a].push_back(a);
+                num_root += 1;
             }
+
+            if (num_root > 1 || b > deps.size()) {
+                return paths;
+            }
+            // means b is parent
             parents[b].push_back(a);
-            int multi_root = 0;
+            int back_step = 0;
             while (b != 0) {
-                ++ multi_root;
-            	children[a].push_back(b);
-            	b = deps[b - 1].second;
-                if (multi_root > deps.size()) {
+                ++ back_step;
+                if (debug) cerr << b << "," << endl;
+                // wrong passing then quit
+                if (b > deps.size() || back_step > deps.size()) {
                     return paths;
                 }
+            	children[a].push_back(b);
+            	b = deps[b - 1].second;
+                
         	}	
         }
-        
+        if (debug) {
+            cerr << "here" << endl;
+        }
 
         for (auto& item : children) {
         	reverse(item.begin(), item.end());
@@ -149,7 +166,7 @@ namespace GenPath
             // assert(min_parent != 0);
             if (min_parent == 0) continue;
 
-            // cerr << min_i << " " << j << "\t" << min_start << "\t" << min_end << "\t" << min_parent << endl;
+            //cerr << min_i << " " << j << "\t" << min_start << "\t" << min_end << "\t" << min_parent << endl;
             // cerr << children[min_start].size() << "\t" << children[min_end].size() << endl;
             for (int st = min_parent; st < children[min_start].size(); ++st) {
                 printSubtree(parents, tags, bgs, children[min_start][st], entityMentions[min_i].second, entityMentions[j].first);
@@ -184,12 +201,6 @@ namespace GenPath
 
             // printf("%d_%s %d_%s\t", min_i, start_type.c_str(), j, end_type.c_str());
             // fprintf(out, "%d %d\t", min_i, j);
-
-            /*
-            for (const auto& t : bgs) {
-                fprintf(out, "%d ", t);
-            }
-            */
 
             // fprintf(out, "<>");
             if (bgs.size() > 0) paths[j] = make_pair(min_i, bgs);

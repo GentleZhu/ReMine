@@ -122,8 +122,8 @@ namespace Features
 
     void extractPosRatio(const Pattern& pattern, vector<double>& feature) {
         const vector<TOTAL_TOKENS_TYPE> &tags = pattern.postags;
-        map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, {"PRP$", 0}, 
-        {"ADJ", 0}, {"NP", 0}, {"PRP", 0}, {"ADV", 0}, {"VB", 0}, {"WH", 0}, {"NA", 0}};
+        map<string, int> featureMaps = {{"CC", 0}, {"CD", 0}, {"DT", 0}, {"IN", 0}, {"PART", 0}, 
+        {"ADJ", 0}, {"NP", 0}, {"PRP", 0}, {"ADV", 0}, {"VB", 0}, {"NA", 0}};
         for (int i = 0; i < pattern.size(); ++i) {
             if (pos_group.count(posid2Tag[tags[i]]) > 0)
                 ++featureMaps[pos_group[posid2Tag[tags[i]]]];
@@ -239,6 +239,7 @@ namespace Features
                 ++ parenthesis;
             }
         }
+        assert(id2ends[id].size() > 0);
         feature.push_back((double)quote / id2ends[id].size());
         feature.push_back((double)dash / id2ends[id].size());
         feature.push_back((double)parenthesis / id2ends[id].size());
@@ -368,18 +369,20 @@ namespace Features
 
         // cerr << "Pass extract prob!" << endl;
         featureNames = {"stat_f1", "stat_f2", "stat_f4", "stat_outside",
+                        
                         "punc_quote", "punc_dash", "punc_parenthesis", "first_capitalized",
                         // "all_capitalized",
                         "stopwords_1st", "stopwords_last", "stopwords_ratio", "avg_idf",
+                        
                         "complete_sub", "complete_super",
-                        "CC", "CD", "DT", "IN", "PRP$", "ADJ", "NP",
-                        "PRP", "ADV", "VB", "WH", "NA",
+                        "CC", "CD", "DT", "IN", "PART", "ADJ", "NP",
+                        "PRP", "ADV", "VB", "NA",
                         };
 
         // compute features for each pattern
         // cerr << "Qi look here: " << patterns.size() << endl;
         vector<vector<double>> features(patterns.size(), vector<double>());
-        
+        cerr << "start extracting ..." << endl;
         # pragma omp parallel for schedule(dynamic, PATTERN_CHUNK_SIZE)
         for (PATTERN_ID_TYPE i = 0; i < patterns.size(); ++ i) {
             //changes here
@@ -387,6 +390,7 @@ namespace Features
                 extractStatistical(i, features[i]);
                 extractPunctuation(i, features[i]);
                 extractStopwords(patterns[i], features[i]);
+                
                 if (i < id2ends.size()) {
                     extractCompleteness(patterns[i], features[i]);
                 }
@@ -398,6 +402,7 @@ namespace Features
                 features[i].shrink_to_fit();
             }
         }
+        cerr << "stop extracting ..." << endl;
         features.shrink_to_fit();
         return features;
     }
@@ -496,7 +501,8 @@ namespace Features
         featureNames = {"log_frequency", "independent_ratio",
                         "stopwords", "idf",
                         "punc_quote", "punc_parenthesis", "first_capitalized", "all_capitalized",
-                        "complete_super", "extrabit_noun", "extrabit_verb", "extrabit_prp", 
+                        "complete_super", "CC", "CD", "DT", "IN", "PART", "ADJ", "NP",
+                        "PRP", "ADV", "VB", "NA", 
                         };
 
         // compute features for each pattern
@@ -515,7 +521,7 @@ namespace Features
 
                 extractPunctuationUnigram(i, features[i]);
                 extractCompletenessUnigram(patterns[i], features[i]);
-                extractExtracbitUnigram(patterns[i], features[i]);
+                extractPosRatio(patterns[i], features[i]);
 
                 features[i].shrink_to_fit();
                 if (features[i].size() == 0) cerr << "wrong" << endl;

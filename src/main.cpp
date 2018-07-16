@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
     // FrequentPatternMining::mine_pos(MIN_SUP, MAX_LEN);
     cerr << "Extracting features..." << endl;
-    Features::loadPosgroup("tmp_remine/pos_tag.map");
+    Features::loadPosgroup("tmp/pos_tag.map");
 
     vector<string> featureNamesPhrase;
     vector<vector<double>> featuresPhrase = Features::extract(featureNamesPhrase);
@@ -124,7 +124,9 @@ int main(int argc, char* argv[])
     // SegPhrase, +, ++, +++, ...
     for (int iteration = 0; iteration < ITERATIONS; ++ iteration) {
         predictQuality(patterns, featuresPhrase, featureNamesPhrase);
+        cerr << "predict quality done" << endl;
         predictQualityUnigram(patterns, featuresUnigram, featureNamesUnigram);
+        cerr << "predict unigram done" << endl;
         
         /*
         if (POSTAG_SCORE == 1){
