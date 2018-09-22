@@ -25,7 +25,7 @@ To address the above issues, we propose a novel Open IE system, called **ReMine*
 1. We integrate. <br />
 2. Instead 
 
-![alt text](qa.png)
+![alt text](framework_new.pdf)
 <br />
 
 #### **Framework**
@@ -69,7 +69,7 @@ ReMine | **0.780** | **0.720** | **0.760** | **0.787** | **0.791**
 1. Codes and datasets have been uploaded to *[Github](https://github.com/GentleZhu/ReMine)*
 2. *[Live demo](http://35.166.108.88:8000/)* on News and Bio corpus.
 3. *[ReMine-server](https://github.com/GentleZhu/ReMine/tree/server-dev)* will start a local server, access ReMine by inputing https://localhost:port-number in browser.
-3. *[ReMine-standalone](https://github.com/GentleZhu/ReMine/tree/kdd)* is the standalone version for testing and training on given corpus.
+3. *[ReMine-standalone](https://github.com/GentleZhu/ReMine/tree/kdd)* is the standalone command line version for testing and training on given corpus.
 
 
 <br />
