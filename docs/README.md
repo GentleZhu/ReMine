@@ -5,7 +5,7 @@
 #### **Updates**
 **2018.8** ReMine supports our KDD showcase demo [AutoNet](http://35.166.108.88:8000/)!
 
-**2018.7** ReMine migrates from Stanford NLP to Spacy regarding deployment.
+**2018.7** ReMine's backend migrates from Stanford NLP to Spacy.
 
 **2018.3** ReMine 0.1 release! 
 
@@ -14,7 +14,7 @@
 
 #### **Task Overview**
 
-Extracting entities and their relations from text is an important task for understanding massive text corpora. Open information extraction (IE) systems mine relation tuples (i.e., entity arguments and a predicate string to describe their relation) from sentences. These relation tuples are not confined to a predefined schema for the relations of interests. However, current Open IE systems focus on modeling *local* context information in a sentence to extract relation tuples, while ignoring the fact that *global* statistics in a large corpus can be *collectively* leveraged to identify high-quality sentence-level extractions.
+Extracting entities and their relations from text is an important task for understanding massive text corpora. Open information extraction (IE) systems mine relation tuples <*head entity*, *predicate*, *tail entity*>(i.e., entity arguments and a predicate string to describe their relation) from sentences. These relation tuples are not confined to a predefined schema for the relations of interests. However, current Open IE systems focus on modeling *local* context information in a sentence to extract relation tuples, while ignoring the fact that *global* statistics in a large corpus can be *collectively* leveraged to identify high-quality sentence-level extractions.
 
 <br />
 
@@ -22,30 +22,21 @@ Extracting entities and their relations from text is an important task for under
 
 To address the above issues, we propose a novel Open IE system, called **ReMine**,  which integrates local context signals and global structural signals in a unified, distant-supervision framework. Leveraging facts from external knowledge bases as supervision, the new system can be applied to many different domains to facilitate sentence-level tuple extractions using corpus-level statistics.
 
-1. We integrate. <br />
-2. Instead 
+1. We develop a context-dependent phrasal segmentation algorithm that can identify high quality entity and relation phrases. <br />
+2. Instead considering only local context information, we design a unified objective to measure both tuple quality in a local context and global cohesiveness of candidate tuples. Extensive experiments show superior performance on entity phrase extraction task as well as Open IE task.
 
-![alt text](framework_new.pdf)
+![alt text](framework_new.png)
 <br />
 
 #### **Framework**
 
-1. Generate text features for each relation mention or QA entity
-mention pair, and construct a heterogeneous graph using four
-kinds of objects in combined corpus, namely relation mentions
-from RE corpus, entity mention pairs from QA corpus, target relation
-types and text features to encode aforementioned signals
-in a unified form. (**Heterogeneous Network Construction**)
-<br />
-2. Jointly embed relation mentions, QA pairs, text features, and
-type labels into two low-dimensional spaces connected by shared
-features, where close objects tend to share the same types or
-questions. (**Joint RE & QA Embedding**)
-<br />
-3. Estimate type labels **r** for each test relation mention **z** from
-learned embeddings, by searching the target type set **R**.  (**Relation Type Inference**) <br />
+1. **Phrase extraction module** trains a robust phrase classifier using existing entity phrases from external knowledge base as "distant supervision" and adjust quality iteratively.
 
-![alt text](framework.png)
+2. **Tuple generation module**: generates candidate tuples based on sentence’s language structure—it adopts widely used local structure patterns. Different from previous studies, the module incorporates corpus-level information redundancy(global cohesiveness).
+
+3. **Global Cohesiveness module**: learns entity and relation phrase representation and uses the representation in a score function to rank tuples.
+
+4. Iteratively update sentence-level extractions based on both local context information and global structure cohesiveness.
 <br />
 
 #### **Performance**
