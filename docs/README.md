@@ -1,19 +1,20 @@
-## [Indirect Supervision for Relation Extraction Using Question-Answer Pairs](https://arxiv.org/abs/1710.11169) <br />
-*Zeqiu Wu, Xiang Ren, Frank F. Xu, Ji Li, Jiawei Han. WSDM 2018.*
+## Integrating Local Context and Global Cohesiveness for Open Information Extraction <br />
 
 <br />
 
+#### **Updates**
+**2018.8** ReMine supports our KDD showcase demo [AutoNet](http://35.166.108.88:8000/)!
+
+**2018.3** ReMine 0.1 release! 
+
 #### **Task Overview**
 
-Typically, relation extraction (RE) systems rely on training data, primarily acquired
-via human annotation, to achieve satisfactory performance. To alleviate the exhaustive process of human labeling, the recent trend has deviated
-towards the adoption of distant supervision (DS). However, the noise introduced to the automatically generated training data is not negligible. Towards the goal of diminishing the negative effects by noisy DS training data, some distantly supervised RE models design distinct assumptions to remove redundant
-training information. However, these models mostly address only one type of error and do not use any trustworthy information sources outside the noisy training corpus itself. We aim to handle these two remaining issues of distant supervised relation extraction.
+Extracting entities and their relations from text is an important task for understanding massive text corpora. Open information extraction (IE) systems mine relation tuples (i.e., entity arguments and a predicate string to describe their relation) from sentences. These relation tuples are not confined to a predefined schema for the relations of interests. However, current Open IE systems focus on modeling *local* context information in a sentence to extract relation tuples, while ignoring the fact that *global* statistics in a large corpus can be *collectively* leveraged to identify high-quality sentence-level extractions.
 
 <br />
 
 #### **Our Method**
-
+In this paper, we propose a novel Open IE system, called **ReMine**,  which integrates local context signals and global structural signals in a unified, distant-supervision framework. Leveraging facts from external knowledge bases as supervision, the new system can be applied to many different domains to facilitate sentence-level tuple extractions using corpus-level statistics.
 We address the above issues as follows: <br /><br />
 1. We integrate indirect supervision from another same-domain data source in the format of QA sentence pairs, that is, each question sentence maps to several positive (where a true answer can be found) and negative (where no answer exists) answer sentences. For example, in the following graph, we have two positive answer sentences (A1, A2) and one negative answer sentence (A3) for the question "What is Jack's nationality". We adopt the principle that for the same question, positive pairs of (question, answer) should be semantically similar while they should be dissimilar from negative pairs. In the question "What is Jack's nationality", we identify "Jack" to be the question entity mention. In both A1 and A2, we extract both the question entity mention and the answer entity mention and construct 2 entity mention pairs: ("Jack", "Germany", A1) and ("Jack", "Germany", A2). In a negative sentence like A3, we randomly sample entity mention pairs as negative examples. In this example, we only have ("Jack", "France", A3). Based on our hypothesis, ("Jack", "Germany", A1) and ("Jack", "Germany", A2) should be very close in the embedding space while either of them should be far away from ("Jack", "France", A3). <br />
 2. Instead of differentiating types of labeling errors at the instance level, we concentrate on how to better learn semantic representation of features. Wrongly labeled training examples essentially misguide the understanding of features. It increases the risk of having a non-representative feature learned to be close to a relation type and vice versa. Therefore, if the feature learning process is improved, potentially both types of error can be reduced. How QA pairs can help improve the feature learning process is illustrated on the right side of the following graph. <br />
