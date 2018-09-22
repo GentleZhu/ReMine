@@ -1,5 +1,5 @@
-# ReMine: Integrating Local and Global Cohesiveness for Open Information Extraction
-Source code and data for under review paper "Integrating Local and Global Cohesiveness for Open Information Extraction"
+# ReMine-server
+The server version of ReMine, it will start a web service on local machine and support browser access at https://localhost:port.
 
 ## Dependencies
 
