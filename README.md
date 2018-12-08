@@ -1,5 +1,5 @@
 # ReMine: Integrating Local and Global Cohesiveness for Open Information Extraction
-Source code and data for under review paper "Integrating Local and Global Cohesiveness for Open Information Extraction"
+Source code and data for WSDM19' paper ["Integrating Local and Global Cohesiveness for Open Information Extraction"](https://arxiv.org/pdf/1804.09931.pdf)
 
 ## Dependencies
 
